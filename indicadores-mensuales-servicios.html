@@ -19,33 +19,33 @@
             --card-bg: #FFFFFF;
             --text-main: #1B2559;
             --text-muted: #8F9BBA;
-            --theme-color: #4318FF; 
+            --theme-color: #3B82F6; 
             --theme-light: #F4F7FE;
-            --theme-gradient: linear-gradient(135deg, #868CFF 0%, #4318FF 100%);
+            --theme-gradient: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
         }
 
         body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
         
-        /* Navbar de Impacto */
+        /* Navbar Ejecutivo */
         .navbar { transition: all 0.4s ease; padding: 16px 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
         .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #fff !important; }
         
-        body.module-inbound { --theme-color: #4318FF; --theme-light: #F4F7FE; --theme-gradient: linear-gradient(135deg, #4318FF 0%, #2A09B0 100%); }
+        body.module-inbound { --theme-color: #3B82F6; --theme-light: #EFF6FF; --theme-gradient: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); }
         body.module-inbound .navbar { background: var(--theme-gradient); }
         
-        body.module-outbound { --theme-color: #FF8F00; --theme-light: #FFF8F0; --theme-gradient: linear-gradient(135deg, #FF8F00 0%, #D86000 100%); }
+        body.module-outbound { --theme-color: #F59E0B; --theme-light: #FFFBEB; --theme-gradient: linear-gradient(135deg, #B45309 0%, #F59E0B 100%); }
         body.module-outbound .navbar { background: var(--theme-gradient); }
         
-        body.module-chat { --theme-color: #01B574; --theme-light: #E6F8F2; --theme-gradient: linear-gradient(135deg, #01B574 0%, #007D50 100%); }
+        body.module-chat { --theme-color: #10B981; --theme-light: #ECFDF5; --theme-gradient: linear-gradient(135deg, #047857 0%, #10B981 100%); }
         body.module-chat .navbar { background: var(--theme-gradient); }
 
-        /* Pestañas Ejecutivas */
+        /* Pestañas */
         .nav-tabs { border-bottom: 2px solid #E9EDF7; margin-bottom: 24px; }
         .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 12px 24px; border: none; border-bottom: 3px solid transparent; transition: all 0.3s ease; font-size: 0.90rem; text-transform: uppercase; letter-spacing: 0.5px;}
         .nav-tabs .nav-link:hover { color: var(--text-main); }
         .nav-tabs .nav-link.active { color: var(--theme-color); background: transparent; border-bottom: 3px solid var(--theme-color); }
 
-        /* Tarjetas Neumórficas Suaves */
+        /* Tarjetas Neumórficas */
         .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 22px; box-shadow: 0px 14px 35px rgba(112, 144, 176, 0.07); margin-bottom: 22px; border: 1px solid rgba(229, 234, 243, 0.8); }
         
         .form-label { font-weight: 800; font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
@@ -53,12 +53,12 @@
         .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.2rem var(--theme-light); }
         
         .btn-primary { background: var(--theme-gradient); border: none; border-radius: 12px; padding: 10px 20px; font-weight: 700; font-size: 0.90rem; transition: all 0.3s; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(67, 24, 255, 0.25); filter: brightness(1.05); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); filter: brightness(1.05); }
 
         .btn-outline-export { border: 1.5px solid var(--theme-color); color: var(--theme-color); background: #fff; border-radius: 10px; padding: 6px 14px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
         .btn-outline-export:hover { background: var(--theme-color); color: #fff; }
 
-        /* Tarjetas KPIs Ajustadas (Sin desbordamiento) */
+        /* Tarjetas KPIs */
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
         .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -68,7 +68,7 @@
         /* Sección Títulos */
         .section-title { font-weight: 800; font-size: 1.05rem; color: var(--text-main); margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px;}
         
-        /* Tabla Ejecutiva "Datagrid Style" */
+        /* Tabla Ejecutiva */
         .table-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid #E9EDF7; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
         table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #E9EDF7; z-index: 1; letter-spacing: 0.8px;}
@@ -76,9 +76,9 @@
         table tbody tr:hover { background-color: #F4F7FE; }
         
         .pill-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; }
-        .pill-success { background-color: #E6F8F2; color: #01B574; }
-        .pill-warning { background-color: #FFF8F0; color: #FF8F00; }
-        .pill-danger { background-color: #FFEBEB; color: #EE5D50; }
+        .pill-success { background-color: #ECFDF5; color: #10B981; }
+        .pill-warning { background-color: #FFFBEB; color: #F59E0B; }
+        .pill-danger { background-color: #FEF2F2; color: #EF4444; }
 
         #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(10px); }
         .spinner-custom { color: var(--theme-color); width: 3.5rem; height: 3.5rem; border-width: 5px;}
@@ -136,11 +136,11 @@
     <!-- Tarjetas de KPIs Dinámicas -->
     <div class="row g-3 mb-4" id="kpi-container">
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#E6F8F2;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FFEBEB;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFF8F0;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#E5F4FF;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-5" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F0F3F8;"><i id="kpi-i6" class="bi bi-stopwatch-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#ECFDF5;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FEF2F2;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFFBEB;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#EFF6FF;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-5" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F8FAFC;"><i id="kpi-i6" class="bi bi-stopwatch-fill"></i></div></div></div>
     </div>
 
     <!-- Gráfica Estilizada -->
@@ -149,11 +149,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="section-title"><i class="bi bi-bar-chart-line-fill me-2 fs-5" style="color:var(--theme-color);"></i> Comportamiento de la Operación por Intervalo</h5>
             </div>
-            <div style="height: 360px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
+            <div style="height: 380px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
     </div>
 
-    <!-- Tabla Ejecutiva con Botón de Exportación -->
+    <!-- Tabla Ejecutiva -->
     <div class="row">
         <div class="col-12"><div class="glass-panel">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -180,7 +180,7 @@
     let excelWorkbook = null; 
     let myChart = null; 
     let currentData = [];
-    let currentFilteredIntervalData = []; // Guardará el desglose filtrado para exportar
+    let currentFilteredIntervalData = []; 
     let currentModule = 'INBOUND';
 
     function formatSeconds(seconds) {
@@ -357,7 +357,7 @@
 
         const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
         const labels = [], dRec = [], dAte = [], dAban = [];
-        currentFilteredIntervalData = []; // Reset para exportación
+        currentFilteredIntervalData = []; 
 
         if (currentModule === 'OUTBOUND') {
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
@@ -427,13 +427,10 @@
         }
     }
 
-    // DISEÑO HYBRID CHART.JS (BAR + LINE FOR DIRECTORS)
+    // PALETA DE COLORES EJECUTIVA
     function renderChart(labels, dRec, dAte, dAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
-        
-        const styles = getComputedStyle(document.body);
-        const hexColor = styles.getPropertyValue('--theme-color').trim() || '#4318FF';
 
         Chart.defaults.font.family = 'Plus Jakarta Sans';
         Chart.defaults.color = '#8F9BBA';
@@ -445,19 +442,21 @@
                 type: 'bar',
                 label: 'Llamadas Realizadas', 
                 data: dRec, 
-                backgroundColor: hexColor + 'CC',
-                hoverBackgroundColor: hexColor,
+                backgroundColor: '#F59E0B',
+                hoverBackgroundColor: '#D97706',
                 borderRadius: 6,
                 barPercentage: 0.6
             }];
-        } else {
+        } else if (currentModule === 'CHAT') {
             datasets = [
                 {
                     type: 'bar',
-                    label: currentModule === 'CHAT' ? 'Chats Entrantes' : 'Volumen Total', 
+                    label: 'Chats Entrantes', 
                     data: dRec, 
-                    backgroundColor: hexColor + '33',
-                    hoverBackgroundColor: hexColor + '80',
+                    backgroundColor: '#10B98133',
+                    borderColor: '#10B981',
+                    borderWidth: 1.5,
+                    hoverBackgroundColor: '#10B98166',
                     borderRadius: 6,
                     barPercentage: 0.65
                 },
@@ -465,8 +464,8 @@
                     type: 'line',
                     label: 'Atendidos', 
                     data: dAte, 
-                    borderColor: '#01B574', 
-                    backgroundColor: '#01B574',
+                    borderColor: '#059669', 
+                    backgroundColor: '#059669',
                     borderWidth: 3, 
                     fill: false, 
                     tension: 0.4, 
@@ -477,10 +476,47 @@
                     type: 'line',
                     label: 'Abandonos', 
                     data: dAban, 
-                    borderColor: '#EE5D50', 
-                    backgroundColor: '#EE5D50',
+                    borderColor: '#EF4444', 
+                    backgroundColor: '#EF4444',
                     borderWidth: 2, 
-                    borderDash: [5, 5], 
+                    borderDash: [4, 4], 
+                    fill: false, 
+                    tension: 0.4, 
+                    pointRadius: 2
+                }
+            ];
+        } else {
+            // INBOUND: PALETA AZUL SLATE Y CIAN
+            datasets = [
+                {
+                    type: 'bar',
+                    label: 'Volumen Total', 
+                    data: dRec, 
+                    backgroundColor: '#1E293B', // Azul Slate Marino Elegante
+                    hoverBackgroundColor: '#0F172A',
+                    borderRadius: 6,
+                    barPercentage: 0.65
+                },
+                {
+                    type: 'line',
+                    label: 'Atendidos', 
+                    data: dAte, 
+                    borderColor: '#2563EB', // Azul Cobalto Clic
+                    backgroundColor: '#2563EB',
+                    borderWidth: 3, 
+                    fill: false, 
+                    tension: 0.4, 
+                    pointRadius: 3,
+                    pointHoverRadius: 6
+                },
+                {
+                    type: 'line',
+                    label: 'Abandonos', 
+                    data: dAban, 
+                    borderColor: '#EF4444', // Rojo Coral Sutil
+                    backgroundColor: '#EF4444',
+                    borderWidth: 2, 
+                    borderDash: [4, 4], 
                     fill: false, 
                     tension: 0.4, 
                     pointRadius: 2
@@ -494,7 +530,7 @@
                 responsive: true, maintainAspectRatio: false, 
                 interaction: { mode: 'index', intersect: false },
                 plugins: { 
-                    legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { weight: '700', size: 12 } } },
+                    legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 10, padding: 20, font: { weight: '700', size: 12 } } },
                     tooltip: { 
                         backgroundColor: '#FFFFFF', titleColor: '#1B2559', bodyColor: '#1B2559', borderColor: '#E9EDF7', borderWidth: 1, 
                         padding: 14, boxPadding: 6, usePointStyle: true, titleFont: {size: 14, weight: '800'}, bodyFont: {size: 12, weight: '600'}, 
@@ -509,7 +545,6 @@
         });
     }
 
-    // EXPORTACIÓN A CSV / EXCEL DE LA TABLA
     function exportTableToCSV() {
         if(!currentFilteredIntervalData || currentFilteredIntervalData.length === 0) {
             alert("No hay datos cargados para exportar.");
