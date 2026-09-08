@@ -150,7 +150,7 @@
 <script>
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // TU ARCHIVO EXCEL V2
+    // TU ARCHIVO EXCEL ORIGINAL
     const EXCEL_FILE = 'Indicadores Mensuales Servicios.xlsx'; 
     
     let excelWorkbook = null; 
@@ -178,7 +178,8 @@
 
         try {
             if (!excelWorkbook) {
-                const response = await fetch(EXCEL_FILE);
+                // Agregar ?v=timestamp para evitar caché duro en GitHub Pages
+                const response = await fetch(EXCEL_FILE + '?v=' + new Date().getTime());
                 if (!response.ok) throw new Error(`No se encontró el archivo ${EXCEL_FILE}.`);
                 const arrayBuffer = await response.arrayBuffer();
                 excelWorkbook = XLSX.read(arrayBuffer, {type: 'array'});
@@ -240,7 +241,7 @@
             document.getElementById('kpi-t2').innerText = 'Chats Atendidos'; document.getElementById('kpi-i2').className = 'bi bi-chat-dots-fill';
             document.getElementById('kpi-t3').innerText = 'Abandonados'; document.getElementById('kpi-i3').className = 'bi bi-chat-square-quote';
             document.getElementById('kpi-t4').innerText = '% Abandono'; document.getElementById('kpi-i4').className = 'bi bi-graph-down-arrow';
-            document.getElementById('kpi-t6').innerText = 'AHT Global (s)'; // En chat quitamos ASA/ART
+            document.getElementById('kpi-t6').innerText = 'AHT Global (s)'; 
             
             tHead.innerHTML = `<th>Intervalo</th><th>Chats Entrantes</th><th>Chats Atendidos</th><th>Abandonados</th><th>% Abandono</th><th>SLA Global</th><th>AHT (s)</th>`;
         }
@@ -293,7 +294,7 @@
         const intMap = {};
 
         data.forEach(row => {
-            // MAPEO EXACTO PARA LAS COLUMNAS DE TU EXCEL V2
+            // MAPEO EXACTO PARA LAS COLUMNAS DE TU EXCEL 
             const rec = parseFloat(row['Recibidas']) || parseFloat(row['Realizadas']) || parseFloat(row['Recibidos']) || 0;
             const aten = parseFloat(row['Atendidas']) || parseFloat(row['Atendidos']) || 0;
             const atenSLA = parseFloat(row['Atendidas_SLA']) || parseFloat(row['Atendidos_SLA']) || 0;
@@ -370,8 +371,8 @@
 
         // Degradado suave nivel director
         let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, hexColor + '30'); // Opacidad muy sutil arriba
-        gradient.addColorStop(1, hexColor + '00'); // Transparente abajo
+        gradient.addColorStop(0, hexColor + '30'); 
+        gradient.addColorStop(1, hexColor + '00'); 
 
         Chart.defaults.font.family = 'Inter';
         Chart.defaults.color = '#8F9BBA';
