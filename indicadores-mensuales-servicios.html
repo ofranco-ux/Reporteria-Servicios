@@ -29,7 +29,8 @@
 
         body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); -webkit-font-smoothing: antialiased; }
         
-        .navbar { background: #0F52BA; padding: 18px 36px; box-shadow: 0 4px 15px rgba(15, 82, 186, 0.15); }
+        /* Header Azul Profundo */
+        .navbar { background: #093986; padding: 18px 36px; box-shadow: 0 4px 15px rgba(9, 57, 134, 0.2); }
         .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #FFFFFF !important; }
 
         .nav-tabs { border-bottom: None; margin-bottom: 24px; gap: 10px; }
@@ -43,9 +44,6 @@
         .form-select, .form-control { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 9px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; }
         .form-select:focus, .form-control:focus { border-color: var(--blue-primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
         
-        .btn-primary { background-color: var(--blue-primary); border: none; border-radius: 10px; padding: 10px 22px; font-weight: 800; font-size: 0.85rem; transition: all 0.2s; color: #FFFFFF; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25); }
-        .btn-primary:hover { background-color: #1E40AF; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(29, 78, 216, 0.35); }
-
         .btn-outline-export { border: 1.5px solid #CBD5E1; color: var(--text-main); background: #FFFFFF; border-radius: 10px; padding: 7px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
         .btn-outline-export:hover { background: #F8FAFC; border-color: #94A3B8; }
 
@@ -96,14 +94,14 @@
         <li class="nav-item"><button class="nav-link" id="chat-tab"><i class="bi bi-chat-dots me-2"></i> Chat Digital</button></li>
     </ul>
 
-    <!-- Panel de Filtros -->
+    <!-- Panel de Filtros Automáticos -->
     <div class="glass-panel">
         <div class="row align-items-end g-3">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label"><i class="bi bi-calendar-event me-1"></i> Desde</label>
                 <input type="date" id="fecha-inicio" class="form-control">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label"><i class="bi bi-calendar-event me-1"></i> Hasta</label>
                 <input type="date" id="fecha-fin" class="form-control">
             </div>
@@ -115,15 +113,10 @@
                 <label class="form-label" id="label-ring"><i class="bi bi-telephone me-1"></i> Ring Group</label>
                 <select id="filter-ring" class="form-select"><option value="ALL">Todos</option></select>
             </div>
-            <div class="col-md-2 text-end">
-                <button class="btn btn-primary w-100 shadow-sm" onclick="applyFilters()">
-                    <i class="bi bi-search me-1"></i> Actualizar
-                </button>
-            </div>
         </div>
     </div>
 
-    <!-- KPIs con Diseño Neutro y Condicional -->
+    <!-- KPIs -->
     <div class="row g-3 mb-4" id="kpi-container">
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
@@ -174,6 +167,12 @@
     let currentData = [];
     let currentFilteredIntervalData = []; 
     let currentModule = 'INBOUND';
+
+    // Eventos para actualizar la tabla y gráfica automáticamente al cambiar cualquier filtro
+    document.getElementById('fecha-inicio').addEventListener('change', applyFilters);
+    document.getElementById('fecha-fin').addEventListener('change', applyFilters);
+    document.getElementById('filter-campana').addEventListener('change', applyFilters);
+    document.getElementById('filter-ring').addEventListener('change', applyFilters);
 
     function formatSeconds(seconds) {
         if (isNaN(seconds) || seconds === null || seconds === undefined) return "00:00";
@@ -294,6 +293,10 @@
     }
 
     function populateFilters() {
+        // Guardar valores actuales para no perder la selección al cambiar de pestaña
+        const valCamp = document.getElementById('filter-campana').value;
+        const valRing = document.getElementById('filter-ring').value;
+
         const campanas = new Set(); const rings = new Set();
         currentData.forEach(row => {
             if(row['Campaña']) campanas.add(row['Campaña']);
@@ -306,8 +309,14 @@
         fCamp.innerHTML = '<option value="ALL">Todas</option>';
         fRing.innerHTML = '<option value="ALL">Todos</option>';
 
-        campanas.forEach(v => { fCamp.innerHTML += `<option value="${v}">${v}</option>`; });
-        rings.forEach(v => { fRing.innerHTML += `<option value="${v}">${v}</option>`; });
+        campanas.forEach(v => { 
+            let selected = (v === valCamp) ? 'selected' : '';
+            fCamp.innerHTML += `<option value="${v}" ${selected}>${v}</option>`; 
+        });
+        rings.forEach(v => { 
+            let selected = (v === valRing) ? 'selected' : '';
+            fRing.innerHTML += `<option value="${v}" ${selected}>${v}</option>`; 
+        });
     }
 
     function applyFilters() {
@@ -456,7 +465,7 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0284C7;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0EA5E9;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
@@ -501,7 +510,7 @@
                     type: 'bar',
                     label: 'Chats Entrantes', 
                     data: dRec, 
-                    backgroundColor: '#E0F2FE', // Color Suave Fondo
+                    backgroundColor: '#E0F2FE', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -513,7 +522,7 @@
                     type: 'bar',
                     label: 'Chats Atendidos', 
                     data: dAte, 
-                    backgroundColor: '#0284C7', // Color Fuerte Logro
+                    backgroundColor: '#0284C7', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -556,7 +565,7 @@
                     type: 'bar',
                     label: 'Volumen Recibido', 
                     data: dRec, 
-                    backgroundColor: '#DBEAFE', // Azul Suave Pastel
+                    backgroundColor: '#DBEAFE', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -568,7 +577,7 @@
                     type: 'bar',
                     label: 'Atendidas', 
                     data: dAte, 
-                    backgroundColor: '#1D4ED8', // Azul Rey Sólido
+                    backgroundColor: '#1D4ED8', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
