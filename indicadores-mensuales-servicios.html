@@ -15,72 +15,82 @@
 
     <style>
         :root {
-            --bg-body: #FAF9FE;
+            --bg-body: #EBF1F5;
             --card-bg: #FFFFFF;
-            --text-main: #2D3748;
-            --text-muted: #A0AEC0;
-            --border-color: #EDF2F7;
-            --theme-color: #7F00FF; 
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            
+            /* Paleta Imagen de Referencia */
+            --blue-primary: #1D4ED8;
+            --blue-cyan: #0EA5E9;
+            --red-soft: #F43F5E;
+            --theme-color: #1D4ED8;
         }
 
         body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); -webkit-font-smoothing: antialiased; }
         
-        .navbar { background: #FFFFFF; padding: 20px 36px; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #1A202C !important; }
+        /* Header Estilo ek Dashboard */
+        .navbar { background: #0F52BA; padding: 18px 36px; box-shadow: 0 4px 15px rgba(15, 82, 186, 0.15); }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #FFFFFF !important; }
 
+        /* Pestañas Flotantes Limpias */
         .nav-tabs { border-bottom: None; margin-bottom: 24px; gap: 10px; }
-        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 10px 22px; border: none; border-radius: 30px; transition: all 0.3s ease; font-size: 0.85rem; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .nav-tabs .nav-link:hover { color: #1A202C; background: #F7FAFC; }
-        .nav-tabs .nav-link.active { color: #FFFFFF; background: linear-gradient(135deg, #7F00FF 0%, #E100FF 100%); box-shadow: 0 4px 15px rgba(127, 0, 255, 0.35); }
+        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 10px 22px; border: none; border-radius: 12px; transition: all 0.2s ease; font-size: 0.88rem; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #F8FAFC; }
+        .nav-tabs .nav-link.active { color: #FFFFFF; background: var(--blue-primary); box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3); }
 
-        .glass-panel { background: var(--card-bg); border-radius: 20px; padding: 24px; box-shadow: 0px 10px 30px rgba(112, 144, 176, 0.06); margin-bottom: 24px; border: 1px solid rgba(237, 242, 247, 0.8); }
+        /* Tarjetas Neumórficas Blancas */
+        .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 24px; box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.1); margin-bottom: 24px; border: none; }
         
-        .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .form-select, .form-control { border-radius: 12px; border: 1.5px solid #EDF2F7; padding: 10px 14px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFC; }
-        .form-select:focus, .form-control:focus { border-color: #7F00FF; box-shadow: 0 0 0 3px rgba(127, 0, 255, 0.15); }
+        .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+        .form-select, .form-control { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 9px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; }
+        .form-select:focus, .form-control:focus { border-color: var(--blue-primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
         
-        .btn-primary { background: linear-gradient(135deg, #7F00FF 0%, #E100FF 100%); border: none; border-radius: 12px; padding: 10px 22px; font-weight: 800; font-size: 0.85rem; transition: all 0.3s; color: #FFFFFF; box-shadow: 0 4px 15px rgba(127, 0, 255, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(127, 0, 255, 0.5); }
+        .btn-primary { background-color: var(--blue-primary); border: none; border-radius: 10px; padding: 10px 22px; font-weight: 800; font-size: 0.85rem; transition: all 0.2s; color: #FFFFFF; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25); }
+        .btn-primary:hover { background-color: #1E40AF; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(29, 78, 216, 0.35); }
 
-        .btn-outline-export { border: 1.5px solid #E2E8F0; color: #4A5568; background: #FFFFFF; border-radius: 12px; padding: 8px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-        .btn-outline-export:hover { background: #F7FAFC; border-color: #CBD5E0; }
+        .btn-outline-export { border: 1.5px solid #CBD5E1; color: var(--text-main); background: #FFFFFF; border-radius: 10px; padding: 7px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
+        .btn-outline-export:hover { background: #F8FAFC; border-color: #94A3B8; }
 
+        /* Tarjetas KPIs con Fondos Pastel Pastel (Estilo Referencia) */
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
-        .kpi-title { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-value { font-size: 1.75rem; font-weight: 800; color: #1A202C; margin: 0; line-height: 1.1; letter-spacing: -0.8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-icon-box { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; margin-left: 8px; }
+        .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-value { font-size: 1.70rem; font-weight: 800; color: #0F172A; margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; margin-left: 8px; }
 
-        .section-title { font-weight: 800; font-size: 1.05rem; color: #1A202C; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
+        .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
         
-        .table-container { max-height: 420px; overflow-y: auto; border-radius: 14px; border: 1px solid #EDF2F7; }
+        /* Tabla Clean */
+        .table-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid #E2E8F0; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        table thead th { position: sticky; top: 0; background-color: #FAFAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #EDF2F7; z-index: 1; letter-spacing: 0.8px; }
-        table tbody td { font-size: 0.88rem; color: #2D3748; font-weight: 600; padding: 13px 16px; border-bottom: 1px solid #F7FAFC; vertical-align: middle; }
-        table tbody tr:hover { background-color: #F7FAFC; }
+        table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #E2E8F0; z-index: 1; letter-spacing: 0.8px; }
+        table tbody td { font-size: 0.88rem; color: #1E293B; font-weight: 600; padding: 13px 16px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+        table tbody tr:hover { background-color: #F8FAFC; }
         
         .pill-badge { font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; font-weight: 800; display: inline-block; }
-        .pill-success { background-color: #E6FFFA; color: #00A3C4; }
-        .pill-warning { background-color: #FEFCBF; color: #D69E2E; }
-        .pill-danger { background-color: #FFF5F5; color: #E53E3E; }
+        .pill-success { background-color: #DCFCE7; color: #15803D; }
+        .pill-warning { background-color: #FEF3C7; color: #B45309; }
+        .pill-danger { background-color: #FEE2E2; color: #B91C1C; }
 
         #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px); }
-        .spinner-custom { color: #7F00FF; width: 3.5rem; height: 3.5rem; border-width: 4px; }
+        .spinner-custom { color: #1D4ED8; width: 3.5rem; height: 3.5rem; border-width: 4px; }
     </style>
 </head>
 <body class="module-inbound">
 
 <div id="loading-overlay">
     <div class="spinner-border spinner-custom" role="status"></div>
-    <h6 class="mt-3 fw-bold" style="color: #1A202C;">Cargando Dashboard...</h6>
+    <h6 class="mt-3 fw-bold" style="color: #0F172A;">Cargando Dashboard...</h6>
 </div>
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-4">
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <i class="bi bi-bar-chart-fill me-2" style="color:#7F00FF;"></i> Indicadores Servicios
+            <i class="bi bi-bar-chart-line-fill me-2 text-white"></i> Indicadores Servicios
         </a>
-        <span class="text-secondary fw-semibold fs-6" id="current-date"></span>
+        <span class="text-white fw-semibold fs-6 opacity-90" id="current-date"></span>
     </div>
 </nav>
 
@@ -92,6 +102,7 @@
         <li class="nav-item"><button class="nav-link" id="chat-tab"><i class="bi bi-chat-dots me-2"></i> Chat Digital</button></li>
     </ul>
 
+    <!-- Panel de Filtros -->
     <div class="glass-panel">
         <div class="row align-items-end g-3">
             <div class="col-md-2">
@@ -112,34 +123,37 @@
             </div>
             <div class="col-md-2 text-end">
                 <button class="btn btn-primary w-100 shadow-sm" onclick="applyFilters()">
-                    <i class="bi bi-lightning-charge-fill me-1"></i> Actualizar
+                    <i class="bi bi-search me-1"></i> Actualizar
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- KPIs con Fondos Pastel Estilo Referencia -->
     <div class="row g-3 mb-4" id="kpi-container">
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box" style="background:#F3E8FF; color:#7F00FF;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box" style="background:#E6FFFA; color:#00A3C4;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box" style="background:#FFF5F5; color:#E53E3E;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" style="background:#FEFCBF; color:#D69E2E;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" style="background:#EBF8FF; color:#3182CE;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#F7FAFC; color:#718096;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#EFF6FF;"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1" style="color:#1D4ED8;">0</span></div><div class="kpi-icon-box" style="background:#DBEAFE; color:#1D4ED8;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#E0F2FE;"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2" style="color:#0284C7;">0</span></div><div class="kpi-icon-box" style="background:#BAE6FD; color:#0284C7;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#FFE4E6;"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3" style="color:#E11D48;">0</span></div><div class="kpi-icon-box" style="background:#FECDD3; color:#E11D48;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#FEF3C7;"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4" style="color:#D97706;">0%</span></div><div class="kpi-icon-box" style="background:#FDE68A; color:#D97706;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#F3E8FF;"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5" style="color:#7E22CE;">0%</span></div><div class="kpi-icon-box" style="background:#E9D5FF; color:#7E22CE;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#F1F5F9;"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6" style="color:#475569;">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#E2E8F0; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
+    <!-- Gráfica de Barras Paralelas Redondeadas (Estilo Referencia) -->
     <div class="row mb-4">
         <div class="col-12"><div class="glass-panel pb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-activity me-2 fs-5" style="color:#7F00FF;"></i> Tendencia Operativa por Intervalo</h5>
+                <h5 class="section-title"><i class="bi bi-bar-chart-fill me-2 fs-5" style="color:#1D4ED8;"></i> Tendencia Operativa por Intervalo</h5>
             </div>
             <div style="height: 380px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
     </div>
 
+    <!-- Tabla -->
     <div class="row">
         <div class="col-12"><div class="glass-panel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-grid-3x3-gap-fill me-2 fs-5" style="color:#7F00FF;"></i> Desglose Detallado por Intervalo (30 Min)</h5>
+                <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:#1D4ED8;"></i> Desglose Detallado por Intervalo (30 Min)</h5>
                 <button class="btn btn-outline-export" onclick="exportTableToCSV()">
                     <i class="bi bi-download me-1"></i> Descargar Excel
                 </button>
@@ -368,7 +382,7 @@
                 labels.push(intv); dRec.push(d.rec);
                 const rAHT = d.rec > 0 ? (d.sumAHT / d.rec) : 0;
                 
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="fw-bold" style="color:#7F00FF;">${d.rec.toLocaleString()}</td><td class="fw-bold text-secondary">${formatSeconds(rAHT)}</td></tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="fw-bold" style="color:#1D4ED8;">${d.rec.toLocaleString()}</td><td class="fw-bold text-secondary">${formatSeconds(rAHT)}</td></tr>`;
                 
                 currentFilteredIntervalData.push({
                     "Intervalo": intv,
@@ -406,7 +420,7 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#00A3C4;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0284C7;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
@@ -424,114 +438,58 @@
         }
     }
 
-    // DISEÑO MODERN TECH CON BARRAS EN PÍLDORA Y LÍNEA FLOTANTE CIAN NEÓN
+    // GRÁFICA BARRAS PARALELAS EN CÁPSULA (ESTILO IMAGEN CLIENTE)
     function renderChart(labels, dRec, dAte, dAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
 
         Chart.defaults.font.family = 'Plus Jakarta Sans';
-        Chart.defaults.color = '#A0AEC0';
+        Chart.defaults.color = '#94A3B8';
 
         let datasets = [];
 
         if (currentModule === 'OUTBOUND') {
-            let gradOut = ctx.createLinearGradient(0, 0, 0, 360);
-            gradOut.addColorStop(0, 'rgba(127, 0, 255, 0.45)');
-            gradOut.addColorStop(1, 'rgba(225, 0, 255, 0.05)');
-
             datasets = [{
                 type: 'bar',
                 label: 'Llamadas Realizadas', 
                 data: dRec, 
-                backgroundColor: gradOut,
-                borderColor: '#7F00FF',
-                borderWidth: 1.5,
+                backgroundColor: '#1D4ED8',
                 borderRadius: 8,
                 barPercentage: 0.65
             }];
-        } else if (currentModule === 'CHAT') {
-            let gradChat = ctx.createLinearGradient(0, 0, 0, 360);
-            gradChat.addColorStop(0, 'rgba(0, 229, 255, 0.35)');
-            gradChat.addColorStop(1, 'rgba(0, 229, 255, 0.02)');
-
-            datasets = [
-                {
-                    type: 'bar',
-                    label: 'Chats Entrantes', 
-                    data: dRec, 
-                    backgroundColor: gradChat,
-                    borderColor: '#00E5FF',
-                    borderWidth: 1.5,
-                    borderRadius: 8,
-                    barPercentage: 0.65
-                },
-                {
-                    type: 'line',
-                    label: 'Atendidos', 
-                    data: dAte, 
-                    borderColor: '#00F2FE', 
-                    borderWidth: 3, 
-                    fill: false, 
-                    tension: 0.4, 
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#FFFFFF',
-                    pointBorderColor: '#00F2FE',
-                    pointBorderWidth: 2
-                },
-                {
-                    type: 'line',
-                    label: 'Abandonos', 
-                    data: dAban, 
-                    borderColor: '#FF0844', 
-                    borderWidth: 2, 
-                    borderDash: [4, 4], 
-                    fill: false, 
-                    tension: 0.4, 
-                    pointRadius: 0
-                }
-            ];
         } else {
-            // INBOUND: BARRAS CAPSULA PÚRPURA/AZUL Y LÍNEA FLOTANTE CIAN NEÓN
-            let gradIn = ctx.createLinearGradient(0, 0, 0, 360);
-            gradIn.addColorStop(0, 'rgba(127, 0, 255, 0.30)');
-            gradIn.addColorStop(1, 'rgba(0, 242, 254, 0.02)');
-
+            // ESTILO IMAGEN DE REFERENCIA: BARRAS AGRUPADAS DE BORDES REDONDEADOS
             datasets = [
                 {
                     type: 'bar',
-                    label: 'Volumen Total (Recibidas)', 
+                    label: currentModule === 'CHAT' ? 'Chats Entrantes' : 'Volumen Recibido', 
                     data: dRec, 
-                    backgroundColor: gradIn,
-                    borderColor: '#7F00FF',
-                    borderWidth: 1.5,
+                    backgroundColor: '#1D4ED8', // Azul Royal Imagen
                     borderRadius: 8,
-                    barPercentage: 0.65
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7
                 },
                 {
-                    type: 'line',
+                    type: 'bar',
                     label: 'Atendidas', 
                     data: dAte, 
-                    borderColor: '#00F2FE', 
-                    borderWidth: 3.5, 
-                    fill: false, 
-                    tension: 0.4, 
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#FFFFFF',
-                    pointBorderColor: '#00F2FE',
-                    pointBorderWidth: 2.5
+                    backgroundColor: '#0EA5E9', // Azul Cyan Imagen
+                    borderRadius: 8,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7
                 },
                 {
                     type: 'line',
                     label: 'Abandonos', 
                     data: dAban, 
-                    borderColor: '#FF0844', 
+                    borderColor: '#F43F5E', // Rojo Pastel Discreto
+                    backgroundColor: '#F43F5E',
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
                     tension: 0.4, 
-                    pointRadius: 0
+                    pointRadius: 0,
+                    pointHoverRadius: 5
                 }
             ];
         }
@@ -544,13 +502,13 @@
                 plugins: { 
                     legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { weight: '800', size: 12 } } },
                     tooltip: { 
-                        backgroundColor: '#FFFFFF', titleColor: '#1A202C', bodyColor: '#1A202C', borderColor: '#EDF2F7', borderWidth: 1, 
+                        backgroundColor: '#FFFFFF', titleColor: '#0F172A', bodyColor: '#0F172A', borderColor: '#E2E8F0', borderWidth: 1, 
                         padding: 14, boxPadding: 6, usePointStyle: true, titleFont: {size: 13, weight: '800'}, bodyFont: {size: 12, weight: '600'}, 
-                        cornerRadius: 12, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 10, shadowBlur: 20, shadowColor: 'rgba(0, 0, 0, 0.06)' 
+                        cornerRadius: 12, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 10, shadowBlur: 20, shadowColor: 'rgba(0, 0, 0, 0.08)' 
                     }
                 },
                 scales: { 
-                    y: { beginAtZero: true, border: {display: false}, grid: { color: '#EDF2F7', drawTicks: false }, ticks: { font: { weight: '700' } } }, 
+                    y: { beginAtZero: true, border: {display: false}, grid: { color: '#F1F5F9', drawTicks: false }, ticks: { font: { weight: '700' } } }, 
                     x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 10, font: { weight: '700', size: 10 } } } 
                 }
             }
