@@ -123,14 +123,14 @@
         </div>
     </div>
 
-    <!-- KPIs con Diseño Neutro y Condicional -->
+    <!-- KPIs -->
     <div class="row g-3 mb-4" id="kpi-container">
         <!-- Tarjetas Neutras -->
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
         
-        <!-- Tarjetas Condicionales (SLA y Abandono) -->
+        <!-- Tarjetas Condicionales -->
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-4-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" id="kpi-i4-box"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-5-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" id="kpi-i5-box"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
         
@@ -460,7 +460,7 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0284C7;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0EA5E9;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
@@ -494,7 +494,9 @@
                 data: dRec, 
                 backgroundColor: '#1D4ED8',
                 borderRadius: 8,
-                barPercentage: 0.65,
+                barPercentage: 0.85,
+                categoryPercentage: 0.85,
+                grouped: false,
                 yAxisID: 'y'
             }];
         } else if (currentModule === 'CHAT') {
@@ -504,20 +506,24 @@
                     label: 'Chats Entrantes', 
                     data: dRec, 
                     backgroundColor: '#1D4ED8',
-                    borderRadius: 8,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.7,
-                    yAxisID: 'y'
+                    borderRadius: 6,
+                    barPercentage: 0.85,
+                    categoryPercentage: 0.85,
+                    grouped: false,
+                    yAxisID: 'y',
+                    order: 2
                 },
                 {
                     type: 'bar',
                     label: 'Chats Atendidos', 
                     data: dAte, 
                     backgroundColor: '#0EA5E9',
-                    borderRadius: 8,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.7,
-                    yAxisID: 'y'
+                    borderRadius: 6,
+                    barPercentage: 0.85,
+                    categoryPercentage: 0.85,
+                    grouped: false,
+                    yAxisID: 'y',
+                    order: 1
                 },
                 {
                     type: 'line',
@@ -530,7 +536,8 @@
                     tension: 0.35, 
                     pointRadius: 3,
                     pointHoverRadius: 6,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    order: 0
                 },
                 {
                     type: 'line',
@@ -543,7 +550,8 @@
                     fill: false, 
                     tension: 0.35, 
                     pointRadius: 2,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    order: 0
                 }
             ];
         } else {
@@ -553,20 +561,24 @@
                     label: 'Volumen Recibido', 
                     data: dRec, 
                     backgroundColor: '#1D4ED8',
-                    borderRadius: 8,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.7,
-                    yAxisID: 'y'
+                    borderRadius: 6,
+                    barPercentage: 0.85,
+                    categoryPercentage: 0.85,
+                    grouped: false,
+                    yAxisID: 'y',
+                    order: 2
                 },
                 {
                     type: 'bar',
                     label: 'Atendidas', 
                     data: dAte, 
                     backgroundColor: '#0EA5E9',
-                    borderRadius: 8,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.7,
-                    yAxisID: 'y'
+                    borderRadius: 6,
+                    barPercentage: 0.85,
+                    categoryPercentage: 0.85,
+                    grouped: false,
+                    yAxisID: 'y',
+                    order: 1
                 },
                 {
                     type: 'line',
@@ -579,7 +591,8 @@
                     tension: 0.35, 
                     pointRadius: 3,
                     pointHoverRadius: 6,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    order: 0
                 },
                 {
                     type: 'line',
@@ -592,7 +605,8 @@
                     fill: false, 
                     tension: 0.35, 
                     pointRadius: 2,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    order: 0
                 }
             ];
         }
