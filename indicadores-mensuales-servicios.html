@@ -259,7 +259,7 @@
             document.getElementById('kpi-t4').innerText = '% Abandono'; document.getElementById('kpi-i4').className = 'bi bi-graph-down-arrow';
             document.getElementById('kpi-t6').innerText = 'AHT / ASA';
             
-            tHead.innerHTML = `<th>Intervalo</th><th>Recibidas</th><th>Atendidas</th><th>Abandonadas</th><th>% Abandono</th><th>SLA Global</th><th>AHT</th><th>ASA</th>`;
+            tHead.innerHTML = `<th>Intervalo</th><th>Recibidas</th><th>Atendidas</th><th>Atend. SLA</th><th>Abandonadas</th><th>% Abandono</th><th>SLA Global</th><th>AHT</th><th>ASA</th>`;
         } 
         else if (modulo === 'OUTBOUND') {
             document.getElementById('card-3').style.display = 'none'; document.getElementById('card-4').style.display = 'none'; document.getElementById('card-5').style.display = 'none'; 
@@ -285,7 +285,7 @@
             document.getElementById('kpi-t4').innerText = '% Abandono'; document.getElementById('kpi-i4').className = 'bi bi-graph-down-arrow';
             document.getElementById('kpi-t6').innerText = 'AHT Global'; 
             
-            tHead.innerHTML = `<th>Intervalo</th><th>Chats Entrantes</th><th>Chats Atendidos</th><th>Abandonados</th><th>% Abandono</th><th>SLA Global</th><th>AHT</th>`;
+            tHead.innerHTML = `<th>Intervalo</th><th>Chats Entrantes</th><th>Chats Atendidos</th><th>Atend. SLA</th><th>Abandonados</th><th>% Abandono</th><th>SLA Global</th><th>AHT</th>`;
         }
     }
 
@@ -465,12 +465,13 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0EA5E9;">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0284C7;">${d.aten.toLocaleString()}</td><td class="fw-bold" style="color:#10B981;">${d.atenSLA.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
                     [currentModule === 'CHAT' ? "Chats Entrantes" : "Recibidas"]: d.rec,
                     [currentModule === 'CHAT' ? "Chats Atendidos" : "Atendidas"]: d.aten,
+                    "Atendidas SLA": d.atenSLA,
                     "Abandonadas": d.aban,
                     "% Abandono": `${rAba}%`,
                     "SLA Global": `${rSLA}%`,
