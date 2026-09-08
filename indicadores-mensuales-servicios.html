@@ -168,7 +168,7 @@
     let currentFilteredIntervalData = []; 
     let currentModule = 'INBOUND';
 
-    // Eventos para actualizar la tabla y gráfica automáticamente al cambiar cualquier filtro
+    // Eventos automáticos
     document.getElementById('fecha-inicio').addEventListener('change', applyFilters);
     document.getElementById('fecha-fin').addEventListener('change', applyFilters);
     document.getElementById('filter-campana').addEventListener('change', applyFilters);
@@ -293,7 +293,6 @@
     }
 
     function populateFilters() {
-        // Guardar valores actuales para no perder la selección al cambiar de pestaña
         const valCamp = document.getElementById('filter-campana').value;
         const valRing = document.getElementById('filter-ring').value;
 
@@ -349,12 +348,17 @@
         const intMap = {};
 
         data.forEach(row => {
-            const rec = parseFloat(row['Recibidas']) || parseFloat(row['Realizadas']) || parseFloat(row['Recibidos']) || 0;
+            let rec = parseFloat(row['Recibidas']) || parseFloat(row['Realizadas']) || parseFloat(row['Recibidos']) || 0;
             const aten = parseFloat(row['Atendidas']) || parseFloat(row['Atendidos']) || 0;
             const atenSLA = parseFloat(row['Atendidas_SLA']) || parseFloat(row['Atendidos_SLA']) || 0;
             const aban = parseFloat(row['Abandonadas_Total']) || parseFloat(row['Abandonados']) || 0;
             const aht = parseFloat(row['AHT']) || 0;
             const asa = parseFloat(row['ASA']) || 0; 
+
+            // PARCHE DE DIRECCIÓN: Asegurar lógica matemática visual
+            if (currentModule !== 'OUTBOUND' && rec < (aten + aban)) {
+                rec = aten + aban;
+            }
 
             tRec += rec; tAten += aten; tSLA += atenSLA; tAban += aban;
             
