@@ -8,7 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- Librerías: Chart.js para gráficas y SheetJS para leer Excel -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <style>
         body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; color: #333; }
@@ -42,12 +45,12 @@
 
 <div id="loading-overlay">
     <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-    <h5 class="mt-3 text-secondary">Sincronizando con Google Sheets...</h5>
+    <h5 class="mt-3 text-secondary">Leyendo archivo Excel...</h5>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="#"><i class="bi bi-cloud-arrow-down me-2"></i> Indicadores Mensuales Servicios</a>
+        <a class="navbar-brand" href="#"><i class="bi bi-file-earmark-spreadsheet me-2"></i> Indicadores Mensuales Servicios</a>
         <span class="text-light fs-6" id="current-date"></span>
     </div>
 </nav>
@@ -111,38 +114,13 @@
 <script>
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    const SHEET_ID = '1uXsU9QPBxac8asB1RfUMxBfez1DkJDi46QE4uHd5Vjg'; 
-    
-    // ENLACES API ACTUALIZADOS: Utilizamos el endpoint gviz de Google que evita bloqueos CORS
-    const urls = {
-        'INBOUND': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Inbound`,
-        'OUTBOUND': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Outbound`,
-        'CHAT': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Chat`
-    };
+    // Archivo Excel subido al mismo repositorio
+    const EXCEL_FILE = 'Indicadores Mensuales Servicios.xlsx'; 
+    let excelWorkbook = null; // Guardará el Excel cargado
 
     let myChart = null; 
     let currentData = [];
     let currentModule = 'INBOUND';
-    const dataSets = { 'INBOUND': null, 'OUTBOUND': null, 'CHAT': null };
-
-    function parseCSV(data) {
-        if(!data || !data.trim()) return [];
-        const cleanData = data.replace(/"/g, ''); 
-        const lines = cleanData.trim().split('\n');
-        const headers = lines[0].split(',');
-        const result = [];
-        for (let i = 1; i < lines.length; i++) {
-            const currentline = lines[i].split(',');
-            if (currentline.length === headers.length) {
-                let obj = {};
-                for (let j = 0; j < headers.length; j++) { 
-                    obj[headers[j].trim()] = currentline[j].trim(); 
-                }
-                result.push(obj);
-            }
-        }
-        return result;
-    }
 
     async function loadModule(moduleName) {
         document.getElementById('loading-overlay').style.display = 'flex';
@@ -152,27 +130,37 @@
 
         currentModule = moduleName;
 
-        if (!dataSets[moduleName]) {
-            try {
-                const response = await fetch(urls[moduleName]);
-                if (!response.ok) throw new Error("Conexión rechazada por Google. Verifica que el Sheet esté 'Publicado en la web'.");
-                
-                const text = await response.text();
-                if(text.trim().toLowerCase().startsWith("<!doctype html>")) {
-                     throw new Error(`Google no encontró la pestaña. Verifica que la pestaña de abajo en tu Excel se llame exactamente ${moduleName === 'INBOUND' ? 'Inbound' : moduleName === 'OUTBOUND' ? 'Outbound' : 'Chat'}.`);
-                }
-                
-                dataSets[moduleName] = parseCSV(text);
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Error de conexión: " + error.message);
-                document.getElementById('loading-overlay').style.display = 'none';
-                return;
+        try {
+            // Si el Excel no se ha descargado aún, lo descargamos una sola vez
+            if (!excelWorkbook) {
+                const response = await fetch(EXCEL_FILE);
+                if (!response.ok) throw new Error(`No se encontró el archivo "${EXCEL_FILE}".`);
+                const arrayBuffer = await response.arrayBuffer();
+                // Leemos el Excel usando SheetJS
+                excelWorkbook = XLSX.read(arrayBuffer, {type: 'array'});
             }
+
+            // Seleccionar la pestaña correcta
+            let sheetName = '';
+            if (moduleName === 'INBOUND') sheetName = 'Inbound';
+            if (moduleName === 'OUTBOUND') sheetName = 'Outbound';
+            if (moduleName === 'CHAT') sheetName = 'Chat';
+
+            if (!excelWorkbook.Sheets[sheetName]) {
+                throw new Error(`La pestaña "${sheetName}" no existe dentro del Excel.`);
+            }
+
+            // Convertimos la pestaña de Excel a un arreglo de objetos JSON (similar a lo que hacía parseCSV)
+            currentData = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheetName], {raw: false});
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error: " + error.message);
+            document.getElementById('loading-overlay').style.display = 'none';
+            return;
         }
         
-        currentData = dataSets[moduleName];
-        
+        // Cambiar textos según el módulo
         if(moduleName === 'OUTBOUND') {
             document.getElementById('kpi-title-rec').innerText = 'Emitidas';
             document.getElementById('kpi-title-ate').innerText = 'Contactos';
@@ -240,10 +228,17 @@
         const intMap = {};
 
         data.forEach(row => {
+            // El formato puede cambiar según Excel, parseamos a flotante limpiando posibles símbolos
             const rec = parseFloat(row['Recibidas']) || parseFloat(row['Emitidas']) || parseFloat(row['Entrantes']) || 0;
             const aten = parseFloat(row['Atendidas']) || parseFloat(row['Contactos']) || parseFloat(row['Atendidos']) || 0;
-            const atenSLA = parseFloat(row['Atendidas_SLA']) || 0;
-            const aban = parseFloat(row['Abandonadas_Total']) || parseFloat(row['No Contactados']) || parseFloat(row['Abandonados']) || 0;
+            
+            // Si tu archivo usa "Atendidas_SLA" pero el Excel lo formatea distinto, usa string normal
+            let strSLA = row['Atendidas_SLA'] || row['Atendidas SLA'] || "0";
+            const atenSLA = parseFloat(strSLA) || 0;
+
+            let strAban = row['Abandonadas_Total'] || row['No Contactados'] || row['Abandonados'] || row['Abandonadas Total'] || "0";
+            const aban = parseFloat(strAban) || 0;
+
             const aht = parseFloat(row['AHT']) || 0;
             const asa = parseFloat(row['ASA']) || 0;
 
@@ -264,10 +259,14 @@
         document.getElementById('kpi-sla').innerText = (tRec > 0 ? ((tSLA / tRec) * 100).toFixed(1) : 0) + '%';
         document.getElementById('kpi-tiempos').innerText = (tAten > 0 ? (sumAHT / tAten).toFixed(0) : 0) + ' / ' + (tAten > 0 ? (sumASA / tAten).toFixed(0) : 0);
 
+        // Intento de ordenar intervalos tipo H:MM
         const sortedIntervals = Object.keys(intMap).sort((a,b) => {
-            const [ha, ma] = a.split(':').map(Number);
-            const [hb, mb] = b.split(':').map(Number);
-            return (ha * 60 + ma) - (hb * 60 + mb);
+            if (a.includes(':') && b.includes(':')) {
+                const [ha, ma] = a.split(':').map(Number);
+                const [hb, mb] = b.split(':').map(Number);
+                return (ha * 60 + ma) - (hb * 60 + mb);
+            }
+            return a.localeCompare(b);
         });
 
         const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
@@ -319,6 +318,7 @@
     document.getElementById('outbound-tab').addEventListener('click', () => loadModule('OUTBOUND'));
     document.getElementById('chat-tab').addEventListener('click', () => loadModule('CHAT'));
 
+    // Iniciar
     loadModule('INBOUND');
 </script>
 </body>
