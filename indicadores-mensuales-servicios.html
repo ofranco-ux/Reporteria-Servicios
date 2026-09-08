@@ -17,61 +17,60 @@
             --bg-body: #F4F7FE;
             --card-bg: #FFFFFF;
             --text-main: #2B3674;
-            --text-muted: #A3AED0;
+            --text-muted: #8F9BBA;
             --theme-color: #4318FF; 
             --theme-light: #F4F7FE;
         }
 
         body { background-color: var(--bg-body); font-family: 'Inter', sans-serif; color: var(--text-main); }
         
-        .navbar { transition: background-color 0.4s ease; padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #fff !important; }
+        .navbar { transition: background-color 0.4s ease; padding: 15px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.5rem; color: #fff !important; }
         
         body.module-inbound { --theme-color: #4318FF; --theme-light: #E9E3FF; }
         body.module-inbound .navbar { background: linear-gradient(135deg, #4318FF 0%, #2A09B0 100%); }
         
-        body.module-outbound { --theme-color: #FF8F00; --theme-light: #FFF1E0; }
-        body.module-outbound .navbar { background: linear-gradient(135deg, #FF8F00 0%, #D86000 100%); }
+        body.module-outbound { --theme-color: #F68D2B; --theme-light: #FFF2E5; }
+        body.module-outbound .navbar { background: linear-gradient(135deg, #F68D2B 0%, #D86000 100%); }
         
         body.module-chat { --theme-color: #05CD99; --theme-light: #E0F9F1; }
         body.module-chat .navbar { background: linear-gradient(135deg, #05CD99 0%, #03936D 100%); }
 
         .nav-tabs { border-bottom: 2px solid #E9EDF7; margin-bottom: 25px; }
-        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 600; padding: 15px 25px; border: none; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 600; padding: 12px 25px; border: none; border-bottom: 3px solid transparent; transition: all 0.3s ease; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;}
         .nav-tabs .nav-link:hover { color: var(--text-main); }
         .nav-tabs .nav-link.active { color: var(--theme-color); background: transparent; border-bottom: 3px solid var(--theme-color); }
 
-        .glass-panel { background: var(--card-bg); border-radius: 20px; padding: 25px; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03); margin-bottom: 25px; border: none; }
-        .form-label { font-weight: 600; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;}
-        .form-select, .form-control { border-radius: 12px; border: 1px solid #E9EDF7; padding: 10px 15px; font-weight: 500; color: var(--text-main); background-color: #FAFCFF;}
-        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.25rem var(--theme-light); }
-        .btn-primary { background-color: var(--theme-color); border: none; border-radius: 12px; padding: 10px 20px; font-weight: 600; transition: all 0.3s; }
+        .glass-panel { background: var(--card-bg); border-radius: 16px; padding: 25px; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.02); margin-bottom: 25px; border: 1px solid #F0F3F8; }
+        .form-label { font-weight: 700; font-size: 0.70rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
+        .form-select, .form-control { border-radius: 10px; border: 1px solid #E9EDF7; padding: 10px 15px; font-weight: 500; color: var(--text-main); background-color: #FCFDFF;}
+        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.2rem var(--theme-light); }
+        .btn-primary { background-color: var(--theme-color); border: none; border-radius: 10px; padding: 10px 20px; font-weight: 600; transition: all 0.3s; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); background-color: var(--theme-color); filter: brightness(1.1); }
 
-        .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; transition: all 0.3s; }
+        .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; }
         .kpi-info { display: flex; flex-direction: column; }
-        .kpi-title { font-size: 0.80rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px;}
-        .kpi-value { font-size: 1.9rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1;}
-        .kpi-icon-box { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--theme-color); background-color: var(--theme-light); transition: all 0.3s ease; }
-        .glass-panel:hover .kpi-icon-box { transform: scale(1.1) rotate(5deg); }
+        .kpi-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;}
+        .kpi-value { font-size: 2.1rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1; letter-spacing: -1px;}
+        .kpi-icon-box { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--theme-color); background-color: var(--theme-light); transition: all 0.3s ease; }
 
-        .section-title { font-weight: 700; font-size: 1.2rem; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; }
-        .table-container { max-height: 450px; overflow-y: auto; border-radius: 12px; }
+        .section-title { font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; letter-spacing: -0.3px;}
+        .table-container { max-height: 450px; overflow-y: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        table thead th { position: sticky; top: 0; background-color: #F4F7FE !important; color: var(--text-muted) !important; font-weight: 700; font-size: 0.80rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid #E9EDF7; z-index: 1; }
-        table tbody td { font-size: 0.95rem; color: var(--text-main); font-weight: 500; padding: 15px; border-bottom: 1px solid #E9EDF7; vertical-align: middle; }
-        table tbody tr:hover { background-color: #F8FAFF; }
-        .badge-sla { font-size: 0.85rem; padding: 0.5em 0.8em; border-radius: 8px; font-weight: 600; }
+        table thead th { position: sticky; top: 0; background-color: #F4F7FE !important; color: var(--text-muted) !important; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 16px; border-bottom: 2px solid #E9EDF7; z-index: 1; letter-spacing: 0.5px;}
+        table tbody td { font-size: 0.90rem; color: var(--text-main); font-weight: 500; padding: 16px; border-bottom: 1px solid #F0F3F8; vertical-align: middle; }
+        table tbody tr:hover { background-color: #FAFCFF; }
+        .badge-sla { font-size: 0.80rem; padding: 0.5em 0.8em; border-radius: 6px; font-weight: 700; }
 
-        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); }
-        .spinner-custom { color: var(--theme-color); width: 4rem; height: 4rem; }
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px); }
+        .spinner-custom { color: var(--theme-color); width: 3.5rem; height: 3.5rem; border-width: 4px;}
     </style>
 </head>
 <body class="module-inbound">
 
 <div id="loading-overlay">
     <div class="spinner-border spinner-custom" role="status"></div>
-    <h5 class="mt-4 fw-bold" style="color: var(--text-main);">Sincronizando Data...</h5>
+    <h5 class="mt-4 fw-bold" style="color: var(--text-main); letter-spacing:-0.5px;">Procesando Base de Datos...</h5>
 </div>
 
 <nav class="navbar navbar-expand-lg">
@@ -84,65 +83,63 @@
 <div class="container-fluid px-4 pb-5 pt-4">
     
     <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item"><button class="nav-link active" id="inbound-tab"><i class="bi bi-headset me-2"></i> INBOUND</button></li>
-        <li class="nav-item"><button class="nav-link" id="outbound-tab"><i class="bi bi-telephone-outbound me-2"></i> OUTBOUND</button></li>
-        <li class="nav-item"><button class="nav-link" id="chat-tab"><i class="bi bi-chat-square-dots me-2"></i> CHAT DIGITAL</button></li>
+        <li class="nav-item"><button class="nav-link active" id="inbound-tab"><i class="bi bi-headset me-2"></i> Inbound</button></li>
+        <li class="nav-item"><button class="nav-link" id="outbound-tab"><i class="bi bi-telephone-outbound me-2"></i> Outbound</button></li>
+        <li class="nav-item"><button class="nav-link" id="chat-tab"><i class="bi bi-chat-dots me-2"></i> Chat Digital</button></li>
     </ul>
 
-    <!-- Panel de Filtros Actualizado (Rango de Fechas) -->
+    <!-- Panel de Filtros -->
     <div class="glass-panel">
         <div class="row align-items-end g-3">
             <div class="col-md-2">
-                <label class="form-label"><i class="bi bi-calendar-check"></i> Desde</label>
-                <input type="date" id="fecha-inicio" class="form-control shadow-sm">
+                <label class="form-label"><i class="bi bi-calendar-event"></i> Desde</label>
+                <input type="date" id="fecha-inicio" class="form-control">
             </div>
             <div class="col-md-2">
-                <label class="form-label"><i class="bi bi-calendar-x"></i> Hasta</label>
-                <input type="date" id="fecha-fin" class="form-control shadow-sm">
+                <label class="form-label"><i class="bi bi-calendar-event"></i> Hasta</label>
+                <input type="date" id="fecha-fin" class="form-control">
             </div>
             <div class="col-md-3">
                 <label class="form-label" id="label-campana"><i class="bi bi-funnel"></i> Campaña</label>
-                <select id="filter-campana" class="form-select shadow-sm"><option value="ALL">Todas</option></select>
+                <select id="filter-campana" class="form-select"><option value="ALL">Todas</option></select>
             </div>
             <div class="col-md-3">
                 <label class="form-label" id="label-ring"><i class="bi bi-telephone"></i> Ring Group</label>
-                <select id="filter-ring" class="form-select shadow-sm"><option value="ALL">Todos</option></select>
+                <select id="filter-ring" class="form-select"><option value="ALL">Todos</option></select>
             </div>
             <div class="col-md-2 text-end">
-                <button class="btn btn-primary w-100 shadow-sm" onclick="applyFilters()">
+                <button class="btn btn-primary w-100" onclick="applyFilters()">
                     <i class="bi bi-search me-1"></i> Analizar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Tarjetas de KPIs Dinámicas -->
+    <!-- Tarjetas de KPIs -->
     <div class="row g-4 mb-4" id="kpi-container">
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#E5F8ED;"><i id="kpi-i2" class="bi bi-check-circle"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FFEBEB;"><i id="kpi-i3" class="bi bi-telephone-x"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFF6E5;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#E5F4FF;"><i id="kpi-i5" class="bi bi-award"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-4" id="kpi-v6">0 / 0</span></div><div class="kpi-icon-box text-secondary" style="background:#F0F1F5;"><i id="kpi-i6" class="bi bi-stopwatch"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-3" id="kpi-v6">0 / 0</span></div><div class="kpi-icon-box text-secondary" style="background:#F0F1F5;"><i id="kpi-i6" class="bi bi-stopwatch"></i></div></div></div>
     </div>
 
     <!-- Gráfica Premium -->
     <div class="row mb-4">
-        <div class="col-12"><div class="glass-panel">
-            <h5 class="section-title"><i class="bi bi-activity me-2 fs-4" style="color:var(--theme-color);"></i> Tendencia Operativa por Intervalo</h5>
+        <div class="col-12"><div class="glass-panel pb-2">
+            <h5 class="section-title"><i class="bi bi-activity me-2 fs-5" style="color:var(--theme-color);"></i> Tendencia Operativa por Intervalo</h5>
             <div style="height: 380px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
     </div>
 
-    <!-- Tabla Dinámica -->
+    <!-- Tabla -->
     <div class="row">
         <div class="col-12"><div class="glass-panel">
-            <h5 class="section-title"><i class="bi bi-table me-2 fs-4" style="color:var(--theme-color);"></i> Desglose Detallado</h5>
+            <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:var(--theme-color);"></i> Desglose Detallado</h5>
             <div class="table-container">
                 <table class="table text-center" id="data-table">
-                    <thead><tr id="table-head-row">
-                        <!-- Se llena dinámicamente -->
-                    </tr></thead>
+                    <thead><tr id="table-head-row"></tr></thead>
                     <tbody id="tabla-body"></tbody>
                 </table>
             </div>
@@ -153,24 +150,20 @@
 <script>
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    const EXCEL_FILE = 'Indicadores Mensuales Servicios.xlsx'; 
+    // TU ARCHIVO EXCEL V2
+    const EXCEL_FILE = 'Indicadores Mensuales Servicios_2.xlsx'; 
+    
     let excelWorkbook = null; 
     let myChart = null; 
     let currentData = [];
     let currentModule = 'INBOUND';
 
-    // Parsea fechas formato DD/MM/YYYY o MM/DD/YYYY a objeto Date real
+    // Función precisa para leer las fechas de Excel
     function parseDateStr(dateStr) {
         if(!dateStr) return null;
-        if(typeof dateStr === 'number') {
-            // Manejo de número serial de Excel si es necesario
-            return new Date((dateStr - (25567 + 2)) * 86400 * 1000);
-        }
-        const partes = dateStr.split('/');
-        if(partes.length === 3) {
-            // Asume DD/MM/YYYY por formato MX
-            return new Date(partes[2], partes[1] - 1, partes[0]);
-        }
+        if(typeof dateStr === 'number') return new Date((dateStr - (25567 + 2)) * 86400 * 1000);
+        const partes = dateStr.toString().split(/[/-]/);
+        if(partes.length === 3) return new Date(partes[2].length === 4 ? partes[2] : '20'+partes[2], partes[1] - 1, partes[0]);
         return new Date(dateStr);
     }
 
@@ -186,7 +179,7 @@
         try {
             if (!excelWorkbook) {
                 const response = await fetch(EXCEL_FILE);
-                if (!response.ok) throw new Error(`No se encontró el archivo Excel.`);
+                if (!response.ok) throw new Error(`No se encontró el archivo ${EXCEL_FILE}.`);
                 const arrayBuffer = await response.arrayBuffer();
                 excelWorkbook = XLSX.read(arrayBuffer, {type: 'array'});
             }
@@ -209,61 +202,55 @@
     }
 
     function configurarUI(modulo) {
-        // Headers de Tabla
         const tHead = document.getElementById('table-head-row');
         
         if(modulo === 'INBOUND') {
-            document.getElementById('card-3').style.display = 'block'; document.getElementById('card-4').style.display = 'block';
-            document.getElementById('card-5').style.display = 'block'; document.getElementById('card-6').style.display = 'block';
+            document.getElementById('card-3').style.display = 'block'; document.getElementById('card-4').style.display = 'block'; document.getElementById('card-5').style.display = 'block'; document.getElementById('card-6').style.display = 'block';
             
             document.getElementById('label-campana').innerHTML = '<i class="bi bi-funnel"></i> Campaña';
             document.getElementById('label-ring').innerHTML = '<i class="bi bi-telephone"></i> Ring Group';
 
             document.getElementById('kpi-t1').innerText = 'Recibidas'; document.getElementById('kpi-i1').className = 'bi bi-telephone-inbound';
-            document.getElementById('kpi-t2').innerText = 'Atendidas'; document.getElementById('kpi-i2').className = 'bi bi-headset';
+            document.getElementById('kpi-t2').innerText = 'Atendidas'; document.getElementById('kpi-i2').className = 'bi bi-check-circle';
             document.getElementById('kpi-t3').innerText = 'Abandonadas'; document.getElementById('kpi-i3').className = 'bi bi-telephone-x';
             document.getElementById('kpi-t4').innerText = '% Abandono'; document.getElementById('kpi-i4').className = 'bi bi-graph-down-arrow';
-            document.getElementById('kpi-t6').innerText = 'AHT / ASA';
+            document.getElementById('kpi-t6').innerText = 'AHT / ASA (s)';
             
-            tHead.innerHTML = `<th>Intervalo</th><th>Recibidas</th><th>Atendidas</th><th>Abandonadas</th><th>% Abandono</th><th>SLA</th><th>AHT (s)</th><th>ASA (s)</th>`;
+            tHead.innerHTML = `<th>Intervalo</th><th>Recibidas</th><th>Atendidas</th><th>Abandonadas</th><th>% Abandono</th><th>SLA Global</th><th>AHT (s)</th><th>ASA (s)</th>`;
         } 
         else if (modulo === 'OUTBOUND') {
-            // Outbound no tiene Abandonadas, SLA, ni ASA según requerimiento, solo Realizadas y AHT
-            document.getElementById('card-3').style.display = 'none'; document.getElementById('card-4').style.display = 'none';
-            document.getElementById('card-5').style.display = 'none'; 
+            document.getElementById('card-3').style.display = 'none'; document.getElementById('card-4').style.display = 'none'; document.getElementById('card-5').style.display = 'none'; 
             
-            document.getElementById('label-campana').innerHTML = '<i class="bi bi-person-lines-fill"></i> Campaña / Base';
-            document.getElementById('label-ring').innerHTML = '<i class="bi bi-headset"></i> Agente / Skill';
+            document.getElementById('label-campana').innerHTML = '<i class="bi bi-list-task"></i> Campaña';
+            document.getElementById('label-ring').innerHTML = '<i class="bi bi-headset"></i> Ring Group';
 
             document.getElementById('kpi-t1').innerText = 'Llamadas Realizadas'; document.getElementById('kpi-i1').className = 'bi bi-telephone-outbound';
             document.getElementById('kpi-t2').innerText = 'AHT Global (s)'; document.getElementById('kpi-i2').className = 'bi bi-stopwatch';
-            // Reposicionamos Card 6 para usarla como AHT
             document.getElementById('card-6').style.display = 'none'; 
             
             tHead.innerHTML = `<th>Intervalo</th><th>Llamadas Realizadas</th><th>AHT (s)</th>`;
         } 
         else if (modulo === 'CHAT') {
-            document.getElementById('card-3').style.display = 'block'; document.getElementById('card-4').style.display = 'block';
-            document.getElementById('card-5').style.display = 'block'; document.getElementById('card-6').style.display = 'block';
+            document.getElementById('card-3').style.display = 'block'; document.getElementById('card-4').style.display = 'block'; document.getElementById('card-5').style.display = 'block'; document.getElementById('card-6').style.display = 'block';
             
-            document.getElementById('label-campana').innerHTML = '<i class="bi bi-chat-square-text"></i> Habilidad / Skill';
-            document.getElementById('label-ring').innerHTML = '<i class="bi bi-laptop"></i> Origen';
+            document.getElementById('label-campana').innerHTML = '<i class="bi bi-chat-square-text"></i> Campaña';
+            document.getElementById('label-ring').innerHTML = '<i class="bi bi-robot"></i> Nombre del Bot';
 
             document.getElementById('kpi-t1').innerText = 'Chats Entrantes'; document.getElementById('kpi-i1').className = 'bi bi-chat-left-dots';
             document.getElementById('kpi-t2').innerText = 'Chats Atendidos'; document.getElementById('kpi-i2').className = 'bi bi-chat-dots-fill';
             document.getElementById('kpi-t3').innerText = 'Abandonados'; document.getElementById('kpi-i3').className = 'bi bi-chat-square-quote';
             document.getElementById('kpi-t4').innerText = '% Abandono'; document.getElementById('kpi-i4').className = 'bi bi-graph-down-arrow';
-            document.getElementById('kpi-t6').innerText = 'AHT / ART (s)';
+            document.getElementById('kpi-t6').innerText = 'AHT Global (s)'; // En chat quitamos ASA/ART
             
-            tHead.innerHTML = `<th>Intervalo</th><th>Chats Entrantes</th><th>Chats Atendidos</th><th>Abandonados</th><th>% Abandono</th><th>SLA</th><th>AHT (s)</th><th>ART (s)</th>`;
+            tHead.innerHTML = `<th>Intervalo</th><th>Chats Entrantes</th><th>Chats Atendidos</th><th>Abandonados</th><th>% Abandono</th><th>SLA Global</th><th>AHT (s)</th>`;
         }
     }
 
     function populateFilters() {
         const campanas = new Set(); const rings = new Set();
         currentData.forEach(row => {
-            if(row.Campaña || row.Skill || row.Habilidad) campanas.add(row.Campaña || row.Skill || row.Habilidad);
-            if(row['Ring Group'] || row.Origen) rings.add(row['Ring Group'] || row.Origen);
+            if(row['Campaña']) campanas.add(row['Campaña']);
+            if(row['Ring Group'] || row['Nombre del Bot']) rings.add(row['Ring Group'] || row['Nombre del Bot']);
         });
 
         const fCamp = document.getElementById('filter-campana');
@@ -291,8 +278,8 @@
             if(dateStart && rowDate < dateStart) inDateRange = false;
             if(dateEnd && rowDate > dateEnd) inDateRange = false;
 
-            let rowCamp = row.Campaña || row.Skill || row.Habilidad;
-            let rowRing = row['Ring Group'] || row.Origen;
+            let rowCamp = row['Campaña'];
+            let rowRing = row['Ring Group'] || row['Nombre del Bot'];
 
             return inDateRange &&
                    (selCamp === 'ALL' || rowCamp === selCamp) &&
@@ -306,16 +293,16 @@
         const intMap = {};
 
         data.forEach(row => {
-            const rec = parseFloat(row['Recibidas']) || parseFloat(row['Llamadas Realizadas']) || parseFloat(row['Emitidas']) || parseFloat(row['Chats Entrantes']) || parseFloat(row['Entrantes']) || 0;
-            const aten = parseFloat(row['Atendidas']) || parseFloat(row['Chats Atendidos']) || 0;
-            const atenSLA = parseFloat(row['Atendidas_SLA']) || parseFloat(row['Atendidas SLA']) || 0;
+            // MAPEO EXACTO PARA LAS COLUMNAS DE TU EXCEL V2
+            const rec = parseFloat(row['Recibidas']) || parseFloat(row['Realizadas']) || parseFloat(row['Recibidos']) || 0;
+            const aten = parseFloat(row['Atendidas']) || parseFloat(row['Atendidos']) || 0;
+            const atenSLA = parseFloat(row['Atendidas_SLA']) || parseFloat(row['Atendidos_SLA']) || 0;
             const aban = parseFloat(row['Abandonadas_Total']) || parseFloat(row['Abandonados']) || 0;
             const aht = parseFloat(row['AHT']) || 0;
-            const asa = parseFloat(row['ASA']) || parseFloat(row['ART']) || 0;
+            const asa = parseFloat(row['ASA']) || 0; 
 
             tRec += rec; tAten += aten; tSLA += atenSLA; tAban += aban;
             
-            // Para Outbound, usamos Recibidas como volumen total para promedio
             let baseAHT = (currentModule === 'OUTBOUND') ? rec : aten;
             sumAHT += (aht * baseAHT); 
             sumASA += (asa * aten);
@@ -330,27 +317,30 @@
         const labels = [], dRec = [], dAte = [], dAban = [];
 
         if (currentModule === 'OUTBOUND') {
-            // OUTBOUND DATA (Solo Realizadas y AHT)
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
-            document.getElementById('kpi-v2').innerText = tRec > 0 ? (sumAHT / tRec).toFixed(0) : '0'; // AHT Global
+            document.getElementById('kpi-v2').innerText = tRec > 0 ? (sumAHT / tRec).toFixed(0) : '0'; 
             
             const sorted = Object.keys(intMap).sort();
             sorted.forEach(intv => {
                 const d = intMap[intv];
                 labels.push(intv); dRec.push(d.rec);
                 const rAHT = d.rec > 0 ? (d.sumAHT / d.rec).toFixed(1) : 0;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="text-primary fw-bold">${d.rec}</td><td>${rAHT}</td></tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="text-primary fw-bold">${d.rec}</td><td class="fw-medium">${rAHT}</td></tr>`;
             });
             renderChart(labels, dRec, [], []);
         } 
         else {
-            // INBOUND & CHAT DATA
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
             document.getElementById('kpi-v2').innerText = tAten.toLocaleString();
             document.getElementById('kpi-v3').innerText = tAban.toLocaleString();
             document.getElementById('kpi-v4').innerText = (tRec > 0 ? ((tAban / tRec) * 100).toFixed(1) : 0) + '%';
             document.getElementById('kpi-v5').innerText = (tRec > 0 ? ((tSLA / tRec) * 100).toFixed(1) : 0) + '%';
-            document.getElementById('kpi-v6').innerText = (tAten > 0 ? (sumAHT / tAten).toFixed(0) : 0) + ' / ' + (tAten > 0 ? (sumASA / tAten).toFixed(0) : 0);
+            
+            if(currentModule === 'CHAT') {
+                document.getElementById('kpi-v6').innerText = (tAten > 0 ? (sumAHT / tAten).toFixed(0) : 0);
+            } else {
+                document.getElementById('kpi-v6').innerText = (tAten > 0 ? (sumAHT / tAten).toFixed(0) : 0) + ' / ' + (tAten > 0 ? (sumASA / tAten).toFixed(0) : 0);
+            }
 
             const sorted = Object.keys(intMap).sort();
             sorted.forEach(intv => {
@@ -361,15 +351,16 @@
                 const rSLA = d.rec > 0 ? ((d.atenSLA / d.rec) * 100).toFixed(1) : 0;
                 const rAHT = d.aten > 0 ? (d.sumAHT / d.aten).toFixed(1) : 0;
                 const rASA = d.aten > 0 ? (d.sumASA / d.aten).toFixed(1) : 0;
-                let slaClass = rSLA >= 80 ? 'bg-success bg-opacity-25 text-success' : (rSLA >= 70 ? 'bg-warning bg-opacity-25 text-warning' : 'bg-danger bg-opacity-25 text-danger');
+                let slaClass = rSLA >= 80 ? 'text-success' : (rSLA >= 70 ? 'text-warning' : 'text-danger');
 
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec}</td><td class="text-success fw-bold">${d.aten}</td><td class="text-danger fw-bold">${d.aban}</td><td class="fw-semibold">${rAba}%</td><td><span class="badge-sla ${slaClass}">${rSLA}%</span></td><td>${rAHT}</td><td>${rASA}</td></tr>`;
+                let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-medium">${rASA}</td>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec}</td><td class="text-success fw-bold">${d.aten}</td><td class="text-danger fw-bold">${d.aban}</td><td class="fw-semibold">${rAba}%</td><td><span class="badge-sla bg-light ${slaClass}">${rSLA}%</span></td><td class="fw-medium">${rAHT}</td>${tdExtra}</tr>`;
             });
             renderChart(labels, dRec, dAte, dAban);
         }
     }
 
-    // Diseño Premium de Gráficas
+    // DISEÑO PREMIUM CHART.JS
     function renderChart(labels, dRec, dAte, dAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
@@ -377,24 +368,28 @@
         const styles = getComputedStyle(document.body);
         const hexColor = styles.getPropertyValue('--theme-color').trim() || '#4318FF';
 
-        // Crear Gradiente para la línea principal
+        // Degradado suave nivel director
         let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, hexColor + '80'); // 50% opacidad
+        gradient.addColorStop(0, hexColor + '30'); // Opacidad muy sutil arriba
         gradient.addColorStop(1, hexColor + '00'); // Transparente abajo
+
+        Chart.defaults.font.family = 'Inter';
+        Chart.defaults.color = '#8F9BBA';
 
         let datasets = [];
 
         if (currentModule === 'OUTBOUND') {
             datasets = [{
                 label: 'Llamadas Realizadas', data: dRec, borderColor: hexColor, backgroundColor: gradient,
-                borderWidth: 3, fill: true, tension: 0.4, pointBackgroundColor: '#fff', pointBorderColor: hexColor, pointRadius: 4, pointHoverRadius: 6
+                borderWidth: 3, fill: true, tension: 0.4, 
+                pointBackgroundColor: '#fff', pointBorderColor: hexColor, pointBorderWidth: 2, pointRadius: 3, pointHoverRadius: 6
             }];
         } else {
             datasets = [
                 {
                     label: currentModule === 'CHAT' ? 'Chats Entrantes' : 'Volumen Total', 
                     data: dRec, borderColor: hexColor, backgroundColor: gradient, borderWidth: 3, fill: true, tension: 0.4,
-                    pointBackgroundColor: '#fff', pointBorderColor: hexColor, pointRadius: 4, pointHoverRadius: 6
+                    pointBackgroundColor: '#fff', pointBorderColor: hexColor, pointBorderWidth: 2, pointRadius: 3, pointHoverRadius: 6
                 },
                 {
                     label: 'Atendidos', data: dAte, borderColor: '#05CD99', backgroundColor: 'transparent',
@@ -402,7 +397,8 @@
                 },
                 {
                     label: 'Abandonos', data: dAban, borderColor: '#EE5D50', backgroundColor: 'transparent',
-                    borderWidth: 2, borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 2, pointBackgroundColor: '#EE5D50'
+                    borderWidth: 2, borderDash: [6, 6], fill: false, tension: 0.4, 
+                    pointRadius: 2, pointBackgroundColor: '#EE5D50', pointBorderColor: '#EE5D50'
                 }
             ];
         }
@@ -414,12 +410,12 @@
                 responsive: true, maintainAspectRatio: false, 
                 interaction: { mode: 'index', intersect: false },
                 plugins: { 
-                    legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { family: 'Inter', weight: '600' } } },
-                    tooltip: { backgroundColor: 'rgba(255, 255, 255, 0.9)', titleColor: '#2B3674', bodyColor: '#2B3674', borderColor: '#E9EDF7', borderWidth: 1, padding: 12, boxPadding: 6, usePointStyle: true }
+                    legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { weight: '600' } } },
+                    tooltip: { backgroundColor: '#FFFFFF', titleColor: '#2B3674', bodyColor: '#2B3674', borderColor: '#E9EDF7', borderWidth: 1, padding: 15, boxPadding: 6, usePointStyle: true, titleFont: {size: 14}, bodyFont: {size: 13, weight: '600'}, cornerRadius: 10, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 4, shadowBlur: 15, shadowColor: 'rgba(0,0,0,0.1)' }
                 },
                 scales: { 
-                    y: { beginAtZero: true, grid: { color: '#E9EDF7', drawBorder: false }, ticks: { font: { family: 'Inter', color: '#A3AED0'} } }, 
-                    x: { grid: { display: false, drawBorder: false }, ticks: { font: { family: 'Inter', color: '#A3AED0'} } } 
+                    y: { beginAtZero: true, border: {display: false}, grid: { color: '#F0F3F8', drawTicks: false } }, 
+                    x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 10 } } 
                 }
             }
         });
