@@ -21,26 +21,23 @@
             --text-muted: #64748B;
             --border-color: #E2E8F0;
             
-            /* Paleta Imagen de Referencia */
             --blue-primary: #1D4ED8;
             --blue-cyan: #0EA5E9;
             --red-soft: #F43F5E;
+            --purple-sla: #8B5CF6;
             --theme-color: #1D4ED8;
         }
 
         body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); -webkit-font-smoothing: antialiased; }
         
-        /* Header Estilo ek Dashboard */
         .navbar { background: #0F52BA; padding: 18px 36px; box-shadow: 0 4px 15px rgba(15, 82, 186, 0.15); }
         .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #FFFFFF !important; }
 
-        /* Pestañas Flotantes Limpias */
         .nav-tabs { border-bottom: None; margin-bottom: 24px; gap: 10px; }
         .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 10px 22px; border: none; border-radius: 12px; transition: all 0.2s ease; font-size: 0.88rem; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #F8FAFC; }
         .nav-tabs .nav-link.active { color: #FFFFFF; background: var(--blue-primary); box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3); }
 
-        /* Tarjetas Neumórficas Blancas */
         .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 24px; box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.1); margin-bottom: 24px; border: none; }
         
         .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
@@ -53,7 +50,6 @@
         .btn-outline-export { border: 1.5px solid #CBD5E1; color: var(--text-main); background: #FFFFFF; border-radius: 10px; padding: 7px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
         .btn-outline-export:hover { background: #F8FAFC; border-color: #94A3B8; }
 
-        /* Tarjetas KPIs con Fondos Pastel Pastel (Estilo Referencia) */
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
         .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -62,7 +58,6 @@
 
         .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
         
-        /* Tabla Clean */
         .table-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid #E2E8F0; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
         table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #E2E8F0; z-index: 1; letter-spacing: 0.8px; }
@@ -129,7 +124,7 @@
         </div>
     </div>
 
-    <!-- KPIs con Fondos Pastel Estilo Referencia -->
+    <!-- KPIs -->
     <div class="row g-3 mb-4" id="kpi-container">
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#EFF6FF;"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1" style="color:#1D4ED8;">0</span></div><div class="kpi-icon-box" style="background:#DBEAFE; color:#1D4ED8;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#E0F2FE;"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2" style="color:#0284C7;">0</span></div><div class="kpi-icon-box" style="background:#BAE6FD; color:#0284C7;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
@@ -139,7 +134,7 @@
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#F1F5F9;"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6" style="color:#475569;">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#E2E8F0; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
-    <!-- Gráfica de Barras Paralelas Redondeadas (Estilo Referencia) -->
+    <!-- Gráfica -->
     <div class="row mb-4">
         <div class="col-12"><div class="glass-panel pb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -367,7 +362,7 @@
         });
 
         const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
-        const labels = [], dRec = [], dAte = [], dAban = [];
+        const labels = [], dRec = [], dAte = [], dAban = [], dSLA = [];
         currentFilteredIntervalData = []; 
 
         const sortedIntervals = Object.keys(intMap).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
@@ -390,7 +385,7 @@
                     "AHT": formatSeconds(rAHT)
                 });
             });
-            renderChart(labels, dRec, [], []);
+            renderChart(labels, dRec, [], [], []);
         } 
         else {
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
@@ -413,7 +408,9 @@
                 labels.push(intv); dRec.push(d.rec); dAte.push(d.aten); dAban.push(d.aban);
 
                 const rAba = d.rec > 0 ? ((d.aban / d.rec) * 100).toFixed(1) : 0;
-                const rSLA = d.rec > 0 ? ((d.atenSLA / d.rec) * 100).toFixed(1) : 0;
+                const rSLA = d.rec > 0 ? parseFloat(((d.atenSLA / d.rec) * 100).toFixed(1)) : 0;
+                dSLA.push(rSLA);
+
                 const rAHT = d.aten > 0 ? (d.sumAHT / d.aten) : 0;
                 const rASA = d.aten > 0 ? (d.sumASA / d.aten) : 0;
                 
@@ -434,12 +431,12 @@
                 if(currentModule !== 'CHAT') exportRow["ASA"] = formatSeconds(rASA);
                 currentFilteredIntervalData.push(exportRow);
             });
-            renderChart(labels, dRec, dAte, dAban);
+            renderChart(labels, dRec, dAte, dAban, dSLA);
         }
     }
 
-    // GRÁFICA BARRAS PARALELAS EN CÁPSULA (ESTILO IMAGEN CLIENTE)
-    function renderChart(labels, dRec, dAte, dAban) {
+    // MULTI-EJE Y CON LÍNEA DE SLA / NIVEL DE SERVICIO
+    function renderChart(labels, dRec, dAte, dAban, dSLA) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
 
@@ -455,41 +452,104 @@
                 data: dRec, 
                 backgroundColor: '#1D4ED8',
                 borderRadius: 8,
-                barPercentage: 0.65
+                barPercentage: 0.65,
+                yAxisID: 'y'
             }];
-        } else {
-            // ESTILO IMAGEN DE REFERENCIA: BARRAS AGRUPADAS DE BORDES REDONDEADOS
+        } else if (currentModule === 'CHAT') {
             datasets = [
                 {
                     type: 'bar',
-                    label: currentModule === 'CHAT' ? 'Chats Entrantes' : 'Volumen Recibido', 
+                    label: 'Chats Entrantes', 
                     data: dRec, 
-                    backgroundColor: '#1D4ED8', // Azul Royal Imagen
+                    backgroundColor: '#1D4ED8',
                     borderRadius: 8,
                     barPercentage: 0.8,
-                    categoryPercentage: 0.7
+                    categoryPercentage: 0.7,
+                    yAxisID: 'y'
                 },
                 {
                     type: 'bar',
-                    label: 'Atendidas', 
+                    label: 'Chats Atendidos', 
                     data: dAte, 
-                    backgroundColor: '#0EA5E9', // Azul Cyan Imagen
+                    backgroundColor: '#0EA5E9',
                     borderRadius: 8,
                     barPercentage: 0.8,
-                    categoryPercentage: 0.7
+                    categoryPercentage: 0.7,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'SLA (%)', 
+                    data: dSLA, 
+                    borderColor: '#10B981', 
+                    backgroundColor: '#10B981',
+                    borderWidth: 2.5, 
+                    fill: false, 
+                    tension: 0.35, 
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    yAxisID: 'y1'
                 },
                 {
                     type: 'line',
                     label: 'Abandonos', 
                     data: dAban, 
-                    borderColor: '#F43F5E', // Rojo Pastel Discreto
-                    backgroundColor: '#F43F5E',
+                    borderColor: '#F43F5E', 
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
                     tension: 0.4, 
                     pointRadius: 0,
-                    pointHoverRadius: 5
+                    yAxisID: 'y'
+                }
+            ];
+        } else {
+            // INBOUND CON NIVEL DE SERVICIO (SLA %)
+            datasets = [
+                {
+                    type: 'bar',
+                    label: 'Volumen Recibido', 
+                    data: dRec, 
+                    backgroundColor: '#1D4ED8',
+                    borderRadius: 8,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'bar',
+                    label: 'Atendidas', 
+                    data: dAte, 
+                    backgroundColor: '#0EA5E9',
+                    borderRadius: 8,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Nivel Servicio (%)', 
+                    data: dSLA, 
+                    borderColor: '#8B5CF6', 
+                    backgroundColor: '#8B5CF6',
+                    borderWidth: 2.5, 
+                    fill: false, 
+                    tension: 0.35, 
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    yAxisID: 'y1'
+                },
+                {
+                    type: 'line',
+                    label: 'Abandonos', 
+                    data: dAban, 
+                    borderColor: '#F43F5E', 
+                    borderWidth: 2, 
+                    borderDash: [4, 4], 
+                    fill: false, 
+                    tension: 0.4, 
+                    pointRadius: 0,
+                    yAxisID: 'y'
                 }
             ];
         }
@@ -504,11 +564,32 @@
                     tooltip: { 
                         backgroundColor: '#FFFFFF', titleColor: '#0F172A', bodyColor: '#0F172A', borderColor: '#E2E8F0', borderWidth: 1, 
                         padding: 14, boxPadding: 6, usePointStyle: true, titleFont: {size: 13, weight: '800'}, bodyFont: {size: 12, weight: '600'}, 
-                        cornerRadius: 12, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 10, shadowBlur: 20, shadowColor: 'rgba(0, 0, 0, 0.08)' 
+                        cornerRadius: 12, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 10, shadowBlur: 20, shadowColor: 'rgba(0, 0, 0, 0.08)',
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.dataset.yAxisID === 'y1') {
+                                    label += context.parsed.y + '%';
+                                } else {
+                                    label += context.parsed.y.toLocaleString();
+                                }
+                                return label;
+                            }
+                        }
                     }
                 },
                 scales: { 
-                    y: { beginAtZero: true, border: {display: false}, grid: { color: '#F1F5F9', drawTicks: false }, ticks: { font: { weight: '700' } } }, 
+                    y: { 
+                        type: 'linear', display: true, position: 'left', beginAtZero: true, 
+                        border: {display: false}, grid: { color: '#F1F5F9', drawTicks: false }, 
+                        ticks: { font: { weight: '700' } } 
+                    },
+                    y1: { 
+                        type: 'linear', display: (currentModule !== 'OUTBOUND'), position: 'right', beginAtZero: true, max: 100,
+                        border: {display: false}, grid: { drawOnChartArea: false, drawTicks: false }, 
+                        ticks: { font: { weight: '700' }, callback: function(value) { return value + '%'; } } 
+                    },
                     x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 10, font: { weight: '700', size: 10 } } } 
                 }
             }
