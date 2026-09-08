@@ -24,7 +24,6 @@
             --blue-primary: #1D4ED8;
             --blue-cyan: #0EA5E9;
             --red-soft: #F43F5E;
-            --purple-sla: #8B5CF6;
             --theme-color: #1D4ED8;
         }
 
@@ -38,7 +37,7 @@
         .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #F8FAFC; }
         .nav-tabs .nav-link.active { color: #FFFFFF; background: var(--blue-primary); box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3); }
 
-        .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 24px; box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.1); margin-bottom: 24px; border: none; }
+        .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 24px; box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.1); margin-bottom: 24px; border: none; transition: background-color 0.3s ease; }
         
         .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
         .form-select, .form-control { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 9px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; }
@@ -53,8 +52,8 @@
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
         .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-value { font-size: 1.70rem; font-weight: 800; color: #0F172A; margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; margin-left: 8px; }
+        .kpi-value { font-size: 1.70rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s ease;}
+        .kpi-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; margin-left: 8px; transition: all 0.3s ease; }
 
         .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
         
@@ -124,14 +123,19 @@
         </div>
     </div>
 
-    <!-- KPIs -->
+    <!-- KPIs con Diseño Neutro y Condicional -->
     <div class="row g-3 mb-4" id="kpi-container">
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#EFF6FF;"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1" style="color:#1D4ED8;">0</span></div><div class="kpi-icon-box" style="background:#DBEAFE; color:#1D4ED8;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#E0F2FE;"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2" style="color:#0284C7;">0</span></div><div class="kpi-icon-box" style="background:#BAE6FD; color:#0284C7;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#FFE4E6;"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3" style="color:#E11D48;">0</span></div><div class="kpi-icon-box" style="background:#FECDD3; color:#E11D48;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#FEF3C7;"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4" style="color:#D97706;">0%</span></div><div class="kpi-icon-box" style="background:#FDE68A; color:#D97706;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#F3E8FF;"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5" style="color:#7E22CE;">0%</span></div><div class="kpi-icon-box" style="background:#E9D5FF; color:#7E22CE;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper" style="background:#F1F5F9;"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6" style="color:#475569;">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#E2E8F0; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
+        <!-- Tarjetas Neutras -->
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+        
+        <!-- Tarjetas Condicionales (SLA y Abandono) -->
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-4-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" id="kpi-i4-box"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-5-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" id="kpi-i5-box"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        
+        <!-- Tarjeta Neutra -->
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
     <!-- Gráfica -->
@@ -388,11 +392,48 @@
             renderChart(labels, dRec, [], [], [], []);
         } 
         else {
+            // Lógica KPIs Neutrales y Condicionales
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
             document.getElementById('kpi-v2').innerText = tAten.toLocaleString();
             document.getElementById('kpi-v3').innerText = tAban.toLocaleString();
-            document.getElementById('kpi-v4').innerText = (tRec > 0 ? ((tAban / tRec) * 100).toFixed(1) : 0) + '%';
-            document.getElementById('kpi-v5').innerText = (tRec > 0 ? ((tSLA / tRec) * 100).toFixed(1) : 0) + '%';
+            
+            let rAbaGlobal = tRec > 0 ? (tAban / tRec) * 100 : 0;
+            let rSLAGlobal = tRec > 0 ? (tSLA / tRec) * 100 : 0;
+            
+            document.getElementById('kpi-v4').innerText = rAbaGlobal.toFixed(1) + '%';
+            document.getElementById('kpi-v5').innerText = rSLAGlobal.toFixed(1) + '%';
+
+            // Formato Condicional % Abandono (Meta: <= 3.0%)
+            const card4Inner = document.getElementById('card-4-inner');
+            const val4 = document.getElementById('kpi-v4');
+            const icon4Box = document.getElementById('kpi-i4-box');
+            if (rAbaGlobal <= 3.0) {
+                card4Inner.style.backgroundColor = '#F0FDF4'; 
+                val4.style.color = '#15803D';
+                icon4Box.style.backgroundColor = '#DCFCE7';
+                icon4Box.style.color = '#15803D';
+            } else {
+                card4Inner.style.backgroundColor = '#FEF2F2'; 
+                val4.style.color = '#B91C1C';
+                icon4Box.style.backgroundColor = '#FEE2E2';
+                icon4Box.style.color = '#B91C1C';
+            }
+
+            // Formato Condicional SLA Global (Meta: >= 80.0%)
+            const card5Inner = document.getElementById('card-5-inner');
+            const val5 = document.getElementById('kpi-v5');
+            const icon5Box = document.getElementById('kpi-i5-box');
+            if (rSLAGlobal >= 80.0) {
+                card5Inner.style.backgroundColor = '#F0FDF4'; 
+                val5.style.color = '#15803D';
+                icon5Box.style.backgroundColor = '#DCFCE7';
+                icon5Box.style.color = '#15803D';
+            } else {
+                card5Inner.style.backgroundColor = '#FEF2F2'; 
+                val5.style.color = '#B91C1C';
+                icon5Box.style.backgroundColor = '#FEE2E2';
+                icon5Box.style.color = '#B91C1C';
+            }
             
             let avgAHT = tAten > 0 ? (sumAHT / tAten) : 0;
             let avgASA = tAten > 0 ? (sumASA / tAten) : 0;
@@ -437,7 +478,6 @@
         }
     }
 
-    // MULTI-EJE CON % DE ABANDONO ASOCIADO AL EJE Y1
     function renderChart(labels, dRec, dAte, dAban, dSLA, dPctAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
@@ -507,7 +547,6 @@
                 }
             ];
         } else {
-            // INBOUND CON % DE ABANDONO EN EJE Y1
             datasets = [
                 {
                     type: 'bar',
