@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Hub | Dashboard Dirección</title>
+    <title>Analytics Hub | Dirección General</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,76 +19,77 @@
             --card-bg: #FFFFFF;
             --text-main: #0F172A;
             --text-muted: #64748B;
+            --border-color: #E2E8F0;
             --theme-color: #2563EB; 
             --theme-light: #EFF6FF;
-            --theme-gradient: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            --header-bg: #0F172A;
         }
 
-        body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
+        body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); -webkit-font-smoothing: antialiased; }
         
-        /* Navbar Ejecutivo */
-        .navbar { background: var(--theme-gradient); padding: 16px 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.35rem; color: #fff !important; }
-        
-        body.module-inbound { --theme-color: #2563EB; --theme-light: #EFF6FF; }
-        body.module-outbound { --theme-color: #D97706; --theme-light: #FFFBEB; }
-        body.module-chat { --theme-color: #0D9488; --theme-light: #CCFBF1; }
+        /* Navbar C-Level */
+        .navbar { background: var(--header-bg); padding: 18px 32px; border-bottom: 1px solid #1E293B; }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.6px; font-size: 1.30rem; color: #FFFFFF !important; }
+        .executive-tag { background: rgba(255,255,255,0.10); color: #94A3B8; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; margin-left: 12px; }
 
-        /* Pestañas */
-        .nav-tabs { border-bottom: 1px solid #E2E8F0; margin-bottom: 24px; }
-        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 12px 24px; border: none; border-bottom: 3px solid transparent; transition: all 0.2s ease; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.5px;}
+        /* Pestañas Elegantes */
+        .nav-tabs { border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
+        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 14px 28px; border: none; border-bottom: 3px solid transparent; transition: all 0.2s ease; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.6px; }
         .nav-tabs .nav-link:hover { color: var(--text-main); }
         .nav-tabs .nav-link.active { color: var(--theme-color); background: transparent; border-bottom: 3px solid var(--theme-color); }
 
-        /* Tarjetas Estilo Dashboard Corporativo */
-        .glass-panel { background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.03); margin-bottom: 22px; border: 1px solid #E2E8F0; }
+        /* Tarjetas de Diseño Corporativo */
+        .glass-panel { background: var(--card-bg); border-radius: 14px; padding: 22px; box-shadow: 0px 1px 3px rgba(15, 23, 42, 0.05), 0px 10px 25px-5px rgba(15, 23, 42, 0.03); margin-bottom: 22px; border: 1px solid var(--border-color); }
         
-        .form-label { font-weight: 800; font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
-        .form-select, .form-control { border-radius: 10px; border: 1px solid #CBD5E1; padding: 9px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC;}
-        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.2rem var(--theme-light); }
+        .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+        .form-select, .form-control { border-radius: 8px; border: 1px solid var(--border-color); padding: 8px 12px; font-weight: 600; font-size: 0.82rem; color: var(--text-main); background-color: #FFFFFF; }
+        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         
-        .btn-primary { background-color: #0F172A; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 700; font-size: 0.88rem; transition: all 0.2s; color: #fff; }
-        .btn-primary:hover { background-color: #1E293B; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
+        .btn-primary { background-color: #0F172A; border: none; border-radius: 8px; padding: 9px 18px; font-weight: 700; font-size: 0.82rem; transition: all 0.2s; color: #FFFFFF; }
+        .btn-primary:hover { background-color: #1E293B; transform: translateY(-1px); }
 
-        .btn-outline-export { border: 1.5px solid #CBD5E1; color: var(--text-main); background: #fff; border-radius: 8px; padding: 6px 14px; font-weight: 700; font-size: 0.78rem; transition: all 0.2s; }
-        .btn-outline-export:hover { background: #F1F5F9; border-color: #94A3B8; }
+        .btn-outline-export { border: 1px solid var(--border-color); color: var(--text-main); background: #FFFFFF; border-radius: 8px; padding: 6px 14px; font-weight: 700; font-size: 0.78rem; transition: all 0.2s; }
+        .btn-outline-export:hover { background: #F1F5F9; border-color: #CBD5E1; }
 
-        /* Tarjetas KPIs */
+        /* KPI Cards Minimalistas sin Amontonamientos */
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
         .kpi-title { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-value { font-size: 1.55rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: var(--theme-color); background-color: var(--theme-light); flex-shrink: 0; margin-left: 8px; }
+        .kpi-value { font-size: 1.50rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-icon-box { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: var(--theme-color); background-color: var(--theme-light); flex-shrink: 0; margin-left: 8px; }
 
-        /* Sección Títulos */
-        .section-title { font-weight: 800; font-size: 1.0rem; color: var(--text-main); margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px;}
+        /* Títulos de Sección */
+        .section-title { font-weight: 800; font-size: 0.95rem; color: var(--text-main); margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.2px; }
         
-        /* Tabla Ejecutiva Datagrid */
-        .table-container { max-height: 420px; overflow-y: auto; border-radius: 10px; border: 1px solid #E2E8F0; }
+        /* Tabla Ejecutiva C-Level */
+        .table-container { max-height: 420px; overflow-y: auto; border-radius: 8px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        table thead th { position: sticky; top: 0; background-color: #F1F5F9 !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.68rem; text-transform: uppercase; padding: 12px 14px; border-bottom: 2px solid #E2E8F0; z-index: 1; letter-spacing: 0.8px;}
-        table tbody td { font-size: 0.85rem; color: var(--text-main); font-weight: 600; padding: 12px 14px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+        table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.66rem; text-transform: uppercase; padding: 12px 14px; border-bottom: 1px solid var(--border-color); z-index: 1; letter-spacing: 0.8px; }
+        table tbody td { font-size: 0.82rem; color: var(--text-main); font-weight: 600; padding: 11px 14px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
         table tbody tr:hover { background-color: #F8FAFC; }
         
-        .pill-badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 12px; font-weight: 700; display: inline-block; }
-        .pill-success { background-color: #DCFCE7; color: #166534; }
-        .pill-warning { background-color: #FEF3C7; color: #92400E; }
-        .pill-danger { background-color: #FEE2E2; color: #991B1B; }
+        .pill-badge { font-size: 0.70rem; padding: 3px 8px; border-radius: 6px; font-weight: 700; display: inline-block; }
+        .pill-success { background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+        .pill-warning { background-color: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+        .pill-danger { background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
 
-        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px); }
-        .spinner-custom { color: var(--text-main); width: 3.2rem; height: 3.5rem; border-width: 4px;}
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(6px); }
+        .spinner-custom { color: #0F172A; width: 3.0rem; height: 3.0rem; border-width: 4px; }
     </style>
 </head>
 <body class="module-inbound">
 
 <div id="loading-overlay">
     <div class="spinner-border spinner-custom" role="status"></div>
-    <h5 class="mt-4 fw-bold" style="color: var(--text-main); letter-spacing:-0.5px;">Procesando Información...</h5>
+    <h6 class="mt-3 fw-bold" style="color: var(--text-main);">Cargando Datos de Dirección...</h6>
 </div>
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="#"><i class="bi bi-grid-1x2-fill me-2"></i> Analytics Hub <span class="fw-light opacity-75">| Operaciones</span></a>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <i class="bi bi-layers-fill me-2 text-primary"></i> Analytics Hub 
+            <span class="executive-tag">C-Level Board</span>
+        </a>
         <span class="text-light fw-medium fs-6 opacity-75" id="current-date"></span>
     </div>
 </nav>
@@ -122,29 +123,29 @@
             </div>
             <div class="col-md-2 text-end">
                 <button class="btn btn-primary w-100 shadow-sm" onclick="applyFilters()">
-                    <i class="bi bi-search me-1"></i> Aplicar
+                    <i class="bi bi-search me-1"></i> Actualizar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Tarjetas de KPIs Dinámicas -->
+    <!-- KPIs Minimalistas -->
     <div class="row g-3 mb-4" id="kpi-container">
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#DCFCE7;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FEE2E2;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FEF3C7;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#E0F2FE;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F1F5F9;"><i id="kpi-i6" class="bi bi-stopwatch-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#F0FDF4;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FEF2F2;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFFBEB;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#EFF6FF;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F1F5F9;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
-    <!-- Gráfica Estilizada -->
+    <!-- Gráfica Stream C-Level -->
     <div class="row mb-4">
         <div class="col-12"><div class="glass-panel pb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-activity me-2 fs-5" style="color:var(--text-main);"></i> Tendencia Operativa por Intervalo</h5>
+                <h5 class="section-title"><i class="bi bi-graph-up me-2 fs-5 text-primary"></i> Curva Operativa por Intervalo de Tiempo</h5>
             </div>
-            <div style="height: 380px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
+            <div style="height: 360px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
     </div>
 
@@ -152,9 +153,9 @@
     <div class="row">
         <div class="col-12"><div class="glass-panel">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:var(--text-main);"></i> Desglose Detallado (30 Min)</h5>
+                <h5 class="section-title"><i class="bi bi-table me-2 fs-5 text-primary"></i> Desglose Detallado por Intervalos (30 Min)</h5>
                 <button class="btn btn-outline-export" onclick="exportTableToCSV()">
-                    <i class="bi bi-download me-1"></i> Exportar CSV
+                    <i class="bi bi-download me-1"></i> Descargar Excel
                 </button>
             </div>
             <div class="table-container">
@@ -263,7 +264,7 @@
             document.getElementById('label-ring').innerHTML = '<i class="bi bi-headset me-1"></i> Ring Group';
 
             document.getElementById('kpi-t1').innerText = 'Llamadas Realizadas'; document.getElementById('kpi-i1').className = 'bi bi-telephone-outbound-fill';
-            document.getElementById('kpi-t2').innerText = 'AHT Global'; document.getElementById('kpi-i2').className = 'bi bi-stopwatch-fill';
+            document.getElementById('kpi-t2').innerText = 'AHT Global'; document.getElementById('kpi-i2').className = 'bi bi-clock-history';
             document.getElementById('card-6').style.display = 'none'; 
             
             tHead.innerHTML = `<th>Intervalo</th><th>Llamadas Realizadas</th><th>AHT</th>`;
@@ -422,7 +423,7 @@
         }
     }
 
-    // NIVELES DE DISEÑO EJECUTIVO PARA LA GRÁFICA
+    // GRÁFICO C-LEVEL EXECUTIVE (SPLINE STREAM GRAPH)
     function renderChart(labels, dRec, dAte, dAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
@@ -434,7 +435,7 @@
 
         if (currentModule === 'OUTBOUND') {
             let gradOut = ctx.createLinearGradient(0, 0, 0, 360);
-            gradOut.addColorStop(0, 'rgba(217, 119, 6, 0.25)');
+            gradOut.addColorStop(0, 'rgba(217, 119, 6, 0.20)');
             gradOut.addColorStop(1, 'rgba(217, 119, 6, 0.00)');
 
             datasets = [{
@@ -445,13 +446,13 @@
                 backgroundColor: gradOut,
                 borderWidth: 3,
                 fill: true,
-                tension: 0.35,
-                pointRadius: 2,
+                tension: 0.38,
+                pointRadius: 0,
                 pointHoverRadius: 6
             }];
         } else if (currentModule === 'CHAT') {
             let gradChat = ctx.createLinearGradient(0, 0, 0, 360);
-            gradChat.addColorStop(0, 'rgba(13, 148, 136, 0.22)');
+            gradChat.addColorStop(0, 'rgba(13, 148, 136, 0.20)');
             gradChat.addColorStop(1, 'rgba(13, 148, 136, 0.00)');
 
             datasets = [
@@ -463,8 +464,8 @@
                     backgroundColor: gradChat,
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.35,
-                    pointRadius: 2,
+                    tension: 0.38,
+                    pointRadius: 0,
                     pointHoverRadius: 6
                 },
                 {
@@ -475,7 +476,7 @@
                     backgroundColor: 'transparent',
                     borderWidth: 2.5, 
                     fill: false, 
-                    tension: 0.35, 
+                    tension: 0.38, 
                     pointRadius: 0,
                     pointHoverRadius: 5
                 },
@@ -483,19 +484,19 @@
                     type: 'line',
                     label: 'Abandonos', 
                     data: dAban, 
-                    borderColor: '#E11D48', 
+                    borderColor: '#F43F5E', 
                     backgroundColor: 'transparent',
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
-                    tension: 0.35, 
-                    pointRadius: 2
+                    tension: 0.38, 
+                    pointRadius: 0
                 }
             ];
         } else {
-            // INBOUND: AZUL COBALTO Y CIAN
+            // INBOUND C-LEVEL
             let gradIn = ctx.createLinearGradient(0, 0, 0, 360);
-            gradIn.addColorStop(0, 'rgba(37, 99, 235, 0.20)');
+            gradIn.addColorStop(0, 'rgba(37, 99, 235, 0.18)');
             gradIn.addColorStop(1, 'rgba(37, 99, 235, 0.00)');
 
             datasets = [
@@ -507,19 +508,19 @@
                     backgroundColor: gradIn,
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.35,
-                    pointRadius: 2,
+                    tension: 0.38,
+                    pointRadius: 0,
                     pointHoverRadius: 6
                 },
                 {
                     type: 'line',
                     label: 'Atendidos', 
                     data: dAte, 
-                    borderColor: '#0D9488', 
+                    borderColor: '#06B6D4', 
                     backgroundColor: 'transparent',
                     borderWidth: 2.5, 
                     fill: false, 
-                    tension: 0.35, 
+                    tension: 0.38, 
                     pointRadius: 0,
                     pointHoverRadius: 5
                 },
@@ -527,13 +528,13 @@
                     type: 'line',
                     label: 'Abandonos', 
                     data: dAban, 
-                    borderColor: '#E11D48', 
+                    borderColor: '#F43F5E', 
                     backgroundColor: 'transparent',
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
-                    tension: 0.35, 
-                    pointRadius: 2
+                    tension: 0.38, 
+                    pointRadius: 0
                 }
             ];
         }
