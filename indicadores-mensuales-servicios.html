@@ -362,7 +362,7 @@
         });
 
         const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
-        const labels = [], dRec = [], dAte = [], dAban = [], dSLA = [];
+        const labels = [], dRec = [], dAte = [], dAban = [], dSLA = [], dPctAban = [];
         currentFilteredIntervalData = []; 
 
         const sortedIntervals = Object.keys(intMap).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
@@ -385,7 +385,7 @@
                     "AHT": formatSeconds(rAHT)
                 });
             });
-            renderChart(labels, dRec, [], [], []);
+            renderChart(labels, dRec, [], [], [], []);
         } 
         else {
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
@@ -407,7 +407,9 @@
                 const d = intMap[intv];
                 labels.push(intv); dRec.push(d.rec); dAte.push(d.aten); dAban.push(d.aban);
 
-                const rAba = d.rec > 0 ? ((d.aban / d.rec) * 100).toFixed(1) : 0;
+                const rAba = d.rec > 0 ? parseFloat(((d.aban / d.rec) * 100).toFixed(1)) : 0;
+                dPctAban.push(rAba);
+
                 const rSLA = d.rec > 0 ? parseFloat(((d.atenSLA / d.rec) * 100).toFixed(1)) : 0;
                 dSLA.push(rSLA);
 
@@ -431,12 +433,12 @@
                 if(currentModule !== 'CHAT') exportRow["ASA"] = formatSeconds(rASA);
                 currentFilteredIntervalData.push(exportRow);
             });
-            renderChart(labels, dRec, dAte, dAban, dSLA);
+            renderChart(labels, dRec, dAte, dAban, dSLA, dPctAban);
         }
     }
 
-    // MULTI-EJE Y CON LÍNEA DE SLA / NIVEL DE SERVICIO
-    function renderChart(labels, dRec, dAte, dAban, dSLA) {
+    // MULTI-EJE CON % DE ABANDONO ASOCIADO AL EJE Y1
+    function renderChart(labels, dRec, dAte, dAban, dSLA, dPctAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
 
@@ -492,19 +494,20 @@
                 },
                 {
                     type: 'line',
-                    label: 'Abandonos', 
-                    data: dAban, 
+                    label: '% Abandono', 
+                    data: dPctAban, 
                     borderColor: '#F43F5E', 
+                    backgroundColor: '#F43F5E',
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
-                    tension: 0.4, 
-                    pointRadius: 0,
-                    yAxisID: 'y'
+                    tension: 0.35, 
+                    pointRadius: 2,
+                    yAxisID: 'y1'
                 }
             ];
         } else {
-            // INBOUND CON NIVEL DE SERVICIO (SLA %)
+            // INBOUND CON % DE ABANDONO EN EJE Y1
             datasets = [
                 {
                     type: 'bar',
@@ -541,15 +544,16 @@
                 },
                 {
                     type: 'line',
-                    label: 'Abandonos', 
-                    data: dAban, 
+                    label: '% Abandono', 
+                    data: dPctAban, 
                     borderColor: '#F43F5E', 
+                    backgroundColor: '#F43F5E',
                     borderWidth: 2, 
                     borderDash: [4, 4], 
                     fill: false, 
-                    tension: 0.4, 
-                    pointRadius: 0,
-                    yAxisID: 'y'
+                    tension: 0.35, 
+                    pointRadius: 2,
+                    yAxisID: 'y1'
                 }
             ];
         }
