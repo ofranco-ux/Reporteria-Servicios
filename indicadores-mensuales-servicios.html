@@ -572,8 +572,8 @@
                     type: 'line',
                     label: 'Nivel Servicio (%)', 
                     data: dSLA, 
-                    borderColor: '#8B5CF6', 
-                    backgroundColor: '#8B5CF6',
+                    borderColor: '#10B981', 
+                    backgroundColor: '#10B981',
                     borderWidth: 2.5, 
                     fill: false, 
                     tension: 0.35, 
@@ -629,9 +629,9 @@
                         ticks: { font: { weight: '700' } } 
                     },
                     y1: { 
-                        type: 'linear', display: (currentModule !== 'OUTBOUND'), position: 'right', beginAtZero: true, max: 100,
+                        type: 'linear', display: (currentModule !== 'OUTBOUND'), position: 'right', beginAtZero: true, max: 120,
                         border: {display: false}, grid: { drawOnChartArea: false, drawTicks: false }, 
-                        ticks: { font: { weight: '700' }, callback: function(value) { return value + '%'; } } 
+                        ticks: { font: { weight: '700' }, stepSize: 20, callback: function(value) { return value + '%'; } } 
                     },
                     x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 10, font: { weight: '700', size: 10 } } } 
                 }
