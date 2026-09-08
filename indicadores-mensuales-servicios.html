@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Operativo</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; color: #333; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .nav-tabs .nav-link { color: #6c757d; font-weight: 600; border: none; padding: 12px 20px; cursor: pointer; }
+        .nav-tabs .nav-link.active { color: #0d6efd; background-color: transparent; border-bottom: 3px solid #0d6efd; }
+        .tab-content { padding-top: 20px; }
+        .filter-panel { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); margin-bottom: 25px; }
+        .form-label { font-weight: 500; font-size: 0.85rem; color: #6c757d; text-transform: uppercase;}
+        .kpi-card { background-color: #fff; border-radius: 12px; padding: 20px 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; height: 100%; border: 1px solid #e9ecef; }
+        .kpi-info { display: flex; flex-direction: column; }
+        .kpi-title { font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .kpi-value { font-size: 1.8rem; font-weight: 700; color: #2b2b2b; margin: 0; line-height: 1.2;}
+        .kpi-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; }
+        .icon-blue { background: linear-gradient(135deg, #0d6efd, #0a58ca); }
+        .icon-green { background: linear-gradient(135deg, #198754, #146c43); }
+        .icon-red { background: linear-gradient(135deg, #dc3545, #b02a37); }
+        .icon-orange { background: linear-gradient(135deg, #fd7e14, #cc6610); }
+        .icon-purple { background: linear-gradient(135deg, #6f42c1, #59359a); }
+        .icon-teal { background: linear-gradient(135deg, #20c997, #1aa179); }
+        .content-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border: 1px solid #e9ecef; margin-bottom: 25px; }
+        .content-title { font-weight: 600; font-size: 1.1rem; color: #2b2b2b; margin-bottom: 15px; }
+        .table-container { max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid #e9ecef;}
+        table thead th { position: sticky; top: 0; background-color: #f8f9fa !important; color: #495057 !important; font-weight: 600; font-size: 0.9rem; border-bottom: 2px solid #dee2e6; z-index: 1; }
+        table tbody td { font-size: 0.9rem; color: #495057; vertical-align: middle; }
+        .badge-sla { font-size: 0.8rem; padding: 0.4em 0.6em; }
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
+    </style>
+</head>
+<body>
+
+<div id="loading-overlay">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    <h5 class="mt-3 text-secondary">Sincronizando con Google Sheets...</h5>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" href="#"><i class="bi bi-cloud-arrow-down me-2"></i> Analytics Hub</a>
+        <span class="text-light fs-6" id="current-date"></span>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 pb-5 pt-3">
+    
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item"><button class="nav-link active" id="inbound-tab"><i class="bi bi-box-arrow-in-right"></i> INBOUND</button></li>
+        <li class="nav-item"><button class="nav-link" id="outbound-tab"><i class="bi bi-box-arrow-up-right"></i> OUTBOUND</button></li>
+        <li class="nav-item"><button class="nav-link" id="chat-tab"><i class="bi bi-chat-dots"></i> CHAT</button></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active">
+            
+            <div class="filter-panel row align-items-end g-3">
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-calendar3"></i> Fecha</label>
+                    <select id="filter-fecha" class="form-select shadow-sm"><option value="ALL">Todas</option></select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-funnel"></i> Campaña</label>
+                    <select id="filter-campana" class="form-select shadow-sm"><option value="ALL">Todas</option></select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-telephone"></i> Ring Group</label>
+                    <select id="filter-ring" class="form-select shadow-sm"><option value="ALL">Todos</option></select>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button class="btn btn-primary w-100 shadow-sm" onclick="applyFilters()">
+                        <i class="bi bi-check2-circle me-1"></i> Aplicar Filtros
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title" id="kpi-title-rec">Recibidas</span><span class="kpi-value" id="kpi-recibidas">0</span></div><div class="kpi-icon icon-blue"><i class="bi bi-telephone-inbound"></i></div></div></div>
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title" id="kpi-title-ate">Atendidas</span><span class="kpi-value" id="kpi-atendidas">0</span></div><div class="kpi-icon icon-green"><i class="bi bi-headset"></i></div></div></div>
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title" id="kpi-title-aba">Abandonadas</span><span class="kpi-value" id="kpi-abandonadas">0</span></div><div class="kpi-icon icon-red"><i class="bi bi-telephone-x"></i></div></div></div>
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title">% Abandono</span><span class="kpi-value" id="kpi-pct-abandono">0%</span></div><div class="kpi-icon icon-orange"><i class="bi bi-graph-down-arrow"></i></div></div></div>
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title">Niv. Servicio</span><span class="kpi-value" id="kpi-sla">0%</span></div><div class="kpi-icon icon-purple"><i class="bi bi-award"></i></div></div></div>
+                <div class="col-xl-2 col-md-4 col-sm-6"><div class="kpi-card"><div class="kpi-info"><span class="kpi-title">AHT / ASA (s)</span><span class="kpi-value" id="kpi-tiempos" style="font-size: 1.4rem;">0 / 0</span></div><div class="kpi-icon icon-teal"><i class="bi bi-stopwatch"></i></div></div></div>
+            </div>
+
+            <div class="row">
+                <div class="col-12"><div class="content-card"><h5 class="content-title"><i class="bi bi-bar-chart-line me-2"></i> Tendencia por Intervalo</h5>
+                <div style="height: 300px; width: 100%;"><canvas id="intervalChart"></canvas></div></div></div>
+            </div>
+
+            <div class="row">
+                <div class="col-12"><div class="content-card"><h5 class="content-title"><i class="bi bi-table me-2"></i> Detalle por Intervalo (30 min)</h5>
+                <div class="table-container"><table class="table table-hover mb-0 text-center">
+                    <thead><tr><th>Intervalo</th><th id="th-rec">Recibidas</th><th id="th-ate">Atendidas</th><th id="th-aba">Abandonadas</th><th>% Abandono</th><th>SLA</th><th>AHT (s)</th><th>ASA (s)</th></tr></thead>
+                    <tbody id="tabla-body"></tbody>
+                </table></div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    const SHEET_ID = '1uXsU9QPBxac8asB1RfUMxBfez1DkJDi46QE4uHd5Vjg'; 
+    const urls = {
+        'INBOUND': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv&single=true&sheet=Inbound`,
+        'OUTBOUND': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv&single=true&sheet=Outbound`,
+        'CHAT': `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv&single=true&sheet=Chat`
+    };
+
+    let myChart = null; 
+    let currentData = [];
+    let currentModule = 'INBOUND';
+    const dataSets = { 'INBOUND': null, 'OUTBOUND': null, 'CHAT': null };
+
+    function parseCSV(data) {
+        if(!data || !data.trim()) return [];
+        const cleanData = data.replace(/"/g, ''); 
+        const lines = cleanData.trim().split('\n');
+        const headers = lines[0].split(',');
+        const result = [];
+        for (let i = 1; i < lines.length; i++) {
+            const currentline = lines[i].split(',');
+            if (currentline.length === headers.length) {
+                let obj = {};
+                for (let j = 0; j < headers.length; j++) { 
+                    obj[headers[j].trim()] = currentline[j].trim(); 
+                }
+                result.push(obj);
+            }
+        }
+        return result;
+    }
+
+    async function loadModule(moduleName) {
+        document.getElementById('loading-overlay').style.display = 'flex';
+        
+        document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(moduleName.toLowerCase() + '-tab').classList.add('active');
+
+        currentModule = moduleName;
+
+        if (!dataSets[moduleName]) {
+            try {
+                const response = await fetch(urls[moduleName]);
+                if (!response.ok) throw new Error("Conexión rechazada. Verifica que el Sheet esté 'Publicado en la web'.");
+                
+                const text = await response.text();
+                if(text.trim().toLowerCase().startsWith("<!doctype html>")) {
+                     throw new Error("El enlace devolvió HTML. Asegúrate de compartir como 'Publicar en la Web'.");
+                }
+                
+                dataSets[moduleName] = parseCSV(text);
+            } catch (error) {
+                console.error("Error:", error);
+                alert(error.message);
+                document.getElementById('loading-overlay').style.display = 'none';
+                return;
+            }
+        }
+        
+        currentData = dataSets[moduleName];
+        
+        if(moduleName === 'OUTBOUND') {
+            document.getElementById('kpi-title-rec').innerText = 'Emitidas';
+            document.getElementById('kpi-title-ate').innerText = 'Contactos';
+            document.getElementById('kpi-title-aba').innerText = 'No Contactados';
+            document.getElementById('th-rec').innerText = 'Emitidas';
+            document.getElementById('th-ate').innerText = 'Exitosos';
+            document.getElementById('th-aba').innerText = 'Fallidos';
+        } else if (moduleName === 'CHAT') {
+            document.getElementById('kpi-title-rec').innerText = 'Entrantes';
+            document.getElementById('kpi-title-ate').innerText = 'Atendidos';
+            document.getElementById('kpi-title-aba').innerText = 'Abandonados';
+            document.getElementById('th-rec').innerText = 'Entrantes';
+            document.getElementById('th-ate').innerText = 'Atendidos';
+            document.getElementById('th-aba').innerText = 'Abandonados';
+        } else {
+            document.getElementById('kpi-title-rec').innerText = 'Recibidas';
+            document.getElementById('kpi-title-ate').innerText = 'Atendidas';
+            document.getElementById('kpi-title-aba').innerText = 'Abandonadas';
+            document.getElementById('th-rec').innerText = 'Recibidas';
+            document.getElementById('th-ate').innerText = 'Atendidas';
+            document.getElementById('th-aba').innerText = 'Abandonadas';
+        }
+
+        populateFilters();
+        applyFilters();
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+
+    function populateFilters() {
+        const fechas = new Set(); const campanas = new Set(); const rings = new Set();
+        currentData.forEach(row => {
+            if(row.Fecha) fechas.add(row.Fecha);
+            if(row.Campaña) campanas.add(row.Campaña);
+            if(row['Ring Group']) rings.add(row['Ring Group']);
+        });
+
+        const fFecha = document.getElementById('filter-fecha');
+        const fCamp = document.getElementById('filter-campana');
+        const fRing = document.getElementById('filter-ring');
+        
+        fFecha.innerHTML = '<option value="ALL">Todas</option>';
+        fCamp.innerHTML = '<option value="ALL">Todas</option>';
+        fRing.innerHTML = '<option value="ALL">Todos</option>';
+
+        fechas.forEach(v => { fFecha.innerHTML += `<option value="${v}">${v}</option>`; });
+        campanas.forEach(v => { fCamp.innerHTML += `<option value="${v}">${v}</option>`; });
+        rings.forEach(v => { fRing.innerHTML += `<option value="${v}">${v}</option>`; });
+    }
+
+    function applyFilters() {
+        const selFecha = document.getElementById('filter-fecha').value;
+        const selCamp = document.getElementById('filter-campana').value;
+        const selRing = document.getElementById('filter-ring').value;
+
+        const filteredData = currentData.filter(row => {
+            return (selFecha === 'ALL' || row.Fecha === selFecha) &&
+                   (selCamp === 'ALL' || row.Campaña === selCamp) &&
+                   (selRing === 'ALL' || row['Ring Group'] === selRing);
+        });
+        processData(filteredData);
+    }
+
+    function processData(data) {
+        let tRec = 0, tAten = 0, tSLA = 0, tAban = 0, sumAHT = 0, sumASA = 0;
+        const intMap = {};
+
+        data.forEach(row => {
+            const rec = parseFloat(row['Recibidas']) || parseFloat(row['Emitidas']) || parseFloat(row['Entrantes']) || 0;
+            const aten = parseFloat(row['Atendidas']) || parseFloat(row['Contactos']) || parseFloat(row['Atendidos']) || 0;
+            const atenSLA = parseFloat(row['Atendidas_SLA']) || 0;
+            const aban = parseFloat(row['Abandonadas_Total']) || parseFloat(row['No Contactados']) || parseFloat(row['Abandonados']) || 0;
+            const aht = parseFloat(row['AHT']) || 0;
+            const asa = parseFloat(row['ASA']) || 0;
+
+            tRec += rec; tAten += aten; tSLA += atenSLA; tAban += aban;
+            sumAHT += (aht * aten); sumASA += (asa * aten);
+
+            const intv = row['Intervalo'];
+            if(!intv) return;
+            if(!intMap[intv]) intMap[intv] = { rec: 0, aten: 0, atenSLA: 0, aban: 0, sumAHT: 0, sumASA: 0 };
+            intMap[intv].rec += rec; intMap[intv].aten += aten; intMap[intv].atenSLA += atenSLA; intMap[intv].aban += aban;
+            intMap[intv].sumAHT += (aht * aten); intMap[intv].sumASA += (asa * aten);
+        });
+
+        document.getElementById('kpi-recibidas').innerText = tRec;
+        document.getElementById('kpi-atendidas').innerText = tAten;
+        document.getElementById('kpi-abandonadas').innerText = tAban;
+        document.getElementById('kpi-pct-abandono').innerText = (tRec > 0 ? ((tAban / tRec) * 100).toFixed(1) : 0) + '%';
+        document.getElementById('kpi-sla').innerText = (tRec > 0 ? ((tSLA / tRec) * 100).toFixed(1) : 0) + '%';
+        document.getElementById('kpi-tiempos').innerText = (tAten > 0 ? (sumAHT / tAten).toFixed(0) : 0) + ' / ' + (tAten > 0 ? (sumASA / tAten).toFixed(0) : 0);
+
+        const sortedIntervals = Object.keys(intMap).sort((a,b) => {
+            const [ha, ma] = a.split(':').map(Number);
+            const [hb, mb] = b.split(':').map(Number);
+            return (ha * 60 + ma) - (hb * 60 + mb);
+        });
+
+        const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
+        const labels = [], dRec = [], dAte = [], dAban = [];
+
+        sortedIntervals.forEach(intv => {
+            const d = intMap[intv];
+            labels.push(intv); dRec.push(d.rec); dAte.push(d.aten); dAban.push(d.aban);
+
+            const rAba = d.rec > 0 ? ((d.aban / d.rec) * 100).toFixed(1) : 0;
+            const rSLA = d.rec > 0 ? ((d.atenSLA / d.rec) * 100).toFixed(1) : 0;
+            const rAHT = d.aten > 0 ? (d.sumAHT / d.aten).toFixed(1) : 0;
+            const rASA = d.aten > 0 ? (d.sumASA / d.aten).toFixed(1) : 0;
+            let slaClass = rSLA >= 80 ? 'bg-success' : (rSLA >= 70 ? 'bg-warning text-dark' : 'bg-danger');
+
+            tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec}</td><td class="text-success fw-bold">${d.aten}</td><td class="text-danger fw-bold">${d.aban}</td><td>${rAba}%</td><td><span class="badge ${slaClass} badge-sla">${rSLA}%</span></td><td>${rAHT}</td><td>${rASA}</td></tr>`;
+        });
+
+        renderChart(labels, dRec, dAte, dAban);
+    }
+
+    function renderChart(labels, dRec, dAte, dAban) {
+        const ctx = document.getElementById('intervalChart').getContext('2d');
+        if (myChart) myChart.destroy();
+        
+        let label1 = 'Recibidas', label2 = 'Atendidas', label3 = 'Abandonadas';
+        if(currentModule === 'OUTBOUND') { label1 = 'Emitidas'; label2 = 'Contactos'; label3 = 'Fallidos'; }
+        else if(currentModule === 'CHAT') { label1 = 'Entrantes'; label2 = 'Atendidos'; label3 = 'Abandonados'; }
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: label1, data: dRec, borderColor: '#0d6efd', backgroundColor: 'rgba(13, 110, 253, 0.1)', borderWidth: 3, fill: true, tension: 0.4 },
+                    { label: label2, data: dAte, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.05)', borderWidth: 3, fill: true, tension: 0.4 },
+                    { label: label3, data: dAban, borderColor: '#dc3545', backgroundColor: 'transparent', borderWidth: 2, borderDash: [5, 5], fill: false, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#dc3545' }
+                ]
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { family: 'Poppins' } } } },
+                scales: { y: { beginAtZero: true, grid: { color: '#f1f3f5' } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    document.getElementById('inbound-tab').addEventListener('click', () => loadModule('INBOUND'));
+    document.getElementById('outbound-tab').addEventListener('click', () => loadModule('OUTBOUND'));
+    document.getElementById('chat-tab').addEventListener('click', () => loadModule('CHAT'));
+
+    loadModule('INBOUND');
+</script>
+</body>
+</html>
