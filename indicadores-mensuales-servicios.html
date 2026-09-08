@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Hub | Dashboard Ejecutivo</title>
+    <title>Analytics Hub | Dashboard Dirección</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
             --bg-body: #F4F7FE;
             --card-bg: #FFFFFF;
             --text-main: #1B2559;
-            --text-muted: #A3AED0;
+            --text-muted: #8F9BBA;
             --theme-color: #4318FF; 
             --theme-light: #F4F7FE;
             --theme-gradient: linear-gradient(135deg, #868CFF 0%, #4318FF 100%);
@@ -27,8 +27,8 @@
         body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
         
         /* Navbar de Impacto */
-        .navbar { transition: all 0.4s ease; padding: 18px 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
-        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.5rem; color: #fff !important; }
+        .navbar { transition: all 0.4s ease; padding: 16px 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #fff !important; }
         
         body.module-inbound { --theme-color: #4318FF; --theme-light: #F4F7FE; --theme-gradient: linear-gradient(135deg, #4318FF 0%, #2A09B0 100%); }
         body.module-inbound .navbar { background: var(--theme-gradient); }
@@ -40,41 +40,48 @@
         body.module-chat .navbar { background: var(--theme-gradient); }
 
         /* Pestañas Ejecutivas */
-        .nav-tabs { border-bottom: 2px solid #E9EDF7; margin-bottom: 28px; }
-        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 14px 28px; border: none; border-bottom: 3px solid transparent; transition: all 0.3s ease; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;}
+        .nav-tabs { border-bottom: 2px solid #E9EDF7; margin-bottom: 24px; }
+        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 12px 24px; border: none; border-bottom: 3px solid transparent; transition: all 0.3s ease; font-size: 0.90rem; text-transform: uppercase; letter-spacing: 0.5px;}
         .nav-tabs .nav-link:hover { color: var(--text-main); }
         .nav-tabs .nav-link.active { color: var(--theme-color); background: transparent; border-bottom: 3px solid var(--theme-color); }
 
         /* Tarjetas Neumórficas Suaves */
-        .glass-panel { background: var(--card-bg); border-radius: 20px; padding: 25px; box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.08); margin-bottom: 25px; border: 1px solid rgba(229, 234, 243, 0.7); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .glass-panel:hover { transform: translateY(-2px); box-shadow: 0px 22px 45px rgba(112, 144, 176, 0.12); }
+        .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 22px; box-shadow: 0px 14px 35px rgba(112, 144, 176, 0.07); margin-bottom: 22px; border: 1px solid rgba(229, 234, 243, 0.8); }
         
-        .form-label { font-weight: 800; font-size: 0.70rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
-        .form-select, .form-control { border-radius: 14px; border: 1px solid #E9EDF7; padding: 12px 16px; font-weight: 600; color: var(--text-main); background-color: #F8FAFC;}
-        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.25rem var(--theme-light); }
-        .btn-primary { background: var(--theme-gradient); border: none; border-radius: 14px; padding: 12px 24px; font-weight: 700; transition: all 0.3s; }
+        .form-label { font-weight: 800; font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
+        .form-select, .form-control { border-radius: 12px; border: 1px solid #E9EDF7; padding: 10px 14px; font-weight: 600; font-size: 0.88rem; color: var(--text-main); background-color: #F8FAFC;}
+        .form-select:focus, .form-control:focus { border-color: var(--theme-color); box-shadow: 0 0 0 0.2rem var(--theme-light); }
+        
+        .btn-primary { background: var(--theme-gradient); border: none; border-radius: 12px; padding: 10px 20px; font-weight: 700; font-size: 0.90rem; transition: all 0.3s; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(67, 24, 255, 0.25); filter: brightness(1.05); }
 
-        /* Tarjetas KPIs Premium */
-        .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; }
-        .kpi-info { display: flex; flex-direction: column; }
-        .kpi-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.8px;}
-        .kpi-value { font-size: 2.2rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1; letter-spacing: -1.2px;}
-        .kpi-icon-box { width: 56px; height: 56px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--theme-color); background-color: var(--theme-light); transition: all 0.3s ease; }
+        .btn-outline-export { border: 1.5px solid var(--theme-color); color: var(--theme-color); background: #fff; border-radius: 10px; padding: 6px 14px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
+        .btn-outline-export:hover { background: var(--theme-color); color: #fff; }
+
+        /* Tarjetas KPIs Ajustadas (Sin desbordamiento) */
+        .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
+        .kpi-info { display: flex; flex-direction: column; min-width: 0; }
+        .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-value { font-size: 1.65rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: var(--theme-color); background-color: var(--theme-light); flex-shrink: 0; margin-left: 10px; }
 
         /* Sección Títulos */
-        .section-title { font-weight: 800; font-size: 1.15rem; color: var(--text-main); margin-bottom: 22px; display: flex; align-items: center; letter-spacing: -0.4px;}
+        .section-title { font-weight: 800; font-size: 1.05rem; color: var(--text-main); margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px;}
         
-        /* Tabla Ejecutiva */
-        .table-container { max-height: 480px; overflow-y: auto; border-radius: 14px; }
+        /* Tabla Ejecutiva "Datagrid Style" */
+        .table-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid #E9EDF7; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        table thead th { position: sticky; top: 0; background-color: #F4F7FE !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; padding: 18px; border-bottom: 2px solid #E9EDF7; z-index: 1; letter-spacing: 0.8px;}
-        table tbody td { font-size: 0.92rem; color: var(--text-main); font-weight: 600; padding: 18px; border-bottom: 1px solid #F0F3F8; vertical-align: middle; }
-        table tbody tr:hover { background-color: #F8FAFC; }
-        .badge-sla { font-size: 0.82rem; padding: 0.6em 0.9em; border-radius: 8px; font-weight: 800; }
+        table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #E9EDF7; z-index: 1; letter-spacing: 0.8px;}
+        table tbody td { font-size: 0.88rem; color: var(--text-main); font-weight: 600; padding: 14px 16px; border-bottom: 1px solid #F0F3F8; vertical-align: middle; }
+        table tbody tr:hover { background-color: #F4F7FE; }
+        
+        .pill-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; }
+        .pill-success { background-color: #E6F8F2; color: #01B574; }
+        .pill-warning { background-color: #FFF8F0; color: #FF8F00; }
+        .pill-danger { background-color: #FFEBEB; color: #EE5D50; }
 
         #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(10px); }
-        .spinner-custom { color: var(--theme-color); width: 4rem; height: 4rem; border-width: 5px;}
+        .spinner-custom { color: var(--theme-color); width: 3.5rem; height: 3.5rem; border-width: 5px;}
     </style>
 </head>
 <body class="module-inbound">
@@ -127,27 +134,34 @@
     </div>
 
     <!-- Tarjetas de KPIs Dinámicas -->
-    <div class="row g-4 mb-4" id="kpi-container">
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#E6F8F2;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FFEBEB;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFF8F0;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#E5F4FF;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-4 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-4" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F0F3F8;"><i id="kpi-i6" class="bi bi-stopwatch-fill"></i></div></div></div>
+    <div class="row g-3 mb-4" id="kpi-container">
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box text-success" style="background:#E6F8F2;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box text-danger" style="background:#FFEBEB;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box text-warning" style="background:#FFF8F0;"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box text-info" style="background:#E5F4FF;"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-5" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box text-secondary" style="background:#F0F3F8;"><i id="kpi-i6" class="bi bi-stopwatch-fill"></i></div></div></div>
     </div>
 
-    <!-- Gráfica Machín -->
+    <!-- Gráfica Estilizada -->
     <div class="row mb-4">
         <div class="col-12"><div class="glass-panel pb-3">
-            <h5 class="section-title"><i class="bi bi-activity me-2 fs-5" style="color:var(--theme-color);"></i> Comportamiento de la Operación por Intervalo</h5>
-            <div style="height: 390px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-title"><i class="bi bi-bar-chart-line-fill me-2 fs-5" style="color:var(--theme-color);"></i> Comportamiento de la Operación por Intervalo</h5>
+            </div>
+            <div style="height: 360px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
     </div>
 
-    <!-- Tabla Ejecutiva -->
+    <!-- Tabla Ejecutiva con Botón de Exportación -->
     <div class="row">
         <div class="col-12"><div class="glass-panel">
-            <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:var(--theme-color);"></i> Desglose Detallado por Horario</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:var(--theme-color);"></i> Desglose Detallado (Intervalos 30 Min)</h5>
+                <button class="btn btn-outline-export" onclick="exportTableToCSV()">
+                    <i class="bi bi-download me-1"></i> Exportar Tabla CSV
+                </button>
+            </div>
             <div class="table-container">
                 <table class="table text-center" id="data-table">
                     <thead><tr id="table-head-row"></tr></thead>
@@ -166,9 +180,9 @@
     let excelWorkbook = null; 
     let myChart = null; 
     let currentData = [];
+    let currentFilteredIntervalData = []; // Guardará el desglose filtrado para exportar
     let currentModule = 'INBOUND';
 
-    // Conversión de Segundos a Formato HH:MM:SS o MM:SS
     function formatSeconds(seconds) {
         if (isNaN(seconds) || seconds === null || seconds === undefined) return "00:00";
         let s = Math.round(parseFloat(seconds));
@@ -343,6 +357,7 @@
 
         const tbody = document.getElementById('tabla-body'); tbody.innerHTML = '';
         const labels = [], dRec = [], dAte = [], dAban = [];
+        currentFilteredIntervalData = []; // Reset para exportación
 
         if (currentModule === 'OUTBOUND') {
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
@@ -354,7 +369,14 @@
                 const d = intMap[intv];
                 labels.push(intv); dRec.push(d.rec);
                 const rAHT = d.rec > 0 ? (d.sumAHT / d.rec) : 0;
+                
                 tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="text-primary fw-bold">${d.rec.toLocaleString()}</td><td class="fw-bold text-secondary">${formatSeconds(rAHT)}</td></tr>`;
+                
+                currentFilteredIntervalData.push({
+                    "Intervalo": intv,
+                    "Llamadas Realizadas": d.rec,
+                    "AHT": formatSeconds(rAHT)
+                });
             });
             renderChart(labels, dRec, [], []);
         } 
@@ -383,16 +405,29 @@
                 const rSLA = d.rec > 0 ? ((d.atenSLA / d.rec) * 100).toFixed(1) : 0;
                 const rAHT = d.aten > 0 ? (d.sumAHT / d.aten) : 0;
                 const rASA = d.aten > 0 ? (d.sumASA / d.aten) : 0;
-                let slaClass = rSLA >= 80 ? 'text-success' : (rSLA >= 70 ? 'text-warning' : 'text-danger');
+                
+                let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="text-success fw-bold">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="badge-sla bg-light ${slaClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="text-success fw-bold">${d.aten.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+
+                let exportRow = {
+                    "Intervalo": intv,
+                    [currentModule === 'CHAT' ? "Chats Entrantes" : "Recibidas"]: d.rec,
+                    [currentModule === 'CHAT' ? "Chats Atendidos" : "Atendidas"]: d.aten,
+                    "Abandonadas": d.aban,
+                    "% Abandono": `${rAba}%`,
+                    "SLA Global": `${rSLA}%`,
+                    "AHT": formatSeconds(rAHT)
+                };
+                if(currentModule !== 'CHAT') exportRow["ASA"] = formatSeconds(rASA);
+                currentFilteredIntervalData.push(exportRow);
             });
             renderChart(labels, dRec, dAte, dAban);
         }
     }
 
-    // DISEÑO ULTRA CHART.JS
+    // DISEÑO HYBRID CHART.JS (BAR + LINE FOR DIRECTORS)
     function renderChart(labels, dRec, dAte, dAban) {
         const ctx = document.getElementById('intervalChart').getContext('2d');
         if (myChart) myChart.destroy();
@@ -400,60 +435,93 @@
         const styles = getComputedStyle(document.body);
         const hexColor = styles.getPropertyValue('--theme-color').trim() || '#4318FF';
 
-        let gradient = ctx.createLinearGradient(0, 0, 0, 380);
-        gradient.addColorStop(0, hexColor + '40'); 
-        gradient.addColorStop(1, hexColor + '00'); 
-
         Chart.defaults.font.family = 'Plus Jakarta Sans';
-        Chart.defaults.color = '#A3AED0';
+        Chart.defaults.color = '#8F9BBA';
 
         let datasets = [];
 
         if (currentModule === 'OUTBOUND') {
             datasets = [{
-                label: 'Llamadas Realizadas', data: dRec, borderColor: hexColor, backgroundColor: gradient,
-                borderWidth: 3.5, fill: true, tension: 0.4, 
-                pointBackgroundColor: '#FFFFFF', pointBorderColor: hexColor, pointBorderWidth: 3, pointRadius: 4, pointHoverRadius: 7
+                type: 'bar',
+                label: 'Llamadas Realizadas', 
+                data: dRec, 
+                backgroundColor: hexColor + 'CC',
+                hoverBackgroundColor: hexColor,
+                borderRadius: 6,
+                barPercentage: 0.6
             }];
         } else {
             datasets = [
                 {
+                    type: 'bar',
                     label: currentModule === 'CHAT' ? 'Chats Entrantes' : 'Volumen Total', 
-                    data: dRec, borderColor: hexColor, backgroundColor: gradient, borderWidth: 3.5, fill: true, tension: 0.4,
-                    pointBackgroundColor: '#FFFFFF', pointBorderColor: hexColor, pointBorderWidth: 3, pointRadius: 4, pointHoverRadius: 7
+                    data: dRec, 
+                    backgroundColor: hexColor + '33',
+                    hoverBackgroundColor: hexColor + '80',
+                    borderRadius: 6,
+                    barPercentage: 0.65
                 },
                 {
-                    label: 'Atendidos', data: dAte, borderColor: '#01B574', backgroundColor: 'transparent',
-                    borderWidth: 3, fill: false, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
+                    type: 'line',
+                    label: 'Atendidos', 
+                    data: dAte, 
+                    borderColor: '#01B574', 
+                    backgroundColor: '#01B574',
+                    borderWidth: 3, 
+                    fill: false, 
+                    tension: 0.4, 
+                    pointRadius: 3,
+                    pointHoverRadius: 6
                 },
                 {
-                    label: 'Abandonos', data: dAban, borderColor: '#EE5D50', backgroundColor: 'transparent',
-                    borderWidth: 2.5, borderDash: [6, 6], fill: false, tension: 0.4, 
-                    pointRadius: 2, pointBackgroundColor: '#EE5D50', pointBorderColor: '#EE5D50'
+                    type: 'line',
+                    label: 'Abandonos', 
+                    data: dAban, 
+                    borderColor: '#EE5D50', 
+                    backgroundColor: '#EE5D50',
+                    borderWidth: 2, 
+                    borderDash: [5, 5], 
+                    fill: false, 
+                    tension: 0.4, 
+                    pointRadius: 2
                 }
             ];
         }
 
         myChart = new Chart(ctx, {
-            type: 'line',
             data: { labels: labels, datasets: datasets },
             options: { 
                 responsive: true, maintainAspectRatio: false, 
                 interaction: { mode: 'index', intersect: false },
                 plugins: { 
-                    legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 10, padding: 25, font: { weight: '700', size: 12 } } },
+                    legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { weight: '700', size: 12 } } },
                     tooltip: { 
                         backgroundColor: '#FFFFFF', titleColor: '#1B2559', bodyColor: '#1B2559', borderColor: '#E9EDF7', borderWidth: 1, 
-                        padding: 16, boxPadding: 8, usePointStyle: true, titleFont: {size: 15, weight: '800'}, bodyFont: {size: 13, weight: '600'}, 
-                        cornerRadius: 14, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 10, shadowBlur: 20, shadowColor: 'rgba(112, 144, 176, 0.15)' 
+                        padding: 14, boxPadding: 6, usePointStyle: true, titleFont: {size: 14, weight: '800'}, bodyFont: {size: 12, weight: '600'}, 
+                        cornerRadius: 12, displayColors: true, shadowOffsetX: 0, shadowOffsetY: 8, shadowBlur: 16, shadowColor: 'rgba(112, 144, 176, 0.12)' 
                     }
                 },
                 scales: { 
                     y: { beginAtZero: true, border: {display: false}, grid: { color: '#F0F3F8', drawTicks: false }, ticks: { font: { weight: '600' } } }, 
-                    x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 12, font: { weight: '600' } } } 
+                    x: { border: {display: false}, grid: { display: false, drawTicks: false }, ticks: { padding: 10, font: { weight: '600' } } } 
                 }
             }
         });
+    }
+
+    // EXPORTACIÓN A CSV / EXCEL DE LA TABLA
+    function exportTableToCSV() {
+        if(!currentFilteredIntervalData || currentFilteredIntervalData.length === 0) {
+            alert("No hay datos cargados para exportar.");
+            return;
+        }
+
+        const ws = XLSX.utils.json_to_sheet(currentFilteredIntervalData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Intervalos_30min");
+
+        const fileName = `Reporte_${currentModule}_Intervalos_30min.xlsx`;
+        XLSX.writeFile(wb, fileName);
     }
 
     document.getElementById('inbound-tab').addEventListener('click', () => loadModule('INBOUND'));
