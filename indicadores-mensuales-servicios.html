@@ -50,7 +50,13 @@
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
         .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kpi-value { font-size: 1.70rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s ease;}
+        
+        /* Ajuste: quitamos el text-overflow para permitir que quepa */
+        .kpi-value { font-size: 1.70rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; transition: color 0.3s ease;}
+        
+        /* Clase específica para AHT/ASA más pequeña */
+        .kpi-value-small { font-size: 1.25rem !important; letter-spacing: -0.3px !important; }
+
         .kpi-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; margin-left: 8px; transition: all 0.3s ease; }
 
         .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
@@ -124,7 +130,7 @@
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-4-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" id="kpi-i4-box"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
         <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-5-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" id="kpi-i5-box"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
         
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value fs-6" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value kpi-value-small" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
     <!-- Gráfica -->
@@ -398,6 +404,7 @@
             renderChart(labels, dRec, [], [], [], []);
         } 
         else {
+            // Lógica KPIs Neutrales y Condicionales
             document.getElementById('kpi-v1').innerText = tRec.toLocaleString();
             document.getElementById('kpi-v2').innerText = tAten.toLocaleString();
             document.getElementById('kpi-v3').innerText = tAban.toLocaleString();
@@ -465,7 +472,7 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0284C7;">${d.aten.toLocaleString()}</td><td class="fw-bold" style="color:#10B981;">${d.atenSLA.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0EA5E9;">${d.aten.toLocaleString()}</td><td class="fw-bold" style="color:#10B981;">${d.atenSLA.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
