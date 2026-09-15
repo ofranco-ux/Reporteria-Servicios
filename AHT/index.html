@@ -194,9 +194,8 @@
                 </div>
             </div>
 
-            <!-- Tables Row: Top Agents (Scrollable) -->
+            <!-- Tables Row: Top Agents -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Top Calls -->
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-medal text-yellow-500 mr-2"></i>Ranking Agentes (Llamadas)</h3>
@@ -219,7 +218,6 @@
                     </div>
                 </div>
 
-                <!-- Top Chats -->
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-medal text-yellow-500 mr-2"></i>Ranking Agentes (Chat)</h3>
@@ -246,7 +244,6 @@
         </div>
     </main>
 
-    <!-- JavaScript Logic -->
     <script>
         let rawCalls = [];
         let rawChats = [];
@@ -319,9 +316,7 @@
                     let coord = cleanString(row['Coordinador']);
                     let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
                     
-                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') {
-                        campanaLimpia = 'SIN ASIGNAR';
-                    }
+                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') campanaLimpia = 'SIN ASIGNAR';
 
                     if (sup === '-' || sup === 'Desconocido' || sup === '') {
                         const mapped = headCountMap[agentName.toLowerCase()];
@@ -353,7 +348,6 @@
             if (workbook.SheetNames.includes('AHT Chat')) {
                 const chatsRaw = XLSX.utils.sheet_to_json(workbook.Sheets['AHT Chat']);
                 
-                // FILTER: Only keep rows where Campaign contains "ATOM"
                 const atomChats = chatsRaw.filter(row => {
                     const camp = String(row['Campaña'] || '').toUpperCase();
                     return camp.includes('ATOM');
@@ -398,7 +392,6 @@
             applyFilters();
         };
 
-        // AUTO-CARGA DESDE RENDER
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
@@ -413,9 +406,7 @@
                 
                 if (response.ok) {
                     const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("text/html")) {
-                        throw new Error("Render no encontró el Excel.");
-                    }
+                    if (contentType && contentType.includes("text/html")) throw new Error("Render no encontró el Excel.");
 
                     const arrayBuffer = await response.arrayBuffer();
                     const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
@@ -431,6 +422,23 @@
 
         const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x !== 'Desconocido' && x !== '-').sort();
         
+        // MODIFIED: Smart Dropdown Population
+        const fillSelect = (id, options) => {
+            const el = document.getElementById(id);
+            const currentValue = el.value;
+            el.innerHTML = '<option value="Todos">Todos</option>';
+            options.forEach(opt => {
+                el.innerHTML += `<option value="${opt}">${opt}</option>`;
+            });
+            
+            // Restore selection if it's still valid in the new list
+            if (Array.from(el.options).some(opt => opt.value === currentValue)) {
+                el.value = currentValue;
+            } else {
+                el.value = 'Todos';
+            }
+        };
+
         const populateFilters = () => {
             const allData = [...rawCalls, ...rawChats];
             
@@ -439,8 +447,8 @@
                 if(a==='Sin asignar') return 1;
                 return moment(a, 'MMMM YYYY', 'es').valueOf() - moment(b, 'MMMM YYYY', 'es').valueOf();
             });
+            
             fillSelect('filter-mes', sortedMonths);
-
             fillSelect('filter-dia', getUnique(allData, 'dia'));
             fillSelect('filter-campana', getUnique(allData, 'campana'));
             fillSelect('filter-ringgroup', getUnique(rawCalls, 'ringGroup'));
@@ -448,12 +456,17 @@
             fillSelect('filter-coordinador', getUnique(allData, 'coordinador'));
         };
 
-        const fillSelect = (id, options) => {
-            const el = document.getElementById(id);
-            el.innerHTML = '<option value="Todos">Todos</option>';
-            options.forEach(opt => {
-                el.innerHTML += `<option value="${opt}">${opt}</option>`;
-            });
+        // NEW: Cascade Logic
+        const cascadeDays = () => {
+            const fMes = document.getElementById('filter-mes').value;
+            const allData = [...rawCalls, ...rawChats];
+            
+            let filteredForDays = allData;
+            if (fMes !== 'Todos') {
+                filteredForDays = allData.filter(d => d.mes === fMes);
+            }
+            
+            fillSelect('filter-dia', getUnique(filteredForDays, 'dia'));
         };
 
         const applyFilters = () => {
@@ -484,11 +497,19 @@
             updateDashboard();
         };
 
-        document.querySelectorAll('select').forEach(sel => {
-            sel.addEventListener('change', applyFilters);
+        // EVENT LISTENERS FOR FILTERS
+        document.getElementById('filter-mes').addEventListener('change', () => {
+            cascadeDays(); // Cascade days based on month
+            applyFilters();
         });
+
+        ['filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
+            document.getElementById(id).addEventListener('change', applyFilters);
+        });
+
         document.getElementById('btn-limpiar').addEventListener('click', () => {
             document.querySelectorAll('select').forEach(sel => sel.value = 'Todos');
+            cascadeDays(); // Reset the days dropdown to show everything
             applyFilters();
         });
 
@@ -537,9 +558,7 @@
         };
 
         const yAxisHHMMSS = {
-            ticks: {
-                callback: function(value) { return formatAHT(value); }
-            }
+            ticks: { callback: function(value) { return formatAHT(value); } }
         };
 
         const updateTrendChart = () => {
