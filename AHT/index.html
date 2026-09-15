@@ -97,7 +97,7 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         
-        <!-- Header (Botones removidos) -->
+        <!-- Header -->
         <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between z-10">
             <div class="flex items-center">
                 <button id="toggleSidebar" class="mr-4 text-slate-300 hover:text-white bg-slate-800 p-2 rounded focus:outline-none">
@@ -194,7 +194,7 @@
                 </div>
             </div>
 
-            <!-- Tables Row: Top Agents (Scrollable) -->
+            <!-- Tables Row: Top Agents -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Top Calls -->
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
@@ -317,7 +317,12 @@
                     const agentName = cleanString(row['Nombre del agente']);
                     let sup = cleanString(row['Supervisor']);
                     let coord = cleanString(row['Coordinador']);
+                    let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
                     
+                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') {
+                        campanaLimpia = 'SIN ASIGNAR';
+                    }
+
                     if (sup === '-' || sup === 'Desconocido' || sup === '') {
                         const mapped = headCountMap[agentName.toLowerCase()];
                         if (mapped) {
@@ -332,7 +337,7 @@
                         mes: d.isValid() ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
                         dia: d.isValid() ? d.format('YYYY-MM-DD') : 'Sin asignar',
                         agente: agentName,
-                        campana: cleanString(row['Campaña']),
+                        campana: campanaLimpia,
                         ringGroup: cleanString(row['Ring Groups']),
                         atendidas: Number(row['Llamadas Atendidas']) || 0,
                         talkTime: Number(row['Talk Time']) || 0,
@@ -351,7 +356,12 @@
                     const agentName = cleanString(row['Nombre del agente']);
                     let sup = cleanString(row['Supervisor']);
                     let coord = cleanString(row['Coordinador']);
+                    let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
                     
+                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') {
+                        campanaLimpia = 'SIN ASIGNAR';
+                    }
+
                     if (sup === '-' || sup === 'Desconocido' || sup === '') {
                         const mapped = headCountMap[agentName.toLowerCase()];
                         if (mapped) {
@@ -369,7 +379,7 @@
                         mes: d.isValid() ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
                         dia: d.isValid() ? d.format('YYYY-MM-DD') : 'Sin asignar',
                         agente: agentName,
-                        campana: cleanString(row['Campaña']),
+                        campana: campanaLimpia,
                         atendidos: atendidos,
                         aht: aht,
                         totalTime: aht * atendidos,
@@ -385,7 +395,6 @@
             applyFilters();
         };
 
-        // AUTO-CARGA DESDE RENDER
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
@@ -407,20 +416,12 @@
                     const arrayBuffer = await response.arrayBuffer();
                     const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
                     processExcelData(workbook);
-                    
-                    if (rawCalls.length === 0 && rawChats.length === 0) {
-                        alert("Se encontró el archivo, pero no tiene las pestañas correctas ('AHT In y Out' o 'AHT Chat').");
-                    }
-                } else {
-                    console.warn("Archivo Excel no encontrado.");
                 }
             } catch (error) {
                 console.error("No se pudo cargar el archivo automáticamente:", error);
             } finally {
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
-                loadingTitle.innerText = "Procesando Base de Datos...";
-                loadingSubtitle.innerText = "Aplicando reglas de mapeo HC y limpieza de datos.";
             }
         });
 
