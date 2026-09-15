@@ -97,7 +97,7 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         
-        <!-- Header -->
+        <!-- Header (Botones removidos) -->
         <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between z-10">
             <div class="flex items-center">
                 <button id="toggleSidebar" class="mr-4 text-slate-300 hover:text-white bg-slate-800 p-2 rounded focus:outline-none">
@@ -107,18 +107,6 @@
                     <h1 class="text-2xl font-bold text-white">Dashboard <span class="text-teal-400">AHT Servicios</span></h1>
                     <p class="text-xs text-slate-400">Métricas Ejecutivas de Llamadas y Chat</p>
                 </div>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <label for="file-upload" class="cursor-pointer bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center">
-                    <i class="fa-solid fa-upload mr-2 text-teal-400"></i>
-                    <span id="upload-text">Cargar Data (Excel)</span>
-                </label>
-                <input id="file-upload" type="file" class="hidden" accept=".xlsx, .xls">
-                
-                <button id="btn-export" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center shadow-lg">
-                    <i class="fa-solid fa-download mr-2"></i> Exportar
-                </button>
             </div>
         </header>
 
@@ -268,9 +256,7 @@
         
         let trendChart, callsCampChart, chatsCampChart, callsCompChart, chatsCompChart;
 
-        const fileInput = document.getElementById('file-upload');
         const overlay = document.getElementById('loading-overlay');
-        const uploadText = document.getElementById('upload-text');
         const loadingTitle = document.getElementById('loading-title');
         const loadingSubtitle = document.getElementById('loading-subtitle');
         const sidebar = document.getElementById('sidebar');
@@ -399,7 +385,7 @@
             applyFilters();
         };
 
-        // 1. AUTO-CARGA MEJORADA AL INICIAR LA PÁGINA
+        // AUTO-CARGA DESDE RENDER
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
@@ -407,14 +393,12 @@
                 loadingTitle.innerText = "Buscando base de datos en Render...";
                 loadingSubtitle.innerText = "Esto puede tomar unos segundos.";
                 
-                // Intenta buscar el archivo con espacios o sin espacios
                 let response = await fetch('./AHT Servicios.xlsx');
                 if (!response.ok) {
                     response = await fetch('./datos.xlsx');
                 }
                 
                 if (response.ok) {
-                    // Evitar que Render mande una página 404 disfrazada de código HTML
                     const contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("text/html")) {
                         throw new Error("Render no encontró el Excel.");
@@ -426,49 +410,18 @@
                     
                     if (rawCalls.length === 0 && rawChats.length === 0) {
                         alert("Se encontró el archivo, pero no tiene las pestañas correctas ('AHT In y Out' o 'AHT Chat').");
-                        uploadText.innerText = "Cargar Data (Excel)";
-                    } else {
-                        uploadText.innerText = "Datos sincronizados";
                     }
                 } else {
-                    console.warn("Archivo Excel no encontrado. Esperando carga manual.");
-                    uploadText.innerText = "Cargar Data (Excel)";
+                    console.warn("Archivo Excel no encontrado.");
                 }
             } catch (error) {
                 console.error("No se pudo cargar el archivo automáticamente:", error);
-                uploadText.innerText = "Cargar Data (Excel)";
             } finally {
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
                 loadingTitle.innerText = "Procesando Base de Datos...";
                 loadingSubtitle.innerText = "Aplicando reglas de mapeo HC y limpieza de datos.";
             }
-        });
-
-        // 2. CARGA MANUAL
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-            uploadText.innerText = `Cargado: ${file.name}`;
-            
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
-                    processExcelData(workbook);
-                } catch (err) {
-                    console.error(err);
-                    alert("Error procesando archivo. Verifica que tenga el formato correcto.");
-                } finally {
-                    overlay.classList.add('hidden');
-                    overlay.classList.remove('flex');
-                }
-            };
-            reader.readAsArrayBuffer(file);
         });
 
         const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x !== 'Desconocido' && x !== '-').sort();
@@ -720,32 +673,6 @@
                 `;
             });
         };
-
-        document.getElementById('btn-export').addEventListener('click', () => {
-            if(filteredCalls.length === 0 && filteredChats.length === 0) return alert("No hay datos para exportar.");
-            
-            const wb = XLSX.utils.book_new();
-            
-            if(filteredCalls.length > 0) {
-                const wsCalls = XLSX.utils.json_to_sheet(filteredCalls.map(c => ({
-                    Fecha: c.dia, Agente: c.agente, Campaña: c.campana, 
-                    'Llamadas Atendidas': c.atendidas, 'AHT (Segundos)': Math.round(c.atendidas > 0 ? c.totalTime/c.atendidas : 0),
-                    Supervisor: c.supervisor, Coordinador: c.coordinador
-                })));
-                XLSX.utils.book_append_sheet(wb, wsCalls, "Llamadas_Filtradas");
-            }
-            
-            if(filteredChats.length > 0) {
-                const wsChats = XLSX.utils.json_to_sheet(filteredChats.map(c => ({
-                    Fecha: c.dia, Agente: c.agente, Campaña: c.campana, 
-                    'Chats Atendidos': c.atendidos, 'AHT (Segundos)': Math.round(c.aht),
-                    Supervisor: c.supervisor, Coordinador: c.coordinador
-                })));
-                XLSX.utils.book_append_sheet(wb, wsChats, "Chats_Filtrados");
-            }
-            
-            XLSX.writeFile(wb, "Reporte_AHT_Exportado.xlsx");
-        });
 
     </script>
 </body>
