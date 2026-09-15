@@ -138,7 +138,7 @@
                 </div>
                 <div class="kpi-card flex items-center">
                     <div class="flex-1">
-                        <div class="kpi-title">Volumen Chats</div>
+                        <div class="kpi-title">Volumen Chats (Atom)</div>
                         <div id="kpi-chats-vol" class="kpi-value">0</div>
                     </div>
                     <div class="kpi-icon bg-teal-100 text-teal-600"><i class="fa-solid fa-comments"></i></div>
@@ -170,7 +170,7 @@
                 </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4"><i class="fa-regular fa-building text-teal-500 mr-2"></i>AHT Chat por Campaña</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4"><i class="fa-regular fa-building text-teal-500 mr-2"></i>AHT Chat por Campaña (Solo Atom)</h3>
                     <div class="h-64 w-full relative">
                         <canvas id="chatsCampChart"></canvas>
                     </div>
@@ -194,7 +194,7 @@
                 </div>
             </div>
 
-            <!-- Tables Row: Top Agents -->
+            <!-- Tables Row: Top Agents (Scrollable) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Top Calls -->
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
@@ -352,15 +352,18 @@
 
             if (workbook.SheetNames.includes('AHT Chat')) {
                 const chatsRaw = XLSX.utils.sheet_to_json(workbook.Sheets['AHT Chat']);
-                rawChats = chatsRaw.map(row => {
+                
+                // FILTER: Only keep rows where Campaign contains "ATOM"
+                const atomChats = chatsRaw.filter(row => {
+                    const camp = String(row['Campaña'] || '').toUpperCase();
+                    return camp.includes('ATOM');
+                });
+
+                rawChats = atomChats.map(row => {
                     const agentName = cleanString(row['Nombre del agente']);
                     let sup = cleanString(row['Supervisor']);
                     let coord = cleanString(row['Coordinador']);
                     let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
-                    
-                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') {
-                        campanaLimpia = 'SIN ASIGNAR';
-                    }
 
                     if (sup === '-' || sup === 'Desconocido' || sup === '') {
                         const mapped = headCountMap[agentName.toLowerCase()];
@@ -395,6 +398,7 @@
             applyFilters();
         };
 
+        // AUTO-CARGA DESDE RENDER
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
