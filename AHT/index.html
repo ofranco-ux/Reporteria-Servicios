@@ -88,9 +88,14 @@
                 </select>
             </div>
             
-            <button id="btn-limpiar" class="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded transition-colors text-sm font-medium shadow-md">
-                <i class="fa-solid fa-eraser mr-2"></i> Limpiar Filtros
-            </button>
+            <div class="pt-2 space-y-2">
+                <button id="btn-limpiar" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded transition-colors text-sm font-medium shadow-md">
+                    <i class="fa-solid fa-eraser mr-2"></i> Limpiar Filtros
+                </button>
+                <button id="btn-exportar" class="w-full bg-teal-600 hover:bg-teal-500 text-white py-2 px-4 rounded transition-colors text-sm font-medium shadow-md">
+                    <i class="fa-solid fa-download mr-2"></i> Exportar Datos
+                </button>
+            </div>
         </div>
     </aside>
 
@@ -438,12 +443,11 @@
         });
 
         // -------------------------------------------------------------
-        // MOTOR DE FILTROS EN CASCADA ("Filtros Chidos")
+        // MOTOR DE FILTROS EN CASCADA
         // -------------------------------------------------------------
         
         const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x && x !== 'Desconocido' && x !== '-').sort();
 
-        // Esta función revisa si un registro "pasa" los filtros, permitiendo omitir uno (para calcular cascadas)
         const checkFilters = (row, skipKey, isChat) => {
             const passMes = skipKey === 'mes' || currentFilters.mes === 'Todos' || row.mes === currentFilters.mes;
             const passDia = skipKey === 'dia' || currentFilters.dia === 'Todos' || row.dia === currentFilters.dia;
@@ -466,7 +470,6 @@
             
             let uniqueOpts = [];
             
-            // Calculamos qué opciones son válidas de acuerdo a TODOS los demás filtros activos
             if (dataKey === 'ringGroup') {
                 const validCalls = rawCalls.filter(d => checkFilters(d, 'ringGroup', false));
                 uniqueOpts = getUnique(validCalls, 'ringGroup');
@@ -488,7 +491,6 @@
                 selectEl.innerHTML += `<option value="${opt}">${opt}</option>`;
             });
 
-            // Si el valor que tenías seleccionado sigue siendo válido, lo mantenemos. Si no, regresamos a "Todos"
             if (currentValue !== 'Todos' && uniqueOpts.includes(currentValue)) {
                 selectEl.value = currentValue;
             } else {
@@ -498,7 +500,6 @@
         };
 
         const applyFilters = () => {
-            // 1. Leer estado de los selectores
             currentFilters.mes = document.getElementById('filter-mes').value;
             currentFilters.dia = document.getElementById('filter-dia').value;
             currentFilters.campana = document.getElementById('filter-campana').value;
@@ -506,14 +507,11 @@
             currentFilters.supervisor = document.getElementById('filter-supervisor').value;
             currentFilters.coordinador = document.getElementById('filter-coordinador').value;
 
-            // 2. Filtrar data real para el dashboard
             filteredCalls = rawCalls.filter(d => checkFilters(d, null, false));
             filteredChats = rawChats.filter(d => checkFilters(d, null, true));
 
-            // 3. Actualizar Gráficas
             updateDashboard();
 
-            // 4. CASCADA: Actualizar opciones disponibles en base a lo que se acaba de filtrar
             updateDropdownOptions('filter-mes', 'mes');
             updateDropdownOptions('filter-dia', 'dia');
             updateDropdownOptions('filter-campana', 'campana');
@@ -522,16 +520,43 @@
             updateDropdownOptions('filter-coordinador', 'coordinador');
         };
 
-        // Asignar los eventos de cascada a los selectores
         ['filter-mes', 'filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
             document.getElementById(id).addEventListener('change', applyFilters);
         });
 
-        // Botón Limpiar (Reset total)
         document.getElementById('btn-limpiar').addEventListener('click', () => {
             currentFilters = { mes: 'Todos', dia: 'Todos', campana: 'Todos', ringGroup: 'Todos', supervisor: 'Todos', coordinador: 'Todos' };
             document.querySelectorAll('select').forEach(sel => sel.value = 'Todos');
             applyFilters();
+        });
+
+        // -------------------------------------------------------------
+        // EXPORTACIÓN DE DATOS (NUEVO BOTÓN)
+        // -------------------------------------------------------------
+        document.getElementById('btn-exportar').addEventListener('click', () => {
+            if(filteredCalls.length === 0 && filteredChats.length === 0) return alert("No hay datos para exportar.");
+            
+            const wb = XLSX.utils.book_new();
+            
+            if(filteredCalls.length > 0) {
+                const wsCalls = XLSX.utils.json_to_sheet(filteredCalls.map(c => ({
+                    Fecha: c.dia, Agente: c.agente, Campaña: c.campana, 'Ring Group': c.ringGroup,
+                    'Llamadas Atendidas': c.atendidas, 'AHT (Segundos)': Math.round(c.atendidas > 0 ? c.totalTime/c.atendidas : 0),
+                    Supervisor: c.supervisor, Coordinador: c.coordinador
+                })));
+                XLSX.utils.book_append_sheet(wb, wsCalls, "Llamadas_Filtradas");
+            }
+            
+            if(filteredChats.length > 0) {
+                const wsChats = XLSX.utils.json_to_sheet(filteredChats.map(c => ({
+                    Fecha: c.dia, Agente: c.agente, Campaña: c.campana, 
+                    'Chats Atendidos': c.atendidos, 'AHT (Segundos)': Math.round(c.aht),
+                    Supervisor: c.supervisor, Coordinador: c.coordinador
+                })));
+                XLSX.utils.book_append_sheet(wb, wsChats, "Chats_Filtrados");
+            }
+            
+            XLSX.writeFile(wb, "Reporte_AHT_Exportado.xlsx");
         });
 
         // -------------------------------------------------------------
