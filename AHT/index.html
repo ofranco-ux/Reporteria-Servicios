@@ -70,7 +70,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Ring Group (Solo Llamadas)</label>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Ring Group (Llamadas)</label>
                 <select id="filter-ringgroup" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded px-3 py-2 focus:outline-none focus:border-teal-500">
                     <option value="Todos">Todos</option>
                 </select>
@@ -88,7 +88,7 @@
                 </select>
             </div>
             
-            <button id="btn-limpiar" class="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded transition-colors text-sm font-medium">
+            <button id="btn-limpiar" class="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded transition-colors text-sm font-medium shadow-md">
                 <i class="fa-solid fa-eraser mr-2"></i> Limpiar Filtros
             </button>
         </div>
@@ -244,15 +244,28 @@
         </div>
     </main>
 
+    <!-- JavaScript Logic -->
     <script>
+        // Data Stores
         let rawCalls = [];
         let rawChats = [];
         let filteredCalls = [];
         let filteredChats = [];
         let headCountMap = {}; 
         
+        // Filter State (Para los Filtros Chidos)
+        let currentFilters = {
+            mes: 'Todos',
+            dia: 'Todos',
+            campana: 'Todos',
+            ringGroup: 'Todos',
+            supervisor: 'Todos',
+            coordinador: 'Todos'
+        };
+        
         let trendChart, callsCampChart, chatsCampChart, callsCompChart, chatsCompChart;
 
+        // UI Setup
         const overlay = document.getElementById('loading-overlay');
         const loadingTitle = document.getElementById('loading-title');
         const loadingSubtitle = document.getElementById('loading-subtitle');
@@ -272,6 +285,7 @@
             sidebar.classList.remove('flex');
         });
 
+        // Utils
         const formatAHT = (seconds) => {
             if (!seconds || isNaN(seconds) || seconds < 0) return '00:00:00';
             const h = Math.floor(seconds / 3600);
@@ -295,6 +309,7 @@
             return m.isValid() ? m : moment(val);
         };
 
+        // Procesamiento del Excel
         const processExcelData = (workbook) => {
             headCountMap = {};
             if (workbook.SheetNames.includes('HC')) {
@@ -348,6 +363,7 @@
             if (workbook.SheetNames.includes('AHT Chat')) {
                 const chatsRaw = XLSX.utils.sheet_to_json(workbook.Sheets['AHT Chat']);
                 
+                // Regla estricta: Solo campañas que digan ATOM
                 const atomChats = chatsRaw.filter(row => {
                     const camp = String(row['Campaña'] || '').toUpperCase();
                     return camp.includes('ATOM');
@@ -388,10 +404,11 @@
                 });
             }
 
-            populateFilters();
+            // Al inicio, forzamos aplicar los filtros para que todo arranque sincronizado
             applyFilters();
         };
 
+        // Render Fetching
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
@@ -420,98 +437,106 @@
             }
         });
 
-        const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x !== 'Desconocido' && x !== '-').sort();
+        // -------------------------------------------------------------
+        // MOTOR DE FILTROS EN CASCADA ("Filtros Chidos")
+        // -------------------------------------------------------------
         
-        // MODIFIED: Smart Dropdown Population
-        const fillSelect = (id, options) => {
-            const el = document.getElementById(id);
-            const currentValue = el.value;
-            el.innerHTML = '<option value="Todos">Todos</option>';
-            options.forEach(opt => {
-                el.innerHTML += `<option value="${opt}">${opt}</option>`;
-            });
+        const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x && x !== 'Desconocido' && x !== '-').sort();
+
+        // Esta función revisa si un registro "pasa" los filtros, permitiendo omitir uno (para calcular cascadas)
+        const checkFilters = (row, skipKey, isChat) => {
+            const passMes = skipKey === 'mes' || currentFilters.mes === 'Todos' || row.mes === currentFilters.mes;
+            const passDia = skipKey === 'dia' || currentFilters.dia === 'Todos' || row.dia === currentFilters.dia;
+            const passCamp = skipKey === 'campana' || currentFilters.campana === 'Todos' || row.campana === currentFilters.campana;
             
-            // Restore selection if it's still valid in the new list
-            if (Array.from(el.options).some(opt => opt.value === currentValue)) {
-                el.value = currentValue;
+            let passRG = true;
+            if (!isChat) {
+                passRG = skipKey === 'ringGroup' || currentFilters.ringGroup === 'Todos' || row.ringGroup === currentFilters.ringGroup;
+            }
+            
+            const passSup = skipKey === 'supervisor' || currentFilters.supervisor === 'Todos' || row.supervisor === currentFilters.supervisor;
+            const passCoord = skipKey === 'coordinador' || currentFilters.coordinador === 'Todos' || row.coordinador === currentFilters.coordinador;
+
+            return passMes && passDia && passCamp && passRG && passSup && passCoord;
+        };
+
+        const updateDropdownOptions = (elementId, dataKey) => {
+            const selectEl = document.getElementById(elementId);
+            const currentValue = currentFilters[dataKey];
+            
+            let uniqueOpts = [];
+            
+            // Calculamos qué opciones son válidas de acuerdo a TODOS los demás filtros activos
+            if (dataKey === 'ringGroup') {
+                const validCalls = rawCalls.filter(d => checkFilters(d, 'ringGroup', false));
+                uniqueOpts = getUnique(validCalls, 'ringGroup');
             } else {
-                el.value = 'Todos';
+                const validCalls = rawCalls.filter(d => checkFilters(d, dataKey, false));
+                const validChats = rawChats.filter(d => checkFilters(d, dataKey, true));
+                uniqueOpts = getUnique([...validCalls, ...validChats], dataKey);
             }
-        };
 
-        const populateFilters = () => {
-            const allData = [...rawCalls, ...rawChats];
-            
-            const uniqueMonths = [...new Set(allData.map(d => d.mes))];
-            const sortedMonths = uniqueMonths.sort((a,b) => {
-                if(a==='Sin asignar') return 1;
-                return moment(a, 'MMMM YYYY', 'es').valueOf() - moment(b, 'MMMM YYYY', 'es').valueOf();
+            if (dataKey === 'mes') {
+                uniqueOpts = uniqueOpts.sort((a,b) => {
+                    if(a==='Sin asignar') return 1;
+                    return moment(a, 'MMMM YYYY', 'es').valueOf() - moment(b, 'MMMM YYYY', 'es').valueOf();
+                });
+            }
+
+            selectEl.innerHTML = '<option value="Todos">Todos</option>';
+            uniqueOpts.forEach(opt => {
+                selectEl.innerHTML += `<option value="${opt}">${opt}</option>`;
             });
-            
-            fillSelect('filter-mes', sortedMonths);
-            fillSelect('filter-dia', getUnique(allData, 'dia'));
-            fillSelect('filter-campana', getUnique(allData, 'campana'));
-            fillSelect('filter-ringgroup', getUnique(rawCalls, 'ringGroup'));
-            fillSelect('filter-supervisor', getUnique(allData, 'supervisor'));
-            fillSelect('filter-coordinador', getUnique(allData, 'coordinador'));
-        };
 
-        // NEW: Cascade Logic
-        const cascadeDays = () => {
-            const fMes = document.getElementById('filter-mes').value;
-            const allData = [...rawCalls, ...rawChats];
-            
-            let filteredForDays = allData;
-            if (fMes !== 'Todos') {
-                filteredForDays = allData.filter(d => d.mes === fMes);
+            // Si el valor que tenías seleccionado sigue siendo válido, lo mantenemos. Si no, regresamos a "Todos"
+            if (currentValue !== 'Todos' && uniqueOpts.includes(currentValue)) {
+                selectEl.value = currentValue;
+            } else {
+                selectEl.value = 'Todos';
+                currentFilters[dataKey] = 'Todos';
             }
-            
-            fillSelect('filter-dia', getUnique(filteredForDays, 'dia'));
         };
 
         const applyFilters = () => {
-            const fMes = document.getElementById('filter-mes').value;
-            const fDia = document.getElementById('filter-dia').value;
-            const fCamp = document.getElementById('filter-campana').value;
-            const fRG = document.getElementById('filter-ringgroup').value;
-            const fSup = document.getElementById('filter-supervisor').value;
-            const fCoord = document.getElementById('filter-coordinador').value;
+            // 1. Leer estado de los selectores
+            currentFilters.mes = document.getElementById('filter-mes').value;
+            currentFilters.dia = document.getElementById('filter-dia').value;
+            currentFilters.campana = document.getElementById('filter-campana').value;
+            currentFilters.ringGroup = document.getElementById('filter-ringgroup').value;
+            currentFilters.supervisor = document.getElementById('filter-supervisor').value;
+            currentFilters.coordinador = document.getElementById('filter-coordinador').value;
 
-            filteredCalls = rawCalls.filter(d => {
-                return (fMes === 'Todos' || d.mes === fMes) &&
-                       (fDia === 'Todos' || d.dia === fDia) &&
-                       (fCamp === 'Todos' || d.campana === fCamp) &&
-                       (fRG === 'Todos' || d.ringGroup === fRG) &&
-                       (fSup === 'Todos' || d.supervisor === fSup) &&
-                       (fCoord === 'Todos' || d.coordinador === fCoord);
-            });
+            // 2. Filtrar data real para el dashboard
+            filteredCalls = rawCalls.filter(d => checkFilters(d, null, false));
+            filteredChats = rawChats.filter(d => checkFilters(d, null, true));
 
-            filteredChats = rawChats.filter(d => {
-                return (fMes === 'Todos' || d.mes === fMes) &&
-                       (fDia === 'Todos' || d.dia === fDia) &&
-                       (fCamp === 'Todos' || d.campana === fCamp) &&
-                       (fSup === 'Todos' || d.supervisor === fSup) &&
-                       (fCoord === 'Todos' || d.coordinador === fCoord);
-            });
-
+            // 3. Actualizar Gráficas
             updateDashboard();
+
+            // 4. CASCADA: Actualizar opciones disponibles en base a lo que se acaba de filtrar
+            updateDropdownOptions('filter-mes', 'mes');
+            updateDropdownOptions('filter-dia', 'dia');
+            updateDropdownOptions('filter-campana', 'campana');
+            updateDropdownOptions('filter-ringgroup', 'ringGroup');
+            updateDropdownOptions('filter-supervisor', 'supervisor');
+            updateDropdownOptions('filter-coordinador', 'coordinador');
         };
 
-        // EVENT LISTENERS FOR FILTERS
-        document.getElementById('filter-mes').addEventListener('change', () => {
-            cascadeDays(); // Cascade days based on month
-            applyFilters();
-        });
-
-        ['filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
+        // Asignar los eventos de cascada a los selectores
+        ['filter-mes', 'filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
             document.getElementById(id).addEventListener('change', applyFilters);
         });
 
+        // Botón Limpiar (Reset total)
         document.getElementById('btn-limpiar').addEventListener('click', () => {
+            currentFilters = { mes: 'Todos', dia: 'Todos', campana: 'Todos', ringGroup: 'Todos', supervisor: 'Todos', coordinador: 'Todos' };
             document.querySelectorAll('select').forEach(sel => sel.value = 'Todos');
-            cascadeDays(); // Reset the days dropdown to show everything
             applyFilters();
         });
+
+        // -------------------------------------------------------------
+        // RENDERIZADO DEL DASHBOARD
+        // -------------------------------------------------------------
 
         const updateDashboard = () => {
             let sumLlamadas = 0, sumTotalTimeCalls = 0;
