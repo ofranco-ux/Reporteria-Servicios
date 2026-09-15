@@ -126,7 +126,7 @@
         <div id="loading-overlay" class="absolute inset-0 bg-white/80 z-50 hidden flex-col items-center justify-center">
             <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-teal-600 mb-4"></div>
             <h3 class="text-lg font-semibold text-slate-700" id="loading-title">Procesando Base de Datos...</h3>
-            <p class="text-sm text-slate-500">Aplicando reglas de mapeo HC y limpieza de datos.</p>
+            <p class="text-sm text-slate-500" id="loading-subtitle">Aplicando reglas de mapeo HC y limpieza de datos.</p>
         </div>
 
         <!-- Scrollable Dashboard Body -->
@@ -272,6 +272,7 @@
         const overlay = document.getElementById('loading-overlay');
         const uploadText = document.getElementById('upload-text');
         const loadingTitle = document.getElementById('loading-title');
+        const loadingSubtitle = document.getElementById('loading-subtitle');
         const sidebar = document.getElementById('sidebar');
         
         document.getElementById('toggleSidebar').addEventListener('click', () => {
@@ -311,7 +312,6 @@
             return m.isValid() ? m : moment(val);
         };
 
-        // Función centralizada para procesar el Excel (ya sea por web o archivo local)
         const processExcelData = (workbook) => {
             headCountMap = {};
             if (workbook.SheetNames.includes('HC')) {
@@ -399,32 +399,53 @@
             applyFilters();
         };
 
-        // 1. AUTO-CARGA AL INICIAR LA PÁGINA
+        // 1. AUTO-CARGA MEJORADA AL INICIAR LA PÁGINA
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');
-                loadingTitle.innerText = "Descargando datos del servidor...";
+                loadingTitle.innerText = "Buscando base de datos en Render...";
+                loadingSubtitle.innerText = "Esto puede tomar unos segundos.";
                 
-                const response = await fetch('./datos.xlsx');
+                // Intenta buscar el archivo con espacios o sin espacios
+                let response = await fetch('./AHT Servicios.xlsx');
+                if (!response.ok) {
+                    response = await fetch('./datos.xlsx');
+                }
+                
                 if (response.ok) {
+                    // Evitar que Render mande una página 404 disfrazada de código HTML
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("text/html")) {
+                        throw new Error("Render no encontró el Excel.");
+                    }
+
                     const arrayBuffer = await response.arrayBuffer();
                     const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
                     processExcelData(workbook);
-                    uploadText.innerText = "Datos sincronizados";
+                    
+                    if (rawCalls.length === 0 && rawChats.length === 0) {
+                        alert("Se encontró el archivo, pero no tiene las pestañas correctas ('AHT In y Out' o 'AHT Chat').");
+                        uploadText.innerText = "Cargar Data (Excel)";
+                    } else {
+                        uploadText.innerText = "Datos sincronizados";
+                    }
                 } else {
-                    console.warn("Archivo datos.xlsx no encontrado. Esperando carga manual.");
+                    console.warn("Archivo Excel no encontrado. Esperando carga manual.");
+                    uploadText.innerText = "Cargar Data (Excel)";
                 }
             } catch (error) {
                 console.error("No se pudo cargar el archivo automáticamente:", error);
+                uploadText.innerText = "Cargar Data (Excel)";
             } finally {
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
                 loadingTitle.innerText = "Procesando Base de Datos...";
+                loadingSubtitle.innerText = "Aplicando reglas de mapeo HC y limpieza de datos.";
             }
         });
 
-        // 2. CARGA MANUAL (POR SI QUIERES ACTUALIZAR)
+        // 2. CARGA MANUAL
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
