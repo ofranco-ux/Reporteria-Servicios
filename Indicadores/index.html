@@ -24,13 +24,13 @@
             --text-soft: #94A3B8;
             --border-color: #E9EEF4;
 
-            --blue-deep: #0B2E6B;
-            --blue-primary: #2563EB;
-            --blue-cyan: #0EA5E9;
+            --blue-deep: #312E81;
+            --blue-primary: #4F46E5;
+            --blue-cyan: #06B6D4;
             --green: #10B981;
             --amber: #F59E0B;
             --red-soft: #F43F5E;
-            --theme-color: #2563EB;
+            --theme-color: #4F46E5;
 
             --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
             --shadow-md: 0 10px 30px -12px rgba(15,23,42,0.15);
@@ -45,7 +45,7 @@
 
         body {
             background:
-                radial-gradient(1200px 600px at 100% -5%, rgba(37,99,235,0.06), transparent 60%),
+                radial-gradient(1200px 600px at 100% -5%, rgba(79,70,229,0.06), transparent 60%),
                 radial-gradient(900px 500px at -10% 10%, rgba(14,165,233,0.05), transparent 55%),
                 linear-gradient(180deg, var(--bg-gradient-1) 0%, var(--bg-body) 100%);
             background-attachment: fixed;
@@ -57,9 +57,9 @@
 
         /* ===== Header ===== */
         .navbar {
-            background: linear-gradient(120deg, #0B2E6B 0%, #123C86 55%, #1E4FB0 100%);
+            background: linear-gradient(120deg, #312E81 0%, #3730A3 55%, #4F46E5 100%);
             padding: 16px 0;
-            box-shadow: 0 10px 30px -10px rgba(11,46,107,0.55);
+            box-shadow: 0 10px 30px -10px rgba(49,46,129,0.55);
             position: relative;
             overflow: hidden;
         }
@@ -95,8 +95,8 @@
         .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #FFFFFF; transform: translateY(-1px); box-shadow: var(--shadow-md); }
         .nav-tabs .nav-link.active {
             color: #FFFFFF; border-color: transparent;
-            background: linear-gradient(120deg, #2563EB, #1D4ED8);
-            box-shadow: 0 10px 22px -8px rgba(37,99,235,0.6);
+            background: linear-gradient(120deg, #4F46E5, #4338CA);
+            box-shadow: 0 10px 22px -8px rgba(79,70,229,0.6);
         }
 
         /* ===== Panels ===== */
@@ -116,10 +116,10 @@
         .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
         .form-select, .form-control { border-radius: 11px; border: 1.5px solid var(--border-color); padding: 10px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; transition: all 0.2s; }
         .form-select:hover, .form-control:hover { border-color: #CBD5E1; }
-        .form-select:focus, .form-control:focus { border-color: var(--blue-primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(37,99,235,0.12); }
+        .form-select:focus, .form-control:focus { border-color: var(--blue-primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(79,70,229,0.12); }
 
         .btn-outline-export { border: 1.5px solid var(--border-color); color: var(--text-main); background: #FFFFFF; border-radius: 11px; padding: 8px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
-        .btn-outline-export:hover { background: var(--blue-primary); border-color: var(--blue-primary); color: #fff; box-shadow: 0 8px 18px -8px rgba(37,99,235,0.6); }
+        .btn-outline-export:hover { background: var(--blue-primary); border-color: var(--blue-primary); color: #fff; box-shadow: 0 8px 18px -8px rgba(79,70,229,0.6); }
 
         /* ===== KPI cards ===== */
         .kpi-card { position: relative; overflow: hidden; }
@@ -134,12 +134,12 @@
         .kpi-title { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .kpi-value { font-size: 1.72rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s ease;}
         .kpi-value-time { font-size: 1.05rem !important; letter-spacing: -0.2px !important; white-space: nowrap !important; overflow: visible !important; text-overflow: clip !important; }
-        .kpi-icon-box { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; margin-left: 8px; transition: all 0.3s ease; background: linear-gradient(135deg, #EFF6FF, #E0F2FE); color: var(--blue-primary); }
+        .kpi-icon-box { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; margin-left: 8px; transition: all 0.3s ease; background: linear-gradient(135deg, #EEF2FF, #CFFAFE); color: var(--blue-primary); }
         .kpi-card:hover .kpi-icon-box { transform: scale(1.06) rotate(-3deg); }
 
         /* ===== Section titles ===== */
         .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
-        .section-title .title-ico { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg,#EFF6FF,#DBEAFE); color: var(--blue-primary); margin-right: 12px; font-size: 1rem; }
+        .section-title .title-ico { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg,#EEF2FF,#E0E7FF); color: var(--blue-primary); margin-right: 12px; font-size: 1rem; }
         .section-sub { font-size: 0.75rem; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
 
         /* ===== Table ===== */
@@ -148,7 +148,7 @@
         table thead th { position: sticky; top: 0; background: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.68rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid var(--border-color); z-index: 1; letter-spacing: 0.8px; }
         table tbody td { font-size: 0.88rem; color: #1E293B; font-weight: 600; padding: 13px 16px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
         table tbody tr { transition: background-color 0.15s; }
-        table tbody tr:hover { background-color: #EFF6FF; }
+        table tbody tr:hover { background-color: #EEF2FF; }
 
         .pill-badge { font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; font-weight: 800; display: inline-block; }
         .pill-success { background-color: #DCFCE7; color: #15803D; }
@@ -490,7 +490,7 @@
                 labels.push(intv); dRec.push(d.rec);
                 const rAHT = d.rec > 0 ? (d.sumAHT / d.rec) : 0;
                 
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="fw-bold" style="color:#1D4ED8;">${d.rec.toLocaleString()}</td><td class="fw-bold text-secondary">${formatSeconds(rAHT)}</td></tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td class="fw-bold" style="color:#4338CA;">${d.rec.toLocaleString()}</td><td class="fw-bold text-secondary">${formatSeconds(rAHT)}</td></tr>`;
                 
                 currentFilteredIntervalData.push({
                     "Intervalo": intv,
@@ -568,7 +568,7 @@
                 let pillClass = rSLA >= 80 ? 'pill-success' : (rSLA >= 70 ? 'pill-warning' : 'pill-danger');
 
                 let tdExtra = currentModule === 'CHAT' ? '' : `<td class="fw-semibold text-secondary">${formatSeconds(rASA)}</td>`;
-                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#0EA5E9;">${d.aten.toLocaleString()}</td><td class="fw-bold" style="color:#10B981;">${d.atenSLA.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold">${intv}</td><td>${d.rec.toLocaleString()}</td><td class="fw-bold" style="color:#06B6D4;">${d.aten.toLocaleString()}</td><td class="fw-bold" style="color:#10B981;">${d.atenSLA.toLocaleString()}</td><td class="text-danger fw-bold">${d.aban.toLocaleString()}</td><td class="fw-semibold">${rAba}%</td><td><span class="pill-badge ${pillClass}">${rSLA}%</span></td><td class="fw-semibold text-secondary">${formatSeconds(rAHT)}</td>${tdExtra}</tr>`;
 
                 let exportRow = {
                     "Intervalo": intv,
@@ -601,7 +601,7 @@
                 type: 'bar',
                 label: 'Llamadas Realizadas', 
                 data: dRec, 
-                backgroundColor: '#1D4ED8',
+                backgroundColor: '#4338CA',
                 borderRadius: 6,
                 barPercentage: 0.85,
                 categoryPercentage: 0.85,
@@ -614,7 +614,7 @@
                     type: 'bar',
                     label: 'Chats Entrantes', 
                     data: dRec, 
-                    backgroundColor: '#E0F2FE', 
+                    backgroundColor: '#CFFAFE', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -626,7 +626,7 @@
                     type: 'bar',
                     label: 'Chats Atendidos', 
                     data: dAte, 
-                    backgroundColor: '#0284C7', 
+                    backgroundColor: '#0891B2', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -669,7 +669,7 @@
                     type: 'bar',
                     label: 'Volumen Recibido', 
                     data: dRec, 
-                    backgroundColor: '#DBEAFE', 
+                    backgroundColor: '#E0E7FF', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
@@ -681,7 +681,7 @@
                     type: 'bar',
                     label: 'Atendidas', 
                     data: dAte, 
-                    backgroundColor: '#1D4ED8', 
+                    backgroundColor: '#4338CA', 
                     borderRadius: 6,
                     barPercentage: 0.85,
                     categoryPercentage: 0.85,
