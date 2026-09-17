@@ -15,66 +15,151 @@
 
     <style>
         :root {
-            --bg-body: #EBF1F5;
+            --bg-body: #F1F5F9;
+            --bg-gradient-1: #EEF3FA;
+            --bg-gradient-2: #E7EEF7;
             --card-bg: #FFFFFF;
-            --text-main: #1E293B;
+            --text-main: #0F172A;
             --text-muted: #64748B;
-            --border-color: #E2E8F0;
-            
-            --blue-primary: #1D4ED8;
+            --text-soft: #94A3B8;
+            --border-color: #E9EEF4;
+
+            --blue-deep: #0B2E6B;
+            --blue-primary: #2563EB;
             --blue-cyan: #0EA5E9;
+            --green: #10B981;
+            --amber: #F59E0B;
             --red-soft: #F43F5E;
-            --theme-color: #1D4ED8;
+            --theme-color: #2563EB;
+
+            --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+            --shadow-md: 0 10px 30px -12px rgba(15,23,42,0.15);
+            --shadow-lg: 0 20px 45px -20px rgba(15,23,42,0.25);
+            --radius: 20px;
         }
 
-        body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); -webkit-font-smoothing: antialiased; }
-        
-        /* Header Azul Profundo */
-        .navbar { background: #093986; padding: 18px 36px; box-shadow: 0 4px 15px rgba(9, 57, 134, 0.2); }
-        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; color: #FFFFFF !important; }
+        * { scrollbar-width: thin; scrollbar-color: #CBD5E1 transparent; }
+        *::-webkit-scrollbar { width: 8px; height: 8px; }
+        *::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 8px; }
+        *::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
-        .nav-tabs { border-bottom: None; margin-bottom: 24px; gap: 10px; }
-        .nav-tabs .nav-link { color: var(--text-muted); font-weight: 700; padding: 10px 22px; border: none; border-radius: 12px; transition: all 0.2s ease; font-size: 0.88rem; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #F8FAFC; }
-        .nav-tabs .nav-link.active { color: #FFFFFF; background: var(--blue-primary); box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3); }
+        body {
+            background:
+                radial-gradient(1200px 600px at 100% -5%, rgba(37,99,235,0.06), transparent 60%),
+                radial-gradient(900px 500px at -10% 10%, rgba(14,165,233,0.05), transparent 55%),
+                linear-gradient(180deg, var(--bg-gradient-1) 0%, var(--bg-body) 100%);
+            background-attachment: fixed;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
 
-        .glass-panel { background: var(--card-bg); border-radius: 18px; padding: 24px; box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.1); margin-bottom: 24px; border: none; transition: background-color 0.3s ease; }
-        
+        /* ===== Header ===== */
+        .navbar {
+            background: linear-gradient(120deg, #0B2E6B 0%, #123C86 55%, #1E4FB0 100%);
+            padding: 16px 0;
+            box-shadow: 0 10px 30px -10px rgba(11,46,107,0.55);
+            position: relative;
+            overflow: hidden;
+        }
+        .navbar::after {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(600px 200px at 90% -50%, rgba(255,255,255,0.14), transparent 70%);
+            pointer-events: none;
+        }
+        .brand-logo {
+            width: 44px; height: 44px; border-radius: 13px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; color: #fff; backdrop-filter: blur(4px);
+        }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; font-size: 1.35rem; color: #FFFFFF !important; line-height: 1.1; }
+        .brand-sub { font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.7); letter-spacing: 0.4px; }
+        .header-chip {
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+            color: #fff; border-radius: 999px; padding: 7px 16px; font-size: 0.78rem; font-weight: 700;
+            display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(4px);
+        }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #34D399; box-shadow: 0 0 0 0 rgba(52,211,153,0.7); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(52,211,153,0.6);} 70%{box-shadow:0 0 0 8px rgba(52,211,153,0);} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0);} }
+
+        /* ===== Tabs ===== */
+        .nav-tabs { border-bottom: none; margin-bottom: 24px; gap: 10px; }
+        .nav-tabs .nav-link {
+            color: var(--text-muted); font-weight: 700; padding: 11px 24px; border: 1px solid var(--border-color);
+            border-radius: 14px; transition: all 0.22s cubic-bezier(.4,0,.2,1); font-size: 0.88rem;
+            background: rgba(255,255,255,0.75); box-shadow: var(--shadow-sm); backdrop-filter: blur(6px);
+        }
+        .nav-tabs .nav-link:hover { color: var(--blue-primary); background: #FFFFFF; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .nav-tabs .nav-link.active {
+            color: #FFFFFF; border-color: transparent;
+            background: linear-gradient(120deg, #2563EB, #1D4ED8);
+            box-shadow: 0 10px 22px -8px rgba(37,99,235,0.6);
+        }
+
+        /* ===== Panels ===== */
+        .glass-panel {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            border: 1px solid rgba(226,232,240,0.7);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+        }
+
+        .filter-panel { padding: 18px 22px; }
+
+        /* ===== Forms ===== */
         .form-label { font-weight: 800; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-        .form-select, .form-control { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 9px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; }
-        .form-select:focus, .form-control:focus { border-color: var(--blue-primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
-        
-        .btn-outline-export { border: 1.5px solid #CBD5E1; color: var(--text-main); background: #FFFFFF; border-radius: 10px; padding: 7px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
-        .btn-outline-export:hover { background: #F8FAFC; border-color: #94A3B8; }
+        .form-select, .form-control { border-radius: 11px; border: 1.5px solid var(--border-color); padding: 10px 13px; font-weight: 600; font-size: 0.85rem; color: var(--text-main); background-color: #F8FAFC; transition: all 0.2s; }
+        .form-select:hover, .form-control:hover { border-color: #CBD5E1; }
+        .form-select:focus, .form-control:focus { border-color: var(--blue-primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(37,99,235,0.12); }
 
+        .btn-outline-export { border: 1.5px solid var(--border-color); color: var(--text-main); background: #FFFFFF; border-radius: 11px; padding: 8px 16px; font-weight: 700; font-size: 0.80rem; transition: all 0.2s; }
+        .btn-outline-export:hover { background: var(--blue-primary); border-color: var(--blue-primary); color: #fff; box-shadow: 0 8px 18px -8px rgba(37,99,235,0.6); }
+
+        /* ===== KPI cards ===== */
+        .kpi-card { position: relative; overflow: hidden; }
+        .kpi-card::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(180deg, var(--blue-primary), var(--blue-cyan));
+            opacity: 0.9;
+        }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
         .kpi-wrapper { display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
         .kpi-info { display: flex; flex-direction: column; min-width: 0; }
-        .kpi-title { font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        /* Ajuste general de KPIs */
-        .kpi-value { font-size: 1.70rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s ease;}
-        
-        /* AJUSTE CLAVE: Evita cortes en el texto de tiempos (AHT/ASA) */
+        .kpi-title { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kpi-value { font-size: 1.72rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s ease;}
         .kpi-value-time { font-size: 1.05rem !important; letter-spacing: -0.2px !important; white-space: nowrap !important; overflow: visible !important; text-overflow: clip !important; }
+        .kpi-icon-box { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; margin-left: 8px; transition: all 0.3s ease; background: linear-gradient(135deg, #EFF6FF, #E0F2FE); color: var(--blue-primary); }
+        .kpi-card:hover .kpi-icon-box { transform: scale(1.06) rotate(-3deg); }
 
-        /* Ajuste: Ícono ligeramente más pequeño para dar espacio al texto */
-        .kpi-icon-box { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; margin-left: 6px; transition: all 0.3s ease; }
-
+        /* ===== Section titles ===== */
         .section-title { font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 0; display: flex; align-items: center; letter-spacing: -0.3px; }
-        
-        .table-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid #E2E8F0; }
+        .section-title .title-ico { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg,#EFF6FF,#DBEAFE); color: var(--blue-primary); margin-right: 12px; font-size: 1rem; }
+        .section-sub { font-size: 0.75rem; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
+
+        /* ===== Table ===== */
+        .table-container { max-height: 440px; overflow-y: auto; border-radius: 14px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        table thead th { position: sticky; top: 0; background-color: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.70rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid #E2E8F0; z-index: 1; letter-spacing: 0.8px; }
+        table thead th { position: sticky; top: 0; background: #F8FAFC !important; color: var(--text-muted) !important; font-weight: 800; font-size: 0.68rem; text-transform: uppercase; padding: 14px 16px; border-bottom: 2px solid var(--border-color); z-index: 1; letter-spacing: 0.8px; }
         table tbody td { font-size: 0.88rem; color: #1E293B; font-weight: 600; padding: 13px 16px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
-        table tbody tr:hover { background-color: #F8FAFC; }
-        
+        table tbody tr { transition: background-color 0.15s; }
+        table tbody tr:hover { background-color: #EFF6FF; }
+
         .pill-badge { font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; font-weight: 800; display: inline-block; }
         .pill-success { background-color: #DCFCE7; color: #15803D; }
         .pill-warning { background-color: #FEF3C7; color: #B45309; }
         .pill-danger { background-color: #FEE2E2; color: #B91C1C; }
 
-        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px); }
-        .spinner-custom { color: #1D4ED8; width: 3.5rem; height: 3.5rem; border-width: 4px; }
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241,245,249,0.85); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(10px); }
+        .spinner-custom { color: var(--blue-primary); width: 3.5rem; height: 3.5rem; border-width: 4px; }
+
+        .fade-in { animation: fadeUp 0.5s ease both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     </style>
 </head>
 <body class="module-inbound">
@@ -85,10 +170,15 @@
 </div>
 
 <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <i class="bi bi-bar-chart-line-fill me-2 text-white"></i> Indicadores Servicios
+            <span class="brand-logo me-3"><i class="bi bi-bar-chart-line-fill"></i></span>
+            <span class="d-flex flex-column">
+                <span>Indicadores Servicios</span>
+                <span class="brand-sub">Panel operativo de Contact Center</span>
+            </span>
         </a>
+        <span class="header-chip d-none d-md-inline-flex"><span class="live-dot"></span> Monitoreo en tiempo real</span>
     </div>
 </nav>
 
@@ -101,7 +191,7 @@
     </ul>
 
     <!-- Panel de Filtros Automáticos -->
-    <div class="glass-panel">
+    <div class="glass-panel filter-panel fade-in">
         <div class="row align-items-end g-3">
             <div class="col-md-3">
                 <label class="form-label"><i class="bi bi-calendar-event me-1"></i> Desde</label>
@@ -123,23 +213,26 @@
     </div>
 
     <!-- KPIs -->
-    <div class="row g-3 mb-4" id="kpi-container">
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
+    <div class="row g-3 mb-4 fade-in" id="kpi-container">
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-1"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t1">Recibidas</span><span class="kpi-value" id="kpi-v1">0</span></div><div class="kpi-icon-box"><i id="kpi-i1" class="bi bi-telephone-inbound-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-2"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t2">Atendidas</span><span class="kpi-value" id="kpi-v2">0</span></div><div class="kpi-icon-box"><i id="kpi-i2" class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-3"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t3">Pérdidas</span><span class="kpi-value" id="kpi-v3">0</span></div><div class="kpi-icon-box"><i id="kpi-i3" class="bi bi-telephone-x-fill"></i></div></div></div>
         
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-4-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" id="kpi-i4-box"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel p-3 h-100 kpi-wrapper" id="card-5-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" id="kpi-i5-box"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-4"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper" id="card-4-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t4">% Abandono</span><span class="kpi-value" id="kpi-v4">0%</span></div><div class="kpi-icon-box" id="kpi-i4-box"><i id="kpi-i4" class="bi bi-graph-down-arrow"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-5"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper" id="card-5-inner"><div class="kpi-info"><span class="kpi-title" id="kpi-t5">SLA Global</span><span class="kpi-value" id="kpi-v5">0%</span></div><div class="kpi-icon-box" id="kpi-i5-box"><i id="kpi-i5" class="bi bi-award-fill"></i></div></div></div>
         
         <!-- Tarjeta de AHT con clase kpi-value-time -->
-        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value kpi-value-time" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box" style="background:#F1F5F9; color:#475569;"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
+        <div class="col-xl-2 col-md-4 col-sm-6" id="card-6"><div class="glass-panel kpi-card p-3 h-100 kpi-wrapper bg-white"><div class="kpi-info"><span class="kpi-title" id="kpi-t6">AHT / ASA</span><span class="kpi-value kpi-value-time" id="kpi-v6">00:00 / 00:00</span></div><div class="kpi-icon-box"><i id="kpi-i6" class="bi bi-clock-history"></i></div></div></div>
     </div>
 
     <!-- Gráfica -->
     <div class="row mb-4">
-        <div class="col-12"><div class="glass-panel pb-3">
+        <div class="col-12"><div class="glass-panel pb-3 fade-in">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-bar-chart-fill me-2 fs-5" style="color:#1D4ED8;"></i> Tendencia Operativa por Intervalo</h5>
+                <div>
+                    <h5 class="section-title"><span class="title-ico"><i class="bi bi-bar-chart-fill"></i></span> Tendencia Operativa por Intervalo</h5>
+                    <div class="section-sub ms-1">Volumen, nivel de servicio y abandono a lo largo del día</div>
+                </div>
             </div>
             <div style="height: 380px; width: 100%; position: relative;"><canvas id="intervalChart"></canvas></div>
         </div></div>
@@ -147,9 +240,12 @@
 
     <!-- Tabla -->
     <div class="row">
-        <div class="col-12"><div class="glass-panel">
+        <div class="col-12"><div class="glass-panel fade-in">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-title"><i class="bi bi-table me-2 fs-5" style="color:#1D4ED8;"></i> Desglose Detallado por Intervalo (30 Min)</h5>
+                <div>
+                    <h5 class="section-title"><span class="title-ico"><i class="bi bi-table"></i></span> Desglose Detallado por Intervalo (30 Min)</h5>
+                    <div class="section-sub ms-1">Detalle granular por franjas de 30 minutos</div>
+                </div>
                 <button class="btn btn-outline-export" onclick="exportTableToCSV()">
                     <i class="bi bi-download me-1"></i> Descargar Excel
                 </button>
