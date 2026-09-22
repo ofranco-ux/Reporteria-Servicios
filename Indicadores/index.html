@@ -27,6 +27,12 @@ body.sidebar-hidden{--sidebar:0px}
 .sidebar-hidden .workspace{margin-left:0}
 .sidebar-hidden .skip-link{left:16px}
 @media(max-width:600px){.topbar-start{gap:8px}#sidebar-toggle{min-width:30px;padding:0 6px}.menu-toggle-label,.breadcrumbs>span,.breadcrumbs>.icon{display:none}.topbar{gap:10px}}
+/* Barra superior simplificada: solo se muestra el botón del menú lateral. */
+.breadcrumbs,.top-actions{display:none!important}
+.topbar{justify-content:flex-start;height:58px;padding:0 24px}
+.topbar-start{width:auto}
+#sidebar-toggle{min-height:36px}
+@media(max-width:600px){.topbar{height:50px;padding:0 16px}.menu-toggle-label{display:inline!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 @media print{.sidebar,.topbar,.heading-actions,.filter-panel,.notice,.error-banner,.segment,.table-actions,.toast,.busy,.footer{display:none!important}.workspace{margin:0}main{padding:0;max-width:none}.panel{box-shadow:none;break-inside:avoid}.kpi-grid{grid-template-columns:repeat(3,1fr)}.analysis-grid{grid-template-columns:minmax(0,1fr) 235px}.table-container{max-height:none;overflow:visible}.table-panel{overflow:visible}body{background:#fff}.page-heading{margin-bottom:20px}}
 </style>
