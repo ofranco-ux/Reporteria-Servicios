@@ -11,7 +11,7 @@
     <!-- SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Moment.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -39,6 +39,12 @@
         .kpi-title { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
         .kpi-value { font-size: 2rem; font-weight: 700; color: #0f172a; line-height: 1; }
         .kpi-icon { padding: 0.75rem; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; font-size: 1.25rem; }
+        .summary-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem 1.25rem; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+        .summary-label { font-size: .7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .06em; }
+        .summary-value { margin-top: .3rem; font-size: 1.05rem; font-weight: 700; color: #0f172a; }
+        .filter-chip { display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .55rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: .72rem; font-weight: 600; }
+        .filter-chip.active { background: #ccfbf1; color: #0f766e; }
+        .chart-note { color: #64748b; font-size: .75rem; margin-top: .25rem; }
     </style>
 </head>
 <body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
@@ -113,6 +119,15 @@
                     <p class="text-xs text-slate-400">Métricas Ejecutivas de Llamadas y Chat</p>
                 </div>
             </div>
+            <div class="hidden lg:flex items-center gap-3 text-right">
+                <div>
+                    <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Última fecha de datos</div>
+                    <div id="data-last-update" class="text-sm text-slate-200 font-semibold">Sin datos</div>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-teal-400">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+            </div>
         </header>
 
         <!-- Loading Overlay -->
@@ -157,11 +172,51 @@
                 </div>
             </div>
 
+            <!-- Executive context -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-4">
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fa-regular fa-calendar mr-1"></i> Periodo seleccionado</div>
+                    <div id="summary-period" class="summary-value">Sin datos</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fa-solid fa-headset mr-1"></i> Interacciones</div>
+                    <div id="summary-interactions" class="summary-value">0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fa-solid fa-users mr-1"></i> Agentes activos</div>
+                    <div id="summary-agents" class="summary-value">0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fa-solid fa-layer-group mr-1"></i> Campañas visibles</div>
+                    <div id="summary-campaigns" class="summary-value">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-100 rounded-xl px-4 py-3 mb-6 shadow-sm">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mr-1">Vista actual</span>
+                    <div id="active-filter-chips" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
             <!-- Trend Line Chart -->
             <div class="bg-white p-6 rounded-xl shadow mb-6 border border-slate-100">
                 <h3 class="text-lg font-bold text-slate-800 mb-4"><i class="fa-solid fa-chart-line text-blue-500 mr-2"></i>Tendencia AHT por Día (Llamadas vs Chat)</h3>
                 <div class="h-80 w-full relative">
                     <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Daily volume -->
+            <div class="bg-white p-6 rounded-xl shadow mb-6 border border-slate-100">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-chart-column text-indigo-500 mr-2"></i>Volumen Diario de Interacciones</h3>
+                        <p class="chart-note">Ayuda a contextualizar el AHT: un cambio de tiempo puede venir acompañado por un cambio importante de carga.</p>
+                    </div>
+                </div>
+                <div class="h-72 w-full relative">
+                    <canvas id="volumeChart"></canvas>
                 </div>
             </div>
 
@@ -203,8 +258,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
-                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-medal text-yellow-500 mr-2"></i>Ranking Agentes (Llamadas)</h3>
-                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Min 10 llamadas</span>
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-list-ol text-blue-500 mr-2"></i>Agentes por AHT (Llamadas)</h3>
+                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Min 10 · menor AHT primero</span>
                     </div>
                     <div class="overflow-x-auto overflow-y-auto flex-1 relative border rounded-md">
                         <table class="w-full text-sm text-left">
@@ -225,8 +280,8 @@
 
                 <div class="bg-white p-6 rounded-xl shadow border border-slate-100 flex flex-col h-[500px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
-                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-medal text-yellow-500 mr-2"></i>Ranking Agentes (Chat)</h3>
-                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Min 10 chats</span>
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-list-ol text-teal-500 mr-2"></i>Agentes por AHT (Chat)</h3>
+                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Min 10 · menor AHT primero</span>
                     </div>
                     <div class="overflow-x-auto overflow-y-auto flex-1 relative border rounded-md">
                         <table class="w-full text-sm text-left">
@@ -268,7 +323,7 @@
             coordinador: 'Todos'
         };
         
-        let trendChart, callsCampChart, chatsCampChart, callsCompChart, chatsCompChart;
+        let trendChart, volumeChart, callsCampChart, chatsCampChart, callsCompChart, chatsCompChart;
 
         // UI Setup
         const overlay = document.getElementById('loading-overlay');
@@ -302,6 +357,53 @@
         const cleanString = (str) => {
             if (!str) return 'Desconocido';
             return String(str).trim().replace(/\s+/g, ' ');
+        };
+
+        moment.locale('es');
+
+        const FILTER_STORAGE_KEY = 'ahtServiciosFiltersV2';
+
+        const saveFilters = () => {
+            try { localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(currentFilters)); } catch (e) {}
+        };
+
+        const restoreSavedFilters = () => {
+            try {
+                const saved = JSON.parse(localStorage.getItem(FILTER_STORAGE_KEY) || '{}');
+                Object.keys(currentFilters).forEach(key => {
+                    if (saved[key]) currentFilters[key] = saved[key];
+                });
+                const idMap = { mes: 'filter-mes', dia: 'filter-dia', campana: 'filter-campana', ringGroup: 'filter-ringgroup', supervisor: 'filter-supervisor', coordinador: 'filter-coordinador' };
+                Object.entries(idMap).forEach(([key, id]) => {
+                    const el = document.getElementById(id);
+                    const exists = [...el.options].some(o => o.value === currentFilters[key]);
+                    el.value = exists ? currentFilters[key] : 'Todos';
+                    if (!exists) currentFilters[key] = 'Todos';
+                });
+            } catch (e) {}
+        };
+
+        const getValidDates = (data) => data
+            .map(d => d.fechaRaw)
+            .filter(d => d instanceof Date && !isNaN(d));
+
+        const updateDataFreshness = () => {
+            const dates = getValidDates([...rawCalls, ...rawChats]);
+            const el = document.getElementById('data-last-update');
+            if (!dates.length) { el.innerText = 'Sin datos'; return; }
+            const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+            el.innerText = moment(maxDate).format('DD MMM YYYY');
+        };
+
+        const updateFilterChips = () => {
+            const container = document.getElementById('active-filter-chips');
+            const labels = { mes: 'Mes', dia: 'Día', campana: 'Campaña', ringGroup: 'Ring Group', supervisor: 'Supervisor', coordinador: 'Coordinador' };
+            const active = Object.entries(currentFilters).filter(([, value]) => value !== 'Todos');
+            if (!active.length) {
+                container.innerHTML = '<span class="filter-chip"><i class="fa-solid fa-globe"></i> Todos los datos</span>';
+                return;
+            }
+            container.innerHTML = active.map(([key, value]) => `<span class="filter-chip active"><i class="fa-solid fa-check"></i>${labels[key]}: ${value}</span>`).join('');
         };
 
         const parseDate = (val) => {
@@ -347,10 +449,11 @@
                     }
 
                     const d = parseDate(row['Fecha']);
+                    const validDate = d && d.isValid();
                     return {
-                        fechaRaw: d.isValid() ? d.toDate() : new Date(),
-                        mes: d.isValid() ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
-                        dia: d.isValid() ? d.format('YYYY-MM-DD') : 'Sin asignar',
+                        fechaRaw: validDate ? d.toDate() : null,
+                        mes: validDate ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
+                        dia: validDate ? d.format('YYYY-MM-DD') : 'Sin asignar',
                         agente: agentName,
                         campana: campanaLimpia,
                         ringGroup: cleanString(row['Ring Groups']),
@@ -389,13 +492,14 @@
                     }
 
                     const d = parseDate(row['Fecha']);
+                    const validDate = d && d.isValid();
                     const atendidos = Number(row['Atendidos']) || 0;
                     const aht = Number(row['AHT']) || 0;
 
                     return {
-                        fechaRaw: d.isValid() ? d.toDate() : new Date(),
-                        mes: d.isValid() ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
-                        dia: d.isValid() ? d.format('YYYY-MM-DD') : 'Sin asignar',
+                        fechaRaw: validDate ? d.toDate() : null,
+                        mes: validDate ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
+                        dia: validDate ? d.format('YYYY-MM-DD') : 'Sin asignar',
                         agente: agentName,
                         campana: campanaLimpia,
                         atendidos: atendidos,
@@ -409,8 +513,11 @@
                 });
             }
 
-            // Al inicio, forzamos aplicar los filtros para que todo arranque sincronizado
+            // Primera carga: construimos opciones, restauramos la vista anterior y sincronizamos el dashboard
             applyFilters();
+            restoreSavedFilters();
+            applyFilters();
+            updateDataFreshness();
         };
 
         // Render Fetching
@@ -507,17 +614,20 @@
             currentFilters.supervisor = document.getElementById('filter-supervisor').value;
             currentFilters.coordinador = document.getElementById('filter-coordinador').value;
 
-            filteredCalls = rawCalls.filter(d => checkFilters(d, null, false));
-            filteredChats = rawChats.filter(d => checkFilters(d, null, true));
-
-            updateDashboard();
-
+            // Primero actualizamos las opciones válidas. Si una selección dejó de existir, vuelve a "Todos".
             updateDropdownOptions('filter-mes', 'mes');
             updateDropdownOptions('filter-dia', 'dia');
             updateDropdownOptions('filter-campana', 'campana');
             updateDropdownOptions('filter-ringgroup', 'ringGroup');
             updateDropdownOptions('filter-supervisor', 'supervisor');
             updateDropdownOptions('filter-coordinador', 'coordinador');
+
+            filteredCalls = rawCalls.filter(d => checkFilters(d, null, false));
+            filteredChats = rawChats.filter(d => checkFilters(d, null, true));
+
+            saveFilters();
+            updateFilterChips();
+            updateDashboard();
         };
 
         ['filter-mes', 'filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
@@ -527,6 +637,7 @@
         document.getElementById('btn-limpiar').addEventListener('click', () => {
             currentFilters = { mes: 'Todos', dia: 'Todos', campana: 'Todos', ringGroup: 'Todos', supervisor: 'Todos', coordinador: 'Todos' };
             document.querySelectorAll('select').forEach(sel => sel.value = 'Todos');
+            try { localStorage.removeItem(FILTER_STORAGE_KEY); } catch (e) {}
             applyFilters();
         });
 
@@ -537,6 +648,30 @@
             if(filteredCalls.length === 0 && filteredChats.length === 0) return alert("No hay datos para exportar.");
             
             const wb = XLSX.utils.book_new();
+
+            const summaryRows = [
+                ['REPORTE AHT SERVICIOS'],
+                ['Generado', moment().format('DD/MM/YYYY HH:mm')],
+                [],
+                ['FILTROS APLICADOS'],
+                ['Mes', currentFilters.mes],
+                ['Día', currentFilters.dia],
+                ['Campaña', currentFilters.campana],
+                ['Ring Group', currentFilters.ringGroup],
+                ['Supervisor', currentFilters.supervisor],
+                ['Coordinador', currentFilters.coordinador],
+                [],
+                ['RESUMEN'],
+                ['Volumen llamadas', filteredCalls.reduce((s,x)=>s+x.atendidas,0)],
+                ['AHT llamadas', formatAHT(filteredCalls.reduce((s,x)=>s+x.totalTime,0) / Math.max(1, filteredCalls.reduce((s,x)=>s+x.atendidas,0)))],
+                ['Volumen chats', filteredChats.reduce((s,x)=>s+x.atendidos,0)],
+                ['AHT chat', formatAHT(filteredChats.reduce((s,x)=>s+x.totalTime,0) / Math.max(1, filteredChats.reduce((s,x)=>s+x.atendidos,0)))],
+                ['Agentes activos', new Set([...filteredCalls.map(x=>x.agente), ...filteredChats.map(x=>x.agente)]).size],
+                ['Campañas visibles', new Set([...filteredCalls.map(x=>x.campana), ...filteredChats.map(x=>x.campana)]).size]
+            ];
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+            wsSummary['!cols'] = [{wch: 24}, {wch: 28}];
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumen');
             
             if(filteredCalls.length > 0) {
                 const wsCalls = XLSX.utils.json_to_sheet(filteredCalls.map(c => ({
@@ -556,7 +691,7 @@
                 XLSX.utils.book_append_sheet(wb, wsChats, "Chats_Filtrados");
             }
             
-            XLSX.writeFile(wb, "Reporte_AHT_Exportado.xlsx");
+            XLSX.writeFile(wb, `Reporte_AHT_${moment().format('YYYYMMDD_HHmm')}.xlsx`);
         });
 
         // -------------------------------------------------------------
@@ -590,10 +725,54 @@
             document.getElementById('kpi-chats-vol').innerText = sumChats.toLocaleString();
             document.getElementById('kpi-chats-aht').innerText = formatAHT(avgChatAHT);
 
+            updateExecutiveSummary(sumLlamadas, sumChats);
             updateTrendChart();
+            updateVolumeChart();
             updateCampCharts();
             updateCompCharts(sumTalk, sumHold, sumAcw, sumPrimerRes, sumEntreMen, sumTotalTimeChats);
             updateAgentTables();
+        };
+
+        const updateExecutiveSummary = (sumLlamadas, sumChats) => {
+            const dates = getValidDates([...filteredCalls, ...filteredChats]);
+            let period = 'Sin datos';
+            if (dates.length) {
+                const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+                const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+                period = moment(minDate).isSame(maxDate, 'day')
+                    ? moment(minDate).format('DD MMM YYYY')
+                    : `${moment(minDate).format('DD MMM')} – ${moment(maxDate).format('DD MMM YYYY')}`;
+            }
+            document.getElementById('summary-period').innerText = period;
+            document.getElementById('summary-interactions').innerText = (sumLlamadas + sumChats).toLocaleString();
+            document.getElementById('summary-agents').innerText = new Set([...filteredCalls.map(x=>x.agente), ...filteredChats.map(x=>x.agente)]).size.toLocaleString();
+            document.getElementById('summary-campaigns').innerText = new Set([...filteredCalls.map(x=>x.campana), ...filteredChats.map(x=>x.campana)]).size.toLocaleString();
+        };
+
+        const updateVolumeChart = () => {
+            const dates = [...new Set([...filteredCalls.map(d=>d.dia), ...filteredChats.map(d=>d.dia)])]
+                .filter(d => d && d !== 'Sin asignar')
+                .sort();
+            const callVol = dates.map(day => filteredCalls.filter(x=>x.dia===day).reduce((s,x)=>s+x.atendidas,0));
+            const chatVol = dates.map(day => filteredChats.filter(x=>x.dia===day).reduce((s,x)=>s+x.atendidos,0));
+
+            if (volumeChart) volumeChart.destroy();
+            volumeChart = new Chart(document.getElementById('volumeChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: dates.map(d => moment(d).format('DD MMM')),
+                    datasets: [
+                        { label: 'Llamadas', data: callVol, backgroundColor: '#3b82f6', borderRadius: 4 },
+                        { label: 'Chats', data: chatVol, backgroundColor: '#14b8a6', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } }
+                }
+            });
         };
 
         const ahtTooltip = {
@@ -651,30 +830,32 @@
         };
 
         const updateCampCharts = () => {
-            const callCamps = [...new Set(filteredCalls.map(d=>d.campana))];
-            const callCampsData = callCamps.map(c => {
-                const arr = filteredCalls.filter(x=>x.campana === c);
-                const vols = arr.reduce((s,x)=>s+x.atendidas,0);
-                return vols > 0 ? arr.reduce((s,x)=>s+x.totalTime,0)/vols : 0;
-            });
+            const aggregateCampaigns = (data, volumeKey) => {
+                const map = {};
+                data.forEach(x => {
+                    if (!map[x.campana]) map[x.campana] = { vol: 0, time: 0 };
+                    map[x.campana].vol += x[volumeKey] || 0;
+                    map[x.campana].time += x.totalTime || 0;
+                });
+                return Object.entries(map)
+                    .map(([campana, v]) => ({ campana, aht: v.vol > 0 ? v.time / v.vol : 0, vol: v.vol }))
+                    .sort((a,b) => b.aht - a.aht);
+            };
 
+            const callData = aggregateCampaigns(filteredCalls, 'atendidas');
             if(callsCampChart) callsCampChart.destroy();
             callsCampChart = new Chart(document.getElementById('callsCampChart').getContext('2d'), {
-                type: 'bar', data: { labels: callCamps, datasets: [{ label: 'AHT', data: callCampsData, backgroundColor: '#0284c7' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: ahtTooltip, legend: {display: false} }, scales: { y: yAxisHHMMSS } }
+                type: 'bar',
+                data: { labels: callData.map(x=>x.campana), datasets: [{ label: 'AHT', data: callData.map(x=>x.aht), backgroundColor: '#0284c7', borderRadius: 4 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { tooltip: ahtTooltip, legend: {display: false} }, scales: { x: yAxisHHMMSS, y: { grid: { display: false } } } }
             });
 
-            const chatCamps = [...new Set(filteredChats.map(d=>d.campana))];
-            const chatCampsData = chatCamps.map(c => {
-                const arr = filteredChats.filter(x=>x.campana === c);
-                const vols = arr.reduce((s,x)=>s+x.atendidos,0);
-                return vols > 0 ? arr.reduce((s,x)=>s+x.totalTime,0)/vols : 0;
-            });
-
+            const chatData = aggregateCampaigns(filteredChats, 'atendidos');
             if(chatsCampChart) chatsCampChart.destroy();
             chatsCampChart = new Chart(document.getElementById('chatsCampChart').getContext('2d'), {
-                type: 'bar', data: { labels: chatCamps, datasets: [{ label: 'AHT', data: chatCampsData, backgroundColor: '#0f766e' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: ahtTooltip, legend: {display: false} }, scales: { y: yAxisHHMMSS } }
+                type: 'bar',
+                data: { labels: chatData.map(x=>x.campana), datasets: [{ label: 'AHT', data: chatData.map(x=>x.aht), backgroundColor: '#0f766e', borderRadius: 4 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { tooltip: ahtTooltip, legend: {display: false} }, scales: { x: yAxisHHMMSS, y: { grid: { display: false } } } }
             });
         };
 
@@ -682,14 +863,14 @@
             if(callsCompChart) callsCompChart.destroy();
             callsCompChart = new Chart(document.getElementById('callsCompChart').getContext('2d'), {
                 type: 'doughnut', data: { labels: ['Talk Time', 'Hold Time', 'ACW'], datasets: [{ data: [talk, hold, acw], backgroundColor: ['#0284c7', '#f59e0b', '#64748b'] }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: {position: 'bottom'} } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: {position: 'bottom'}, tooltip: { callbacks: { label: (ctx) => { const total = ctx.dataset.data.reduce((a,b)=>a+b,0); const pct = total ? (ctx.raw/total*100).toFixed(1) : '0.0'; return `${ctx.label}: ${formatAHT(ctx.raw)} (${pct}%)`; } } } } }
             });
 
             const resto = Math.max(0, totalChatTime - pr - em);
             if(chatsCompChart) chatsCompChart.destroy();
             chatsCompChart = new Chart(document.getElementById('chatsCompChart').getContext('2d'), {
                 type: 'doughnut', data: { labels: ['1er Respuesta', 'Entre Mensajes', 'Resto del AHT'], datasets: [{ data: [pr, em, resto], backgroundColor: ['#0d9488', '#14b8a6', '#94a3b8'] }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: {position: 'bottom'} } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: {position: 'bottom'}, tooltip: { callbacks: { label: (ctx) => { const total = ctx.dataset.data.reduce((a,b)=>a+b,0); const pct = total ? (ctx.raw/total*100).toFixed(1) : '0.0'; return `${ctx.label}: ${formatAHT(ctx.raw)} (${pct}%)`; } } } } }
             });
         };
 
