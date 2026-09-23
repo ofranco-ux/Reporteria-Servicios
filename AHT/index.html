@@ -1,1198 +1,232 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHT Control Executive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        :root{
-            --bg:#f3f6fb;
-            --panel:#0f172a;
-            --panel-2:#131f38;
-            --card:#ffffff;
-            --line:#e6ebf3;
-            --text:#0f172a;
-            --muted:#6b7280;
-            --muted-2:#94a3b8;
-            --primary:#4f46e5;
-            --primary-soft:#eef2ff;
-            --blue:#2563eb;
-            --teal:#0f766e;
-            --emerald:#059669;
-            --amber:#d97706;
-            --rose:#e11d48;
-            --shadow:0 18px 40px rgba(15,23,42,.07);
-            --radius:22px;
-        }
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{margin:0;font-family:'Inter',sans-serif;background:radial-gradient(circle at top left,#f8fbff 0%,#f3f6fb 45%,#eef3fa 100%);color:var(--text);letter-spacing:-.01em}
-        ::-webkit-scrollbar{width:8px;height:8px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:#cfd8e3;border-radius:999px}
-        #sidebar::-webkit-scrollbar-thumb{background:#35435e}
-        #sidebar{
-            width:300px!important;
-            background:linear-gradient(180deg,#0f172a 0%,#17233d 100%)!important;
-            border-right:1px solid rgba(255,255,255,.06);
-            box-shadow:28px 0 60px rgba(15,23,42,.14);
-        }
-        .brand-mark{
-            width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-            background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;box-shadow:0 12px 30px rgba(79,70,229,.35)
-        }
-        .brand-title{font-size:17px;font-weight:800;color:#f8fafc;line-height:1.1}
-        .brand-subtitle{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8ea3c3;margin-top:4px}
-        .side-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#8fa0b9;margin-bottom:8px;display:block}
-        .side-select{
-            width:100%;height:44px;border-radius:13px;border:1px solid #28364e;background:#19253c;color:#edf2f7;
-            padding:0 14px;font-size:13px;transition:.18s ease;outline:none;
-        }
-        .side-select:hover{background:#1d2a43;border-color:#33435f}
-        .side-select:focus{border-color:#6d75ff;box-shadow:0 0 0 4px rgba(99,102,241,.16)}
-        .side-btn{
-            width:100%;height:44px;border-radius:13px;font-size:12px;font-weight:700;letter-spacing:.02em;transition:.18s ease;
-            display:flex;align-items:center;justify-content:center;gap:10px
-        }
-        .side-btn.secondary{background:#1b2941;color:#d9e3ef;border:1px solid #2d3a53}
-        .side-btn.secondary:hover{transform:translateY(-1px);background:#22314d}
-        .side-btn.primary{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 30px rgba(79,70,229,.28)}
-        .side-btn.primary:hover{transform:translateY(-1px);filter:brightness(1.05)}
-        header.topbar{
-            background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(230,235,243,.95);
-            min-height:88px;box-shadow:0 1px 0 rgba(15,23,42,.03)
-        }
-        .top-kicker{font-size:10px;font-weight:800;color:#5b5ce2;letter-spacing:.16em;text-transform:uppercase}
-        .top-title{font-size:28px;font-weight:800;letter-spacing:-.045em;color:#111827;line-height:1.06;margin-top:4px}
-        .top-subtitle{font-size:12px;color:#7b8797;margin-top:6px}
-        .status-pill{
-            display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);
-            background:linear-gradient(180deg,#ffffff 0%,#fbfcfe 100%);box-shadow:0 6px 22px rgba(15,23,42,.04)
-        }
-        .status-dot{width:10px;height:10px;border-radius:999px;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.12)}
-        .status-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#95a0b0}
-        .status-value{font-size:13px;font-weight:800;color:#334155;margin-top:2px}
-        .hero-grid{display:grid;grid-template-columns:1.3fr .95fr;gap:22px}
-        .glass-card,.metric-card,.panel-card,.table-card,.note-card{
-            background:linear-gradient(180deg,#ffffff 0%,#fbfcfe 100%);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)
-        }
-        .hero-card{padding:24px 24px 18px 24px;position:relative;overflow:hidden}
-        .hero-card:before{
-            content:"";position:absolute;inset:auto auto -80px -80px;width:240px;height:240px;background:radial-gradient(circle,#eef2ff 0%,rgba(238,242,255,0) 72%);pointer-events:none
-        }
-        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-        .hero-title{font-size:26px;font-weight:800;line-height:1.08;letter-spacing:-.045em;color:#0f172a;margin-top:16px;max-width:760px}
-        .hero-text{font-size:13px;line-height:1.7;color:#667085;margin-top:10px;max-width:760px}
-        .highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
-        .highlight-mini{padding:15px 16px;border-radius:16px;background:#f8fafc;border:1px solid #edf2f7}
-        .mini-label{font-size:10px;font-weight:700;color:#95a0b0;text-transform:uppercase;letter-spacing:.12em}
-        .mini-value{font-size:18px;font-weight:800;color:#0f172a;margin-top:7px;letter-spacing:-.03em}
-        .mini-helper{font-size:11px;color:#7b8797;margin-top:5px;line-height:1.5}
-        .insight-stack{display:grid;gap:14px}
-        .insight-card{padding:20px}
-        .insight-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .insight-title{font-size:13px;font-weight:800;color:#111827;letter-spacing:-.02em}
-        .insight-caption{font-size:11px;color:#7b8797;margin-top:5px}
-        .status-tag{padding:7px 10px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-        .status-ok{background:#ecfdf3;color:#047857}
-        .status-warn{background:#fff7ed;color:#c2410c}
-        .status-bad{background:#fff1f2;color:#be123c}
-        .progress-shell{height:10px;border-radius:999px;background:#edf2f7;overflow:hidden;margin-top:14px}
-        .progress-bar{height:100%;border-radius:999px;transition:.25s ease}
-        .insight-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-        .insight-metrics .cell{padding:12px;border-radius:14px;background:#f8fafc;border:1px solid #eef2f7}
-        .cell-label{font-size:10px;font-weight:700;color:#95a0b0;text-transform:uppercase;letter-spacing:.12em}
-        .cell-value{font-size:14px;font-weight:800;color:#111827;margin-top:6px}
-        .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:22px}
-        .metric-card{padding:18px;position:relative;overflow:hidden}
-        .metric-card:after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:#cbd5e1}
-        .metric-card[data-accent="blue"]:after{background:linear-gradient(90deg,#2563eb,#60a5fa)}
-        .metric-card[data-accent="violet"]:after{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
-        .metric-card[data-accent="teal"]:after{background:linear-gradient(90deg,#0f766e,#2dd4bf)}
-        .metric-card[data-accent="emerald"]:after{background:linear-gradient(90deg,#059669,#34d399)}
-        .metric-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
-        .metric-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;font-weight:800}
-        .metric-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:#f4f7fb;color:#64748b}
-        .metric-value{font-size:28px;font-weight:800;letter-spacing:-.05em;color:#0f172a;margin-top:10px;font-variant-numeric:tabular-nums}
-        .metric-sub{font-size:12px;color:#7b8797;margin-top:8px;line-height:1.5}
-        .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:30px 0 14px}
-        .section-kicker{font-size:10px;font-weight:800;color:#5b5ce2;letter-spacing:.15em;text-transform:uppercase}
-        .section-title{font-size:22px;font-weight:800;color:#111827;letter-spacing:-.04em;margin-top:4px}
-        .section-helper{font-size:12px;color:#94a3b8;max-width:460px;text-align:right;line-height:1.6}
-        .chip-bar{display:flex;flex-wrap:wrap;gap:10px;padding:15px 18px}
-        .filter-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f5f7fb;border:1px solid #e7ecf3;color:#60708a;font-size:11px;font-weight:700}
-        .filter-chip.active{background:#eef2ff;color:#4f46e5;border-color:#d9defd}
-        .panel-card{padding:20px}
-        .panel-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:12px}
-        .panel-title{font-size:16px;font-weight:800;color:#18212f;letter-spacing:-.02em}
-        .panel-note{font-size:11px;color:#8a97a8;line-height:1.6;margin-top:6px;max-width:540px}
-        .panel-tag{padding:7px 10px;border-radius:999px;background:#f7f8fb;border:1px solid #e9edf4;color:#5c697b;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-        .canvas-lg{height:340px!important}
-        .canvas-md{height:310px!important}
-        .canvas-sm{height:270px!important}
-        .table-card{padding:18px}
-        .table-wrap{border:1px solid #edf1f6;border-radius:16px;overflow:auto;background:#fff}
-        table{width:100%;border-collapse:collapse}
-        thead{position:sticky;top:0;background:#f8fafc;z-index:2}
-        th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8b96a8;padding:12px 14px;text-align:left}
-        td{font-size:12px;color:#1f2937;padding:12px 14px;border-top:1px solid #eff2f7}
-        tbody tr:hover{background:#fafcff}
-        .rank-badge,.state-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:10px;font-weight:800;padding:6px 10px}
-        .rank-badge{background:#eef2ff;color:#4f46e5;min-width:28px}
-        .state-good{background:#ecfdf3;color:#047857}
-        .state-mid{background:#fff7ed;color:#c2410c}
-        .state-bad{background:#fff1f2;color:#be123c}
-        .note-card{padding:18px}
-        .note-card ul{margin:12px 0 0 0;padding-left:18px}
-        .note-card li{font-size:12px;line-height:1.7;color:#667085;margin:8px 0}
-        #loading-overlay{background:rgba(245,247,251,.92);backdrop-filter:blur(6px)}
-        #loading-overlay .loader{width:52px;height:52px;border-radius:999px;border:4px solid #c7d2fe;border-top-color:#4f46e5;animation:spin 1s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        @media (max-width:1400px){
-            .hero-grid{grid-template-columns:1fr}
-            .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-        }
-        @media (max-width:1024px){
-            #sidebar{width:286px!important}
-            .highlight-row,.insight-metrics{grid-template-columns:1fr}
-        }
-        @media (max-width:767px){
-            .metric-grid{grid-template-columns:1fr}
-            .highlight-row{grid-template-columns:1fr}
-            .section-head{flex-direction:column;align-items:flex-start}
-            .section-helper{text-align:left}
-            .top-title{font-size:23px}
-            main>.body-scroll{padding:18px 15px 32px!important}
-            header.topbar{padding:14px 15px!important}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AHT Intelligence | Executive Analysis</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{
+ --nav:#091426;--nav2:#0f2039;--bg:#f4f7fb;--card:#fff;--ink:#0c1729;--muted:#738096;--line:#e5eaf1;
+ --indigo:#4f46e5;--blue:#2563eb;--cyan:#0891b2;--green:#059669;--amber:#d97706;--red:#dc2626;
+ --shadow:0 12px 32px rgba(15,23,42,.06);--r:18px;
+}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--ink)}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#c8d1dc;border-radius:99px}::-webkit-scrollbar-track{background:transparent}
+#sidebar{width:286px;background:linear-gradient(180deg,var(--nav),var(--nav2));box-shadow:18px 0 50px rgba(9,20,38,.13)}
+.brand{padding:24px;border-bottom:1px solid rgba(255,255,255,.08)}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#4f46e5,#06b6d4);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.3)}
+.brand-name{font-weight:800;font-size:16px;color:white}.brand-sub{font-size:9px;text-transform:uppercase;letter-spacing:.16em;color:#87a0c2;margin-top:4px;font-weight:700}
+.filter-label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#8396b3;font-weight:800;margin-bottom:7px}.filter-select{width:100%;height:40px;border:1px solid #263a57;background:#142742;color:#eaf0f8;border-radius:11px;padding:0 12px;font-size:12px;outline:none}.filter-select:focus{border-color:#6971ff;box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.side-btn{height:41px;width:100%;border-radius:11px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px}.side-btn.secondary{background:#162b49;color:#cbd7e7;border:1px solid #2a3d59}.side-btn.primary{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.22)}
+.topbar{height:82px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}.kicker{font-size:9px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--indigo)}.page-title{font-size:23px;font-weight:800;letter-spacing:-.04em;margin-top:3px}.page-sub{font-size:11px;color:#8491a3;margin-top:4px}.top-date{padding:10px 13px;border:1px solid var(--line);border-radius:12px;background:#fafbfd}.top-date-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#98a2b3;font-weight:700}.top-date-value{font-size:12px;color:#344054;font-weight:800;margin-top:2px}
+.content{padding:24px 28px 44px}.section-kicker{font-size:9px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:#6366f1}.section-title{font-size:20px;font-weight:800;letter-spacing:-.035em;margin-top:4px}.section-desc{font-size:11px;line-height:1.6;color:#8491a3;max-width:550px;text-align:right}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:28px 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.hero-main{padding:24px;background:linear-gradient(135deg,#0d1b32 0%,#112744 60%,#153250 100%);border-radius:20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 18px 44px rgba(9,20,38,.18)}.hero-main:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-140px;top:-160px;background:radial-gradient(circle,rgba(99,102,241,.32),rgba(99,102,241,0) 70%)}
+.hero-eyebrow{font-size:9px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:#9fb6d8}.hero-title{font-size:27px;line-height:1.12;font-weight:800;letter-spacing:-.04em;max-width:760px;margin-top:10px}.hero-copy{font-size:12px;line-height:1.7;color:#b6c4d8;max-width:790px;margin-top:10px}.hero-insights{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;position:relative;z-index:2}.hero-mini{padding:13px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:13px}.hero-mini-label{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#95abc9;font-weight:800}.hero-mini-value{font-size:16px;font-weight:800;margin-top:5px}.hero-mini-sub{font-size:9px;color:#93a8c4;margin-top:4px}
+.verdict{padding:20px;display:flex;flex-direction:column;gap:12px}.verdict-label{font-size:9px;text-transform:uppercase;letter-spacing:.15em;font-weight:800;color:#7b8798}.verdict-title{font-size:18px;font-weight:800;letter-spacing:-.03em}.verdict-text{font-size:11px;line-height:1.7;color:#697586}.verdict-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.verdict-box{padding:13px;border-radius:13px;background:#f8fafc;border:1px solid #edf1f6}.verdict-box-label{font-size:8px;text-transform:uppercase;letter-spacing:.11em;color:#98a2b3;font-weight:800}.verdict-box-value{font-size:15px;font-weight:800;margin-top:5px}.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:99px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.pill.good{background:#ecfdf3;color:#047857}.pill.warn{background:#fff7ed;color:#c2410c}.pill.bad{background:#fff1f2;color:#be123c}.pill.neutral{background:#eef2ff;color:#4f46e5}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}.kpi{padding:16px;min-height:110px;position:relative}.kpi-top{display:flex;align-items:center;justify-content:space-between}.kpi-label{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#98a2b3;font-weight:800}.kpi-icon{width:34px;height:34px;border-radius:11px;background:#f4f7fb;display:flex;align-items:center;justify-content:center;color:#64748b}.kpi-value{font-size:23px;font-weight:800;letter-spacing:-.045em;margin-top:8px}.kpi-sub{font-size:10px;color:#7b8798;line-height:1.5;margin-top:6px}.kpi.emphasis{background:linear-gradient(180deg,#fff,#f7f8ff);border-color:#dfe3ff}.kpi.emphasis .kpi-value{color:#4338ca}
+.analysis-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.chart-card{padding:18px}.chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}.chart-title{font-size:14px;font-weight:800;letter-spacing:-.02em}.chart-copy{font-size:10px;line-height:1.6;color:#8995a7;margin-top:4px;max-width:560px}.chart-tag{font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:#6366f1;background:#eef2ff;padding:6px 8px;border-radius:99px}.h340{height:340px}.h300{height:300px}.h270{height:270px}
+.tab-row{display:flex;gap:6px}.tab-btn{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:7px 10px;border-radius:9px;background:#f3f5f8;color:#7b8798;border:1px solid transparent}.tab-btn.active{background:#111827;color:#fff}
+.matrix{padding:18px}.matrix-table{width:100%;border-collapse:separate;border-spacing:0}.matrix-table thead th{background:#f8fafc;color:#8b96a8;font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;padding:10px 11px;text-align:left;border-top:1px solid #edf1f6;border-bottom:1px solid #edf1f6}.matrix-table thead th:first-child{border-left:1px solid #edf1f6;border-radius:10px 0 0 0}.matrix-table thead th:last-child{border-right:1px solid #edf1f6;border-radius:0 10px 0 0}.matrix-table td{padding:11px;font-size:10px;border-bottom:1px solid #edf1f6;color:#344054}.matrix-table tbody tr:hover{background:#fafcff}.num{text-align:right;font-variant-numeric:tabular-nums}.bar-cell{min-width:130px}.microbar{height:7px;border-radius:99px;background:#eef2f6;overflow:hidden}.microbar>span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#06b6d4)}
+.findings{padding:18px}.finding{display:grid;grid-template-columns:32px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #eef2f6}.finding:last-child{border-bottom:0}.finding-icon{width:30px;height:30px;border-radius:10px;background:#f3f5f8;color:#64748b;display:flex;align-items:center;justify-content:center}.finding-title{font-size:10px;font-weight:800;color:#344054}.finding-text{font-size:10px;color:#7b8798;line-height:1.55;margin-top:3px}.method{padding:16px;background:#f8fafc;border:1px solid #edf1f6;border-radius:13px;margin-top:10px}.method-title{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#667085}.method-text{font-size:10px;color:#7b8798;line-height:1.65;margin-top:6px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{font-size:9px;padding:6px 9px;border-radius:99px;background:#f4f6f9;color:#667085;border:1px solid #e7ebf0;font-weight:700}.chip.active{background:#eef2ff;color:#4f46e5;border-color:#d9ddff}
+#loading-overlay{background:rgba(244,247,251,.94);backdrop-filter:blur(5px)}.spinner{width:48px;height:48px;border-radius:50%;border:4px solid #dbe3ef;border-top-color:#4f46e5;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1400px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.hero{grid-template-columns:1fr}.analysis-grid{grid-template-columns:1fr}}
+@media(max-width:900px){#sidebar{width:280px}.kpi-grid{grid-template-columns:1fr 1fr}.hero-insights{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.section-desc{text-align:left}.verdict-row{grid-template-columns:1fr}}
+@media(max-width:640px){.kpi-grid{grid-template-columns:1fr}.topbar{padding:0 15px}.content{padding:18px 15px 32px}.page-title{font-size:19px}}
+</style>
 </head>
-<body class="flex h-screen overflow-hidden text-slate-800">
-    <aside id="sidebar" class="text-white flex-shrink-0 h-full overflow-y-auto flex flex-col fixed z-20 md:relative transition-all duration-300">
-        <div class="p-6 border-b border-white/10 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="brand-mark"><i class="fa-solid fa-chart-network"></i></div>
-                <div class="min-w-0">
-                    <div class="brand-title">AHT Executive</div>
-                    <div class="brand-subtitle">Servicios · Voz & Chat</div>
-                </div>
-            </div>
-            <button id="closeSidebarMobile" class="md:hidden text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
+<body class="flex h-screen overflow-hidden">
+<aside id="sidebar" class="h-full overflow-y-auto flex-shrink-0 fixed md:relative z-20 transition-all duration-300">
+  <div class="brand flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3"><div class="logo"><i class="fa-solid fa-chart-simple"></i></div><div><div class="brand-name">AHT Intelligence</div><div class="brand-sub">Performance analytics</div></div></div>
+    <button id="closeSidebarMobile" class="md:hidden text-slate-400"><i class="fa-solid fa-times"></i></button>
+  </div>
+  <div class="p-5 space-y-4">
+    <div><label class="filter-label">Mes</label><select id="filter-mes" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div><label class="filter-label">Día</label><select id="filter-dia" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div><label class="filter-label">Campaña</label><select id="filter-campana" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div><label class="filter-label">Ring Group</label><select id="filter-ringgroup" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div><label class="filter-label">Supervisor</label><select id="filter-supervisor" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div><label class="filter-label">Coordinador</label><select id="filter-coordinador" class="filter-select"><option value="Todos">Todos</option></select></div>
+    <div class="pt-2 space-y-2"><button id="btn-limpiar" class="side-btn secondary"><i class="fa-solid fa-rotate-left"></i>Restablecer vista</button><button id="btn-exportar" class="side-btn primary"><i class="fa-solid fa-file-export"></i>Exportar análisis</button></div>
+  </div>
+</aside>
+
+<main class="flex-1 h-full overflow-hidden relative flex flex-col">
+  <header class="topbar">
+    <div class="flex items-center gap-4 min-w-0">
+      <button id="toggleSidebar" class="w-9 h-9 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 flex items-center justify-center"><i class="fa-solid fa-bars-staggered"></i></button>
+      <div class="min-w-0"><div class="kicker">Executive performance review</div><div class="page-title">Análisis AHT · Servicios</div><div class="page-sub">De reporte descriptivo a diagnóstico: nivel actual, meta, dispersión y oportunidad operativa.</div></div>
+    </div>
+    <div class="top-date hidden md:block"><div class="top-date-label">Datos disponibles hasta</div><div id="data-last-update" class="top-date-value">Sin datos</div></div>
+  </header>
+
+  <div id="loading-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center"><div class="spinner mb-4"></div><div id="loading-title" class="font-semibold text-slate-700">Procesando datos...</div><div id="loading-subtitle" class="text-xs text-slate-500 mt-2">Preparando análisis ejecutivo.</div></div>
+
+  <div class="content flex-1 overflow-y-auto">
+    <section class="hero">
+      <div class="hero-main">
+        <div class="hero-eyebrow">Conclusión ejecutiva automática</div>
+        <div id="executive-headline" class="hero-title">Cargando diagnóstico del AHT...</div>
+        <div id="executive-copy" class="hero-copy">El análisis se actualizará con la información disponible y los filtros seleccionados.</div>
+        <div class="hero-insights">
+          <div class="hero-mini"><div class="hero-mini-label">Periodo analizado</div><div id="period-value" class="hero-mini-value">Sin datos</div><div class="hero-mini-sub">Rango visible.</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Cobertura</div><div id="coverage-value" class="hero-mini-value">0 agentes</div><div id="coverage-sub" class="hero-mini-sub">0 campañas.</div></div>
+          <div class="hero-mini"><div class="hero-mini-label">Interacciones</div><div id="interactions-value" class="hero-mini-value">0</div><div class="hero-mini-sub">Voz + chat.</div></div>
         </div>
-
-        <div class="p-6 flex-1 space-y-4">
-            <div>
-                <label class="side-label">Mes</label>
-                <select id="filter-mes" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div>
-                <label class="side-label">Día</label>
-                <select id="filter-dia" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div>
-                <label class="side-label">Campaña</label>
-                <select id="filter-campana" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div>
-                <label class="side-label">Ring Group (Llamadas)</label>
-                <select id="filter-ringgroup" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div>
-                <label class="side-label">Supervisor</label>
-                <select id="filter-supervisor" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div>
-                <label class="side-label">Coordinador</label>
-                <select id="filter-coordinador" class="side-select"><option value="Todos">Todos</option></select>
-            </div>
-            <div class="pt-2 space-y-3">
-                <button id="btn-limpiar" class="side-btn secondary"><i class="fa-solid fa-eraser"></i>Limpiar filtros</button>
-                <button id="btn-exportar" class="side-btn primary"><i class="fa-solid fa-download"></i>Exportar vista</button>
-            </div>
+      </div>
+      <div class="card verdict">
+        <div class="flex items-start justify-between gap-3"><div><div class="verdict-label">Lectura de la operación</div><div id="verdict-title" class="verdict-title">Sin datos suficientes</div></div><span id="overall-pill" class="pill neutral">Analizando</span></div>
+        <div id="verdict-text" class="verdict-text">La evaluación aparecerá cuando se cargue la base.</div>
+        <div class="verdict-row">
+          <div class="verdict-box"><div class="verdict-box-label">Canal a priorizar</div><div id="priority-channel" class="verdict-box-value">—</div></div>
+          <div class="verdict-box"><div class="verdict-box-label">Mayor foco</div><div id="priority-focus" class="verdict-box-value">—</div></div>
         </div>
-    </aside>
+      </div>
+    </section>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <header class="topbar px-7 flex items-center justify-between z-10">
-            <div class="flex items-center min-w-0 gap-4">
-                <button id="toggleSidebar" class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 flex items-center justify-center" aria-label="Mostrar u ocultar filtros">
-                    <i class="fa-solid fa-bars-staggered"></i>
-                </button>
-                <div class="min-w-0">
-                    <div class="top-kicker">Operations intelligence</div>
-                    <div class="top-title">AHT Control Executive</div>
-                    <div class="top-subtitle">Análisis operativo con foco en meta, desviación y relación entre carga y tiempo de atención.</div>
-                </div>
-            </div>
-            <div class="hidden md:flex items-center gap-4">
-                <div class="status-pill">
-                    <span class="status-dot"></span>
-                    <div>
-                        <div class="status-label">Datos disponibles hasta</div>
-                        <div id="data-last-update" class="status-value">Sin datos</div>
-                    </div>
-                </div>
-            </div>
-        </header>
+    <section class="kpi-grid">
+      <div class="card kpi"><div class="kpi-top"><div class="kpi-label">AHT actual · Voz</div><div class="kpi-icon"><i class="fa-solid fa-phone"></i></div></div><div id="voice-aht" class="kpi-value">00:00:00</div><div id="voice-aht-sub" class="kpi-sub">Sin referencia.</div></div>
+      <div class="card kpi emphasis"><div class="kpi-top"><div class="kpi-label">Meta sugerida · Voz</div><div class="kpi-icon"><i class="fa-solid fa-bullseye"></i></div></div><div id="voice-target" class="kpi-value">00:00:00</div><div class="kpi-sub">Referencia dinámica basada en desempeño alcanzable.</div></div>
+      <div class="card kpi"><div class="kpi-top"><div class="kpi-label">AHT actual · Chat</div><div class="kpi-icon"><i class="fa-solid fa-comments"></i></div></div><div id="chat-aht" class="kpi-value">00:00:00</div><div id="chat-aht-sub" class="kpi-sub">Sin referencia.</div></div>
+      <div class="card kpi emphasis"><div class="kpi-top"><div class="kpi-label">Meta sugerida · Chat</div><div class="kpi-icon"><i class="fa-solid fa-bullseye"></i></div></div><div id="chat-target" class="kpi-value">00:00:00</div><div class="kpi-sub">Referencia dinámica basada en desempeño alcanzable.</div></div>
+      <div class="card kpi"><div class="kpi-top"><div class="kpi-label">Oportunidad teórica</div><div class="kpi-icon"><i class="fa-solid fa-hourglass-end"></i></div></div><div id="opportunity-hours" class="kpi-value">0 h</div><div id="opportunity-sub" class="kpi-sub">Horas de handling por encima de meta en la selección actual.</div></div>
+    </section>
 
-        <div id="loading-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center">
-            <div class="loader mb-4"></div>
-            <h3 class="text-lg font-semibold text-slate-700" id="loading-title">Procesando base de datos...</h3>
-            <p class="text-sm text-slate-500" id="loading-subtitle">Aplicando reglas de mapeo HC y limpieza de datos.</p>
-        </div>
+    <div class="section-head"><div><div class="section-kicker">Vista actual</div><div class="section-title">Contexto del análisis</div></div><div class="chips" id="active-filter-chips"></div></div>
 
-        <div class="body-scroll flex-1 overflow-y-auto px-7 py-6">
-            <div class="hero-grid">
-                <section class="glass-card hero-card">
-                    <div class="hero-badge"><i class="fa-solid fa-wave-square"></i> análisis ejecutivo</div>
-                    <div id="hero-title" class="hero-title">Vista general del AHT y oportunidad operativa</div>
-                    <div id="hero-text" class="hero-text">Cargando análisis de la operación...</div>
-                    <div class="highlight-row">
-                        <div class="highlight-mini">
-                            <div class="mini-label">Periodo observado</div>
-                            <div id="summary-period" class="mini-value">Sin datos</div>
-                            <div class="mini-helper">Rango visible con base en los filtros seleccionados.</div>
-                        </div>
-                        <div class="highlight-mini">
-                            <div class="mini-label">Interacciones visibles</div>
-                            <div id="summary-interactions" class="mini-value">0</div>
-                            <div class="mini-helper">Suma de llamadas y chats de la vista actual.</div>
-                        </div>
-                        <div class="highlight-mini">
-                            <div class="mini-label">Cobertura operativa</div>
-                            <div id="summary-footprint" class="mini-value">0 agentes / 0 campañas</div>
-                            <div class="mini-helper">Alcance de la muestra disponible para el análisis.</div>
-                        </div>
-                    </div>
-                </section>
+    <div class="section-head"><div><div class="section-kicker">01 · Control</div><div class="section-title">¿El AHT está estable o se está desviando?</div></div><div class="section-desc">La banda representa el rango objetivo alrededor de la meta sugerida. Así la tendencia deja de ser solo una línea y se convierte en una señal de control.</div></div>
+    <div class="card chart-card">
+      <div class="chart-head"><div><div class="chart-title">Control diario de AHT</div><div class="chart-copy">AHT diario de Voz y Chat comparado con su meta dinámica. La banda de ±5% ayuda a distinguir variación normal de una desviación operativa relevante.</div></div><div class="chart-tag">Target band</div></div>
+      <div class="h340"><canvas id="controlChart"></canvas></div>
+    </div>
 
-                <section class="insight-stack">
-                    <div class="panel-card insight-card">
-                        <div class="insight-header">
-                            <div>
-                                <div class="insight-title">Diagnóstico de Voz</div>
-                                <div class="insight-caption">Comparación entre AHT actual y meta sugerida del periodo.</div>
-                            </div>
-                            <div id="calls-status" class="status-tag status-ok">En meta</div>
-                        </div>
-                        <div class="progress-shell"><div id="calls-progress" class="progress-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
-                        <div class="insight-metrics">
-                            <div class="cell"><div class="cell-label">AHT actual</div><div id="calls-current" class="cell-value">00:00:00</div></div>
-                            <div class="cell"><div class="cell-label">Meta sugerida</div><div id="calls-target" class="cell-value">00:00:00</div></div>
-                            <div class="cell"><div class="cell-label">Desviación</div><div id="calls-gap" class="cell-value">00:00:00</div></div>
-                        </div>
-                    </div>
-                    <div class="panel-card insight-card">
-                        <div class="insight-header">
-                            <div>
-                                <div class="insight-title">Diagnóstico de Chat</div>
-                                <div class="insight-caption">Meta estimada con base en el desempeño de los agentes elegibles.</div>
-                            </div>
-                            <div id="chats-status" class="status-tag status-ok">En meta</div>
-                        </div>
-                        <div class="progress-shell"><div id="chats-progress" class="progress-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
-                        <div class="insight-metrics">
-                            <div class="cell"><div class="cell-label">AHT actual</div><div id="chats-current" class="cell-value">00:00:00</div></div>
-                            <div class="cell"><div class="cell-label">Meta sugerida</div><div id="chats-target" class="cell-value">00:00:00</div></div>
-                            <div class="cell"><div class="cell-label">Desviación</div><div id="chats-gap" class="cell-value">00:00:00</div></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+    <div class="section-head"><div><div class="section-kicker">02 · Dispersión</div><div class="section-title">¿Quién sostiene volumen con un AHT controlado?</div></div><div class="section-desc">El mapa divide a los agentes por volumen y AHT. La lectura clave está en el cuadrante de alto volumen y AHT sobre meta: ahí una mejora tiene mayor impacto.</div></div>
+    <div class="analysis-grid">
+      <div class="card chart-card">
+        <div class="chart-head"><div><div class="chart-title">Mapa de desempeño por agente</div><div class="chart-copy">Eje X = volumen. Eje Y = AHT. La línea horizontal es la meta y la vertical es la mediana de volumen.</div></div><div class="tab-row"><button id="scatter-voice" class="tab-btn active">Voz</button><button id="scatter-chat" class="tab-btn">Chat</button></div></div>
+        <div class="h340"><canvas id="scatterChart"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head"><div><div class="chart-title">Distribución de AHT por agentes</div><div class="chart-copy">Muestra concentración y dispersión. Una operación sana debería concentrar más agentes cerca del objetivo y reducir la cola de AHT altos.</div></div><div class="chart-tag">Distribution</div></div>
+        <div class="h340"><canvas id="distributionChart"></canvas></div>
+      </div>
+    </div>
 
-            <div class="metric-grid">
-                <div class="metric-card" data-accent="blue">
-                    <div class="metric-head"><div class="metric-label">Volumen voz</div><div class="metric-icon"><i class="fa-solid fa-phone"></i></div></div>
-                    <div id="kpi-calls-vol" class="metric-value">0</div>
-                    <div class="metric-sub">Interacciones de voz visibles en la selección actual.</div>
-                </div>
-                <div class="metric-card" data-accent="violet">
-                    <div class="metric-head"><div class="metric-label">AHT voz</div><div class="metric-icon"><i class="fa-solid fa-stopwatch"></i></div></div>
-                    <div id="kpi-calls-aht" class="metric-value">00:00:00</div>
-                    <div id="kpi-calls-gap-text" class="metric-sub">Sin referencia de meta.</div>
-                </div>
-                <div class="metric-card" data-accent="teal">
-                    <div class="metric-head"><div class="metric-label">Volumen chat</div><div class="metric-icon"><i class="fa-solid fa-comments"></i></div></div>
-                    <div id="kpi-chats-vol" class="metric-value">0</div>
-                    <div class="metric-sub">Interacciones de chat consideradas para campañas Atom.</div>
-                </div>
-                <div class="metric-card" data-accent="emerald">
-                    <div class="metric-head"><div class="metric-label">AHT chat</div><div class="metric-icon"><i class="fa-solid fa-hourglass-half"></i></div></div>
-                    <div id="kpi-chats-aht" class="metric-value">00:00:00</div>
-                    <div id="kpi-chats-gap-text" class="metric-sub">Sin referencia de meta.</div>
-                </div>
-            </div>
+    <div class="section-head"><div><div class="section-kicker">03 · Impacto</div><div class="section-title">¿Dónde se concentra la oportunidad?</div></div><div class="section-desc">En lugar de ordenar únicamente por AHT, el Pareto combina gap y volumen. Prioriza los casos que acumulan más tiempo por encima de la meta.</div></div>
+    <div class="analysis-grid">
+      <div class="card chart-card">
+        <div class="chart-head"><div><div class="chart-title">Pareto de oportunidad por agente</div><div class="chart-copy">Barras = horas por encima de meta. Línea = porcentaje acumulado de la oportunidad total.</div></div><div class="tab-row"><button id="pareto-voice" class="tab-btn active">Voz</button><button id="pareto-chat" class="tab-btn">Chat</button></div></div>
+        <div class="h340"><canvas id="paretoChart"></canvas></div>
+      </div>
+      <div class="card findings">
+        <div class="chart-head"><div><div class="chart-title">Hallazgos que requieren atención</div><div class="chart-copy">Lectura automática del conjunto filtrado. No sustituye una meta oficial ni considera calidad o CSAT.</div></div><div class="chart-tag">Insights</div></div>
+        <div id="findings-list"></div>
+        <div class="method"><div class="method-title">Cómo propongo la meta</div><div class="method-text">Tomo agentes con mínimo 10 interacciones, elimino extremos muy alejados mediante rango intercuartílico y calculo el percentil 35 del AHT restante. La idea es usar un nivel que ya está siendo alcanzado por una parte relevante de la operación, sin tomar al agente más rápido como estándar. Si cuentas con una meta oficial, conviene sustituir esta referencia dinámica.</div></div>
+      </div>
+    </div>
 
-            <div class="section-head">
-                <div>
-                    <div class="section-kicker">Contexto</div>
-                    <div class="section-title">Filtros activos y lectura de la vista</div>
-                </div>
-                <div class="section-helper">La meta sugerida se recalcula con la vista activa. Se basa en agentes con al menos 10 interacciones y usa un percentil de desempeño para proponer una referencia realista.</div>
-            </div>
-            <div class="panel-card">
-                <div class="chip-bar" id="active-filter-chips"></div>
-            </div>
+    <div class="section-head"><div><div class="section-kicker">04 · Campañas</div><div class="section-title">Matriz de priorización operativa</div></div><div class="section-desc">La tabla cruza volumen, AHT, gap y horas de oportunidad. Su objetivo es orientar la conversación de gestión, no premiar únicamente el AHT más bajo.</div></div>
+    <div class="card matrix overflow-x-auto">
+      <table class="matrix-table">
+        <thead><tr><th>Canal</th><th>Campaña</th><th class="num">Volumen</th><th class="num">AHT</th><th class="num">Meta</th><th class="num">Gap</th><th>Impacto relativo</th><th class="num">Horas oportunidad</th><th class="num">Estado</th></tr></thead>
+        <tbody id="campaign-matrix"><tr><td colspan="9" class="text-center text-slate-400 py-6">Sin datos</td></tr></tbody>
+      </table>
+    </div>
 
-            <div class="section-head">
-                <div>
-                    <div class="section-kicker">Seguimiento</div>
-                    <div class="section-title">Tendencia del AHT vs meta sugerida</div>
-                </div>
-                <div class="section-helper">La línea punteada sirve como referencia de meta. Si el AHT diario está por encima, existe oportunidad de control o revisión del mix operativo.</div>
-            </div>
-            <div class="panel-card mb-6">
-                <div class="panel-header">
-                    <div>
-                        <div class="panel-title">Comportamiento diario del AHT</div>
-                        <div class="panel-note">Voz y chat se muestran con su propia referencia para observar si la variación diaria ya está controlada o si sigue alejándose de la meta sugerida.</div>
-                    </div>
-                    <div class="panel-tag">Control diario</div>
-                </div>
-                <div class="canvas-lg"><canvas id="trendChart"></canvas></div>
-            </div>
+    <div class="section-head"><div><div class="section-kicker">05 · Drivers</div><div class="section-title">¿Qué componente explica el AHT?</div></div><div class="section-desc">La composición se presenta como barras apiladas, porque permite comparar proporciones con mayor precisión que una dona.</div></div>
+    <div class="card chart-card">
+      <div class="chart-head"><div><div class="chart-title">Mix del tiempo de atención</div><div class="chart-copy">Voz: Talk, Hold y ACW. Chat: primera respuesta, entre mensajes y resto del AHT.</div></div><div class="chart-tag">100% stacked</div></div>
+      <div class="h270"><canvas id="driverChart"></canvas></div>
+    </div>
+  </div>
+</main>
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Dispersión Voz · Volumen vs AHT</div>
-                            <div class="panel-note">Cada punto representa un agente. Permite identificar quién tiene alto volumen con AHT controlado y quién concentra desviaciones relevantes.</div>
-                        </div>
-                        <div class="panel-tag">Scatter</div>
-                    </div>
-                    <div class="canvas-md"><canvas id="scatterCallsChart"></canvas></div>
-                </div>
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Dispersión Chat · Volumen vs AHT</div>
-                            <div class="panel-note">Ideal para observar si el incremento de carga en chat está impactando el tiempo medio o si existen outliers de proceso.</div>
-                        </div>
-                        <div class="panel-tag">Scatter</div>
-                    </div>
-                    <div class="canvas-md"><canvas id="scatterChatsChart"></canvas></div>
-                </div>
-            </div>
+<script>
+moment.locale('es');
+let rawCalls=[],rawChats=[],filteredCalls=[],filteredChats=[],headCountMap={};
+let currentFilters={mes:'Todos',dia:'Todos',campana:'Todos',ringGroup:'Todos',supervisor:'Todos',coordinador:'Todos'};
+let controlChart,scatterChart,distributionChart,paretoChart,driverChart;
+let scatterMode='voice',paretoMode='voice';
+const overlay=document.getElementById('loading-overlay');
+const sidebar=document.getElementById('sidebar');
+const FILTER_KEY='ahtExecutiveAnalysisFiltersV2';
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Campañas de Voz frente a meta</div>
-                            <div class="panel-note">Las barras se ordenan por mayor AHT. La línea de meta ayuda a ubicar rápidamente dónde enfocar seguimiento.</div>
-                        </div>
-                        <div class="panel-tag">Prioridades</div>
-                    </div>
-                    <div class="canvas-md"><canvas id="callsCampChart"></canvas></div>
-                </div>
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Campañas de Chat frente a meta</div>
-                            <div class="panel-note">Muestra si la variación viene de una campaña específica o si el comportamiento es general en la operación.</div>
-                        </div>
-                        <div class="panel-tag">Prioridades</div>
-                    </div>
-                    <div class="canvas-md"><canvas id="chatsCampChart"></canvas></div>
-                </div>
-            </div>
+document.getElementById('toggleSidebar').onclick=()=>{sidebar.classList.toggle('hidden');sidebar.classList.toggle('flex')};
+document.getElementById('closeSidebarMobile').onclick=()=>{sidebar.classList.add('hidden');sidebar.classList.remove('flex')};
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Composición del tiempo · Voz</div>
-                            <div class="panel-note">Visualiza qué parte del AHT se concentra en conversación, espera y ACW.</div>
-                        </div>
-                        <div class="panel-tag">Mix</div>
-                    </div>
-                    <div class="canvas-sm flex items-center justify-center"><canvas id="callsCompChart"></canvas></div>
-                </div>
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">Composición del tiempo · Chat</div>
-                            <div class="panel-note">Separa primera respuesta, tiempo entre mensajes y resto del ciclo total de chat.</div>
-                        </div>
-                        <div class="panel-tag">Mix</div>
-                    </div>
-                    <div class="canvas-sm flex items-center justify-center"><canvas id="chatsCompChart"></canvas></div>
-                </div>
-            </div>
+const fmt=(s)=>{if(s==null||isNaN(s)||s<0)return'00:00:00';const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),x=Math.floor(s%60);return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`};
+const signed=(s)=>`${s>0?'+':s<0?'-':'±'}${fmt(Math.abs(s||0))}`;
+const clean=(s)=>!s?'Desconocido':String(s).trim().replace(/\s+/g,' ');
+const parseDate=(v)=>{if(!v)return null;if(typeof v==='number')return moment(new Date((v-(25567+1))*86400*1000));const m=moment(v,['DD/MM/YYYY','YYYY-MM-DD','MM/DD/YYYY'],true);return m.isValid()?m:moment(v)};
+const sum=(a,k)=>a.reduce((t,x)=>t+(Number(x[k])||0),0);
+const median=(v)=>{if(!v.length)return 0;const s=[...v].sort((a,b)=>a-b),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const quantile=(v,q)=>{if(!v.length)return 0;const s=[...v].sort((a,b)=>a-b),p=(s.length-1)*q,l=Math.floor(p),h=Math.ceil(p);return l===h?s[l]:s[l]+(s[h]-s[l])*(p-l)};
+const validDates=(a)=>a.map(x=>x.fechaRaw).filter(d=>d instanceof Date&&!isNaN(d));
+const aggregate=(data,volKey,key='agente')=>{const m={};data.forEach(d=>{const k=d[key];if(!m[k])m[k]={name:k,vol:0,time:0};m[k].vol+=Number(d[volKey])||0;m[k].time+=Number(d.totalTime)||0});return Object.values(m).map(x=>({...x,aht:x.vol?x.time/x.vol:0}))};
+const eligible=(arr)=>arr.filter(x=>x.vol>=10&&x.aht>0);
+const targetFrom=(arr,fallback)=>{const vals=eligible(arr).map(x=>x.aht);if(!vals.length)return Math.round(fallback||0);const q1=quantile(vals,.25),q3=quantile(vals,.75),iqr=q3-q1;const trimmed=vals.filter(x=>x>=Math.max(0,q1-1.5*iqr)&&x<=q3+1.5*iqr);return Math.round(quantile(trimmed.length?trimmed:vals,.35)||fallback||0)};
+const status=(current,target)=>{if(!target||!current)return{label:'Sin referencia',cls:'neutral'};const r=current/target;if(r<=1)return{label:'En objetivo',cls:'good'};if(r<=1.08)return{label:'Cerca del objetivo',cls:'warn'};return{label:'Sobre objetivo',cls:'bad'}};
+const oppHours=(arr,target)=>arr.reduce((t,x)=>t+Math.max(0,x.aht-target)*x.vol,0)/3600;
 
-            <div class="grid grid-cols-1 xl:grid-cols-[1.3fr_.7fr] gap-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="table-card">
-                        <div class="panel-header mb-3">
-                            <div>
-                                <div class="panel-title">Agentes con mayor desviación · Voz</div>
-                                <div class="panel-note">Se ordenan por brecha frente a la meta sugerida, priorizando la revisión operativa.</div>
-                            </div>
-                            <div class="panel-tag">Top desviación</div>
-                        </div>
-                        <div class="table-wrap max-h-[470px]">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Agente</th>
-                                        <th class="text-right">Vol.</th>
-                                        <th class="text-right">AHT</th>
-                                        <th class="text-right">Gap</th>
-                                        <th class="text-right">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-calls-body">
-                                    <tr><td colspan="6" class="text-center py-4 text-slate-400">Sin datos</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="table-card">
-                        <div class="panel-header mb-3">
-                            <div>
-                                <div class="panel-title">Agentes con mayor desviación · Chat</div>
-                                <div class="panel-note">Ayuda a detectar si el desvío está concentrado en pocos agentes o distribuido en la operación.</div>
-                            </div>
-                            <div class="panel-tag">Top desviación</div>
-                        </div>
-                        <div class="table-wrap max-h-[470px]">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Agente</th>
-                                        <th class="text-right">Vol.</th>
-                                        <th class="text-right">AHT</th>
-                                        <th class="text-right">Gap</th>
-                                        <th class="text-right">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-chats-body">
-                                    <tr><td colspan="6" class="text-center py-4 text-slate-400">Sin datos</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-6">
-                    <div class="note-card">
-                        <div class="panel-title">Hallazgos automáticos</div>
-                        <ul id="insights-list">
-                            <li>Cargando análisis...</li>
-                        </ul>
-                    </div>
-                    <div class="note-card">
-                        <div class="panel-title">Cómo se calcula la meta sugerida</div>
-                        <ul>
-                            <li>Se toman agentes con al menos <strong>10 interacciones</strong> en la vista activa.</li>
-                            <li>Se calcula el AHT por agente y se usa el <strong>percentil 35</strong> como referencia operativa ambiciosa pero alcanzable.</li>
-                            <li>La meta es dinámica: cambia con filtros, por lo que te ayuda a tener una referencia específica por periodo, campaña o estructura.</li>
-                            <li>Úsala como señal de gestión; si ya tienes una meta oficial, se puede sustituir fácilmente por una fija.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+const saveFilters=()=>{try{localStorage.setItem(FILTER_KEY,JSON.stringify(currentFilters))}catch(e){}};
+const restore=()=>{try{const s=JSON.parse(localStorage.getItem(FILTER_KEY)||'{}');Object.keys(currentFilters).forEach(k=>{if(s[k])currentFilters[k]=s[k]});const ids={mes:'filter-mes',dia:'filter-dia',campana:'filter-campana',ringGroup:'filter-ringgroup',supervisor:'filter-supervisor',coordinador:'filter-coordinador'};Object.entries(ids).forEach(([k,id])=>{const e=document.getElementById(id),ok=[...e.options].some(o=>o.value===currentFilters[k]);e.value=ok?currentFilters[k]:'Todos';if(!ok)currentFilters[k]='Todos'})}catch(e){}};
+const uniq=(d,k)=>[...new Set(d.map(x=>x[k]))].filter(x=>x&&x!=='Desconocido'&&x!=='-').sort();
+const passes=(r,skip,isChat)=>{const a=skip==='mes'||currentFilters.mes==='Todos'||r.mes===currentFilters.mes,b=skip==='dia'||currentFilters.dia==='Todos'||r.dia===currentFilters.dia,c=skip==='campana'||currentFilters.campana==='Todos'||r.campana===currentFilters.campana;let rg=true;if(!isChat)rg=skip==='ringGroup'||currentFilters.ringGroup==='Todos'||r.ringGroup===currentFilters.ringGroup;const s=skip==='supervisor'||currentFilters.supervisor==='Todos'||r.supervisor===currentFilters.supervisor,o=skip==='coordinador'||currentFilters.coordinador==='Todos'||r.coordinador===currentFilters.coordinador;return a&&b&&c&&rg&&s&&o};
+const updateOptions=(id,key)=>{const el=document.getElementById(id),cur=currentFilters[key];let opts;if(key==='ringGroup')opts=uniq(rawCalls.filter(x=>passes(x,'ringGroup',false)),'ringGroup');else opts=uniq([...rawCalls.filter(x=>passes(x,key,false)),...rawChats.filter(x=>passes(x,key,true))],key);if(key==='mes')opts.sort((a,b)=>a==='Sin asignar'?1:b==='Sin asignar'?-1:moment(a.toLowerCase(),'MMMM YYYY','es')-moment(b.toLowerCase(),'MMMM YYYY','es'));el.innerHTML='<option value="Todos">Todos</option>'+opts.map(o=>`<option value="${o}">${o}</option>`).join('');if(cur!=='Todos'&&opts.includes(cur))el.value=cur;else{el.value='Todos';currentFilters[key]='Todos'}};
+const updateChips=()=>{const box=document.getElementById('active-filter-chips'),labels={mes:'Mes',dia:'Día',campana:'Campaña',ringGroup:'Ring Group',supervisor:'Supervisor',coordinador:'Coordinador'},a=Object.entries(currentFilters).filter(([,v])=>v!=='Todos');box.innerHTML=a.length?a.map(([k,v])=>`<span class="chip active">${labels[k]}: ${v}</span>`).join(''):'<span class="chip">Todos los datos visibles</span>'};
 
-    <script>
-        let rawCalls = [];
-        let rawChats = [];
-        let filteredCalls = [];
-        let filteredChats = [];
-        let headCountMap = {};
-        let currentFilters = {
-            mes: 'Todos',
-            dia: 'Todos',
-            campana: 'Todos',
-            ringGroup: 'Todos',
-            supervisor: 'Todos',
-            coordinador: 'Todos'
-        };
-        let trendChart, scatterCallsChart, scatterChatsChart, callsCampChart, chatsCampChart, callsCompChart, chatsCompChart;
-        const FILTER_STORAGE_KEY = 'ahtExecutiveFiltersV1';
-        const overlay = document.getElementById('loading-overlay');
-        const loadingTitle = document.getElementById('loading-title');
-        const loadingSubtitle = document.getElementById('loading-subtitle');
-        const sidebar = document.getElementById('sidebar');
-        moment.locale('es');
+const guidePlugin={id:'guidePlugin',afterDatasetsDraw(chart,args,opts){if(!opts||!opts.enabled)return;const{ctx,chartArea:{left,right,top,bottom},scales}=chart;ctx.save();if(opts.targetY!=null&&scales.y){const y=scales.y.getPixelForValue(opts.targetY);ctx.setLineDash([6,5]);ctx.strokeStyle=opts.targetColor||'#94a3b8';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=opts.targetColor||'#64748b';ctx.font='600 10px Inter';ctx.fillText('Meta',right-30,y-6)}if(opts.medianX!=null&&scales.x){const x=scales.x.getPixelForValue(opts.medianX);ctx.setLineDash([4,5]);ctx.strokeStyle='#cbd5e1';ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#94a3b8';ctx.font='600 9px Inter';ctx.fillText('Mediana volumen',Math.min(x+5,right-90),top+12)}ctx.restore()}};
+Chart.register(guidePlugin);
 
-        document.getElementById('toggleSidebar').addEventListener('click', () => {
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('hidden');
-                sidebar.classList.add('flex');
-            } else {
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('flex');
-            }
-        });
-        document.getElementById('closeSidebarMobile').addEventListener('click', () => {
-            sidebar.classList.add('hidden');
-            sidebar.classList.remove('flex');
-        });
+const renderExecutive=(voiceAvg,chatAvg,vTarget,cTarget,vAgg,cAgg)=>{
+ const vStat=status(voiceAvg,vTarget),cStat=status(chatAvg,cTarget),vGap=voiceAvg-vTarget,cGap=chatAvg-cTarget,vOpp=oppHours(vAgg,vTarget),cOpp=oppHours(cAgg,cTarget),totalOpp=vOpp+cOpp;
+ const priority=vOpp>=cOpp?'Voz':'Chat',maxOpp=Math.max(vOpp,cOpp);
+ const dates=validDates([...filteredCalls,...filteredChats]);let period='Sin datos';if(dates.length){const mn=new Date(Math.min(...dates.map(d=>d.getTime()))),mx=new Date(Math.max(...dates.map(d=>d.getTime())));period=moment(mn).isSame(mx,'day')?moment(mn).format('DD MMM YYYY'):`${moment(mn).format('DD MMM')} – ${moment(mx).format('DD MMM YYYY')}`}
+ const agents=new Set([...filteredCalls.map(x=>x.agente),...filteredChats.map(x=>x.agente)]).size,camps=new Set([...filteredCalls.map(x=>x.campana),...filteredChats.map(x=>x.campana)]).size,total=sum(filteredCalls,'atendidas')+sum(filteredChats,'atendidos');
+ document.getElementById('period-value').innerText=period;document.getElementById('coverage-value').innerText=`${agents} agentes`;document.getElementById('coverage-sub').innerText=`${camps} campañas visibles.`;document.getElementById('interactions-value').innerText=total.toLocaleString();
+ document.getElementById('voice-aht').innerText=fmt(voiceAvg);document.getElementById('voice-target').innerText=fmt(vTarget);document.getElementById('chat-aht').innerText=fmt(chatAvg);document.getElementById('chat-target').innerText=fmt(cTarget);document.getElementById('voice-aht-sub').innerText=`Gap ${signed(vGap)} · ${vStat.label}`;document.getElementById('chat-aht-sub').innerText=`Gap ${signed(cGap)} · ${cStat.label}`;document.getElementById('opportunity-hours').innerText=`${totalOpp.toFixed(1)} h`;document.getElementById('opportunity-sub').innerText='Tiempo teórico acumulado por encima de la meta; no equivale directamente a ahorro de HC.';
+ let headline,copy,pill;if(vGap<=0&&cGap<=0){headline='El AHT está controlado frente al benchmark sugerido en ambos canales.';copy='La prioridad deja de ser reducir AHT de forma general y pasa a vigilar dispersión, outliers y estabilidad diaria para no deteriorar la experiencia.';pill={label:'Controlado',cls:'good'}}else if(totalOpp>0){headline=`La principal oportunidad de AHT está concentrada en ${priority.toLowerCase()}.`;copy=`La referencia dinámica estima ${totalOpp.toFixed(1)} horas de handling por encima del objetivo dentro de la selección actual. ${priority} concentra ${maxOpp.toFixed(1)} horas, por lo que conviene revisar primero los agentes y campañas de mayor impacto.`;pill={label:'Oportunidad visible',cls:'warn'}}else{headline='No hay suficiente señal para establecer una prioridad clara.';copy='Revisa el volumen disponible o amplía el periodo para obtener una referencia más robusta.';pill={label:'Muestra limitada',cls:'neutral'}}
+ document.getElementById('executive-headline').innerText=headline;document.getElementById('executive-copy').innerText=copy;document.getElementById('verdict-title').innerText=headline;document.getElementById('verdict-text').innerText=copy;const p=document.getElementById('overall-pill');p.className=`pill ${pill.cls}`;p.innerText=pill.label;document.getElementById('priority-channel').innerText=priority;document.getElementById('priority-focus').innerText=maxOpp>0?`${maxOpp.toFixed(1)} h sobre meta`:'Monitoreo';
+};
 
-        const formatAHT = (seconds) => {
-            if (seconds === null || seconds === undefined || isNaN(seconds) || seconds < 0) return '00:00:00';
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
-            return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        };
+const renderControl=(vTarget,cTarget)=>{const dates=[...new Set([...filteredCalls.map(x=>x.dia),...filteredChats.map(x=>x.dia)])].filter(x=>x&&x!=='Sin asignar').sort();const day=(data,volKey,d)=>{const a=data.filter(x=>x.dia===d),v=sum(a,volKey),t=sum(a,'totalTime');return v?t/v:null};const v=dates.map(d=>day(filteredCalls,'atendidas',d)),c=dates.map(d=>day(filteredChats,'atendidos',d));if(controlChart)controlChart.destroy();controlChart=new Chart(document.getElementById('controlChart'),{type:'line',data:{labels:dates.map(d=>moment(d).format('DD MMM')),datasets:[{label:'Voz',data:v,borderColor:'#2563eb',backgroundColor:'#2563eb',tension:.3,pointRadius:2},{label:'Voz meta +5%',data:dates.map(()=>vTarget*1.05),borderColor:'rgba(37,99,235,.18)',backgroundColor:'rgba(37,99,235,.08)',pointRadius:0,borderWidth:1,fill:'+1'},{label:'Voz meta -5%',data:dates.map(()=>vTarget*.95),borderColor:'rgba(37,99,235,.18)',backgroundColor:'rgba(37,99,235,.08)',pointRadius:0,borderWidth:1},{label:'Chat',data:c,borderColor:'#0f766e',backgroundColor:'#0f766e',tension:.3,pointRadius:2},{label:'Chat meta +5%',data:dates.map(()=>cTarget*1.05),borderColor:'rgba(15,118,110,.18)',backgroundColor:'rgba(15,118,110,.07)',pointRadius:0,borderWidth:1,fill:'+1'},{label:'Chat meta -5%',data:dates.map(()=>cTarget*.95),borderColor:'rgba(15,118,110,.18)',backgroundColor:'rgba(15,118,110,.07)',pointRadius:0,borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{filter:i=>!i.text.includes('meta')}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmt(ctx.raw)}`}}},scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>fmt(v)},grid:{color:'rgba(148,163,184,.13)'}}}}})};
 
-        const formatSignedAHT = (seconds) => {
-            const sign = seconds > 0 ? '+' : seconds < 0 ? '-' : '±';
-            return `${sign}${formatAHT(Math.abs(seconds || 0))}`;
-        };
+const scatterData=(agg,target)=>eligible(agg).map(x=>({x:x.vol,y:x.aht,name:x.name,gap:x.aht-target}));
+const renderScatter=(vAgg,cAgg,vTarget,cTarget)=>{const arr=scatterMode==='voice'?vAgg:cAgg,target=scatterMode==='voice'?vTarget:cTarget,points=scatterData(arr,target),med=median(points.map(p=>p.x));if(scatterChart)scatterChart.destroy();scatterChart=new Chart(document.getElementById('scatterChart'),{type:'scatter',data:{datasets:[{label:scatterMode==='voice'?'Agentes Voz':'Agentes Chat',data:points,pointRadius:ctx=>{const v=ctx.raw?.x||0,m=Math.max(1,...points.map(p=>p.x));return Math.max(5,Math.min(12,5+7*(v/m)))},pointBackgroundColor:ctx=>{const g=ctx.raw?.gap||0;return g<=0?'rgba(5,150,105,.65)':g<=target*.08?'rgba(217,119,6,.68)':'rgba(220,38,38,.68)'},pointBorderColor:'#fff',pointBorderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},guidePlugin:{enabled:true,targetY:target,medianX:med,targetColor:'#64748b'},tooltip:{callbacks:{label:ctx=>[ctx.raw.name,`Volumen: ${ctx.raw.x.toLocaleString()}`,`AHT: ${fmt(ctx.raw.y)}`,`Gap: ${signed(ctx.raw.gap)}`]}}},scales:{x:{beginAtZero:true,title:{display:true,text:'Volumen de interacciones'},grid:{color:'rgba(148,163,184,.13)'}},y:{beginAtZero:true,title:{display:true,text:'AHT'},ticks:{callback:v=>fmt(v)},grid:{color:'rgba(148,163,184,.13)'}}}}})};
 
-        const cleanString = (str) => {
-            if (!str) return 'Desconocido';
-            return String(str).trim().replace(/\s+/g, ' ');
-        };
+const renderDistribution=(vAgg,cAgg,vTarget,cTarget)=>{const all=[...eligible(vAgg).map(x=>x.aht),...eligible(cAgg).map(x=>x.aht)];if(!all.length){if(distributionChart)distributionChart.destroy();return}const min=Math.min(...all),max=Math.max(...all),bins=8,width=Math.max(1,(max-min)/bins),labels=[],voice=[],chat=[];for(let i=0;i<bins;i++){const a=min+i*width,b=i===bins-1?max+.001:min+(i+1)*width;labels.push(`${fmt(a)}–${fmt(b)}`);voice.push(eligible(vAgg).filter(x=>x.aht>=a&&x.aht<b).length);chat.push(eligible(cAgg).filter(x=>x.aht>=a&&x.aht<b).length)}if(distributionChart)distributionChart.destroy();distributionChart=new Chart(document.getElementById('distributionChart'),{type:'bar',data:{labels,datasets:[{label:'Voz',data:voice,backgroundColor:'rgba(37,99,235,.72)',borderRadius:5},{label:'Chat',data:chat,backgroundColor:'rgba(15,118,110,.72)',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{footer:()=>`Metas: Voz ${fmt(vTarget)} · Chat ${fmt(cTarget)}`}}},scales:{x:{stacked:false,grid:{display:false},ticks:{maxRotation:35,minRotation:35,font:{size:9}}},y:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:'Número de agentes'},grid:{color:'rgba(148,163,184,.13)'}}}}})};
 
-        const parseDate = (val) => {
-            if (!val) return null;
-            if (typeof val === 'number') {
-                const date = new Date((val - (25567 + 1)) * 86400 * 1000);
-                return moment(date);
-            }
-            const m = moment(val, ['DD/MM/YYYY', 'YYYY-MM-DD', 'MM/DD/YYYY'], true);
-            return m.isValid() ? m : moment(val);
-        };
+const renderPareto=(vAgg,cAgg,vTarget,cTarget)=>{const arr=paretoMode==='voice'?vAgg:cAgg,target=paretoMode==='voice'?vTarget:cTarget;const data=eligible(arr).map(x=>({...x,hours:Math.max(0,x.aht-target)*x.vol/3600})).filter(x=>x.hours>0).sort((a,b)=>b.hours-a.hours).slice(0,15);const total=data.reduce((t,x)=>t+x.hours,0);let cum=0;const cumPct=data.map(x=>{cum+=x.hours;return total?cum/total*100:0});if(paretoChart)paretoChart.destroy();paretoChart=new Chart(document.getElementById('paretoChart'),{data:{labels:data.map(x=>x.name),datasets:[{type:'bar',label:'Horas oportunidad',data:data.map(x=>x.hours),backgroundColor:'rgba(79,70,229,.75)',borderRadius:5,yAxisID:'y'},{type:'line',label:'% acumulado',data:cumPct,borderColor:'#0891b2',backgroundColor:'#0891b2',pointRadius:2,tension:.25,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?`${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`:`${ctx.dataset.label}: ${ctx.raw.toFixed(2)} h`}}},scales:{x:{grid:{display:false},ticks:{maxRotation:35,minRotation:35,font:{size:9}}},y:{beginAtZero:true,title:{display:true,text:'Horas sobre meta'},grid:{color:'rgba(148,163,184,.13)'}},y1:{beginAtZero:true,max:100,position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>`${v}%`}}}}})};
 
-        const getValidDates = (data) => data.map(d => d.fechaRaw).filter(d => d instanceof Date && !isNaN(d));
-        const sum = (arr, key) => arr.reduce((acc, item) => acc + (Number(item[key]) || 0), 0);
-        const uniqueCount = (arr, key) => new Set(arr.map(x => x[key]).filter(Boolean)).size;
-        const percentile = (values, p) => {
-            if (!values.length) return 0;
-            const sorted = [...values].sort((a,b)=>a-b);
-            const idx = (sorted.length - 1) * p;
-            const low = Math.floor(idx);
-            const high = Math.ceil(idx);
-            if (low === high) return sorted[low];
-            return sorted[low] + (sorted[high] - sorted[low]) * (idx - low);
-        };
+const renderMatrix=(vTarget,cTarget)=>{const rows=[...aggregate(filteredCalls,'atendidas','campana').map(x=>({...x,channel:'Voz',target:vTarget})),...aggregate(filteredChats,'atendidos','campana').map(x=>({...x,channel:'Chat',target:cTarget}))].map(x=>({...x,gap:x.aht-x.target,hours:Math.max(0,x.aht-x.target)*x.vol/3600})).sort((a,b)=>b.hours-a.hours);const max=Math.max(1,...rows.map(x=>x.hours));const tbody=document.getElementById('campaign-matrix');if(!rows.length){tbody.innerHTML='<tr><td colspan="9" class="text-center text-slate-400 py-6">Sin datos</td></tr>';return}tbody.innerHTML=rows.map(x=>{const st=status(x.aht,x.target);return`<tr><td><span class="pill ${x.channel==='Voz'?'neutral':'good'}">${x.channel}</span></td><td class="font-semibold">${x.name}</td><td class="num">${x.vol.toLocaleString()}</td><td class="num font-semibold">${fmt(x.aht)}</td><td class="num">${fmt(x.target)}</td><td class="num ${x.gap>0?'text-red-600':'text-emerald-600'} font-semibold">${signed(x.gap)}</td><td class="bar-cell"><div class="microbar"><span style="width:${Math.max(2,x.hours/max*100)}%"></span></div></td><td class="num">${x.hours.toFixed(2)}</td><td class="num"><span class="pill ${st.cls}">${st.label}</span></td></tr>`}).join('')};
 
-        const saveFilters = () => {
-            try { localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(currentFilters)); } catch (e) {}
-        };
+const renderFindings=(vAgg,cAgg,vTarget,cTarget)=>{const vE=eligible(vAgg),cE=eligible(cAgg),vOver=vE.filter(x=>x.aht>vTarget),cOver=cE.filter(x=>x.aht>cTarget),vOpp=oppHours(vAgg,vTarget),cOpp=oppHours(cAgg,cTarget),topV=[...vE].map(x=>({...x,h:Math.max(0,x.aht-vTarget)*x.vol/3600})).sort((a,b)=>b.h-a.h)[0],topC=[...cE].map(x=>({...x,h:Math.max(0,x.aht-cTarget)*x.vol/3600})).sort((a,b)=>b.h-a.h)[0],campRows=[...aggregate(filteredCalls,'atendidas','campana').map(x=>({...x,channel:'Voz',target:vTarget})),...aggregate(filteredChats,'atendidos','campana').map(x=>({...x,channel:'Chat',target:cTarget}))].map(x=>({...x,h:Math.max(0,x.aht-x.target)*x.vol/3600})).sort((a,b)=>b.h-a.h);const topCamp=campRows[0];const findings=[{icon:'fa-users-viewfinder',title:'Dispersión de agentes',text:`${vOver.length} de ${vE.length} agentes elegibles en Voz y ${cOver.length} de ${cE.length} en Chat están sobre su referencia dinámica.`},{icon:'fa-clock',title:'Oportunidad acumulada',text:`Voz concentra ${vOpp.toFixed(1)} h y Chat ${cOpp.toFixed(1)} h de handling teórico por encima de la meta.`}];if(topCamp)findings.push({icon:'fa-layer-group',title:'Campaña prioritaria',text:`${topCamp.name} (${topCamp.channel}) concentra aproximadamente ${topCamp.h.toFixed(1)} h de oportunidad dentro de la vista.`});if((topV?.h||0)>0)findings.push({icon:'fa-user-clock',title:'Outlier con impacto · Voz',text:`${topV.name}: ${topV.vol.toLocaleString()} interacciones, AHT ${fmt(topV.aht)} y ${topV.h.toFixed(1)} h de oportunidad.`});if((topC?.h||0)>0)findings.push({icon:'fa-comment-dots',title:'Outlier con impacto · Chat',text:`${topC.name}: ${topC.vol.toLocaleString()} interacciones, AHT ${fmt(topC.aht)} y ${topC.h.toFixed(1)} h de oportunidad.`});document.getElementById('findings-list').innerHTML=findings.map(f=>`<div class="finding"><div class="finding-icon"><i class="fa-solid ${f.icon}"></i></div><div><div class="finding-title">${f.title}</div><div class="finding-text">${f.text}</div></div></div>`).join('')};
 
-        const restoreSavedFilters = () => {
-            try {
-                const saved = JSON.parse(localStorage.getItem(FILTER_STORAGE_KEY) || '{}');
-                const idMap = { mes: 'filter-mes', dia: 'filter-dia', campana: 'filter-campana', ringGroup: 'filter-ringgroup', supervisor: 'filter-supervisor', coordinador: 'filter-coordinador' };
-                Object.keys(currentFilters).forEach(key => { if (saved[key]) currentFilters[key] = saved[key]; });
-                Object.entries(idMap).forEach(([key, id]) => {
-                    const el = document.getElementById(id);
-                    const exists = [...el.options].some(o => o.value === currentFilters[key]);
-                    el.value = exists ? currentFilters[key] : 'Todos';
-                    if (!exists) currentFilters[key] = 'Todos';
-                });
-            } catch (e) {}
-        };
+const renderDrivers=()=>{const talk=sum(filteredCalls,'talkTime'),hold=sum(filteredCalls,'holdTime'),acw=sum(filteredCalls,'acwTime'),pr=sum(filteredChats,'sumPrimerRes'),em=sum(filteredChats,'sumEntreMen'),chatTotal=sum(filteredChats,'totalTime'),rest=Math.max(0,chatTotal-pr-em),vTotal=talk+hold+acw||1,cTotal=pr+em+rest||1;const rows=[{channel:'Voz',a:talk/vTotal*100,b:hold/vTotal*100,c:acw/vTotal*100},{channel:'Chat',a:pr/cTotal*100,b:em/cTotal*100,c:rest/cTotal*100}];if(driverChart)driverChart.destroy();driverChart=new Chart(document.getElementById('driverChart'),{type:'bar',data:{labels:rows.map(x=>x.channel),datasets:[{label:'Principal',data:rows.map(x=>x.a),backgroundColor:'#2563eb',stack:'total',borderRadius:5},{label:'Secundario',data:rows.map(x=>x.b),backgroundColor:'#f59e0b',stack:'total',borderRadius:5},{label:'Resto',data:rows.map(x=>x.c),backgroundColor:'#94a3b8',stack:'total',borderRadius:5}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`}}},scales:{x:{stacked:true,min:0,max:100,ticks:{callback:v=>`${v}%`},grid:{color:'rgba(148,163,184,.13)'}},y:{stacked:true,grid:{display:false}}}}})};
 
-        const updateDataFreshness = () => {
-            const dates = getValidDates([...rawCalls, ...rawChats]);
-            const el = document.getElementById('data-last-update');
-            if (!dates.length) { el.innerText = 'Sin datos'; return; }
-            const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
-            el.innerText = moment(maxDate).format('DD MMM YYYY');
-        };
+const renderAll=()=>{const vVol=sum(filteredCalls,'atendidas'),cVol=sum(filteredChats,'atendidos'),vTime=sum(filteredCalls,'totalTime'),cTime=sum(filteredChats,'totalTime'),vAvg=vVol?vTime/vVol:0,cAvg=cVol?cTime/cVol:0,vAgg=aggregate(filteredCalls,'atendidas'),cAgg=aggregate(filteredChats,'atendidos'),vTarget=targetFrom(vAgg,vAvg),cTarget=targetFrom(cAgg,cAvg);renderExecutive(vAvg,cAvg,vTarget,cTarget,vAgg,cAgg);renderControl(vTarget,cTarget);renderScatter(vAgg,cAgg,vTarget,cTarget);renderDistribution(vAgg,cAgg,vTarget,cTarget);renderPareto(vAgg,cAgg,vTarget,cTarget);renderMatrix(vTarget,cTarget);renderFindings(vAgg,cAgg,vTarget,cTarget);renderDrivers();};
 
-        const getUnique = (data, key) => [...new Set(data.map(item => item[key]))].filter(x => x && x !== 'Desconocido' && x !== '-').sort();
-        const checkFilters = (row, skipKey, isChat) => {
-            const passMes = skipKey === 'mes' || currentFilters.mes === 'Todos' || row.mes === currentFilters.mes;
-            const passDia = skipKey === 'dia' || currentFilters.dia === 'Todos' || row.dia === currentFilters.dia;
-            const passCamp = skipKey === 'campana' || currentFilters.campana === 'Todos' || row.campana === currentFilters.campana;
-            let passRG = true;
-            if (!isChat) {
-                passRG = skipKey === 'ringGroup' || currentFilters.ringGroup === 'Todos' || row.ringGroup === currentFilters.ringGroup;
-            }
-            const passSup = skipKey === 'supervisor' || currentFilters.supervisor === 'Todos' || row.supervisor === currentFilters.supervisor;
-            const passCoord = skipKey === 'coordinador' || currentFilters.coordinador === 'Todos' || row.coordinador === currentFilters.coordinador;
-            return passMes && passDia && passCamp && passRG && passSup && passCoord;
-        };
+const applyFilters=()=>{currentFilters.mes=document.getElementById('filter-mes').value;currentFilters.dia=document.getElementById('filter-dia').value;currentFilters.campana=document.getElementById('filter-campana').value;currentFilters.ringGroup=document.getElementById('filter-ringgroup').value;currentFilters.supervisor=document.getElementById('filter-supervisor').value;currentFilters.coordinador=document.getElementById('filter-coordinador').value;updateOptions('filter-mes','mes');updateOptions('filter-dia','dia');updateOptions('filter-campana','campana');updateOptions('filter-ringgroup','ringGroup');updateOptions('filter-supervisor','supervisor');updateOptions('filter-coordinador','coordinador');filteredCalls=rawCalls.filter(x=>passes(x,null,false));filteredChats=rawChats.filter(x=>passes(x,null,true));saveFilters();updateChips();renderAll()};
+['filter-mes','filter-dia','filter-campana','filter-ringgroup','filter-supervisor','filter-coordinador'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+document.getElementById('btn-limpiar').onclick=()=>{currentFilters={mes:'Todos',dia:'Todos',campana:'Todos',ringGroup:'Todos',supervisor:'Todos',coordinador:'Todos'};document.querySelectorAll('select').forEach(s=>s.value='Todos');try{localStorage.removeItem(FILTER_KEY)}catch(e){}applyFilters()};
+document.getElementById('scatter-voice').onclick=()=>{scatterMode='voice';document.getElementById('scatter-voice').classList.add('active');document.getElementById('scatter-chat').classList.remove('active');renderAll()};
+document.getElementById('scatter-chat').onclick=()=>{scatterMode='chat';document.getElementById('scatter-chat').classList.add('active');document.getElementById('scatter-voice').classList.remove('active');renderAll()};
+document.getElementById('pareto-voice').onclick=()=>{paretoMode='voice';document.getElementById('pareto-voice').classList.add('active');document.getElementById('pareto-chat').classList.remove('active');renderAll()};
+document.getElementById('pareto-chat').onclick=()=>{paretoMode='chat';document.getElementById('pareto-chat').classList.add('active');document.getElementById('pareto-voice').classList.remove('active');renderAll()};
 
-        const updateDropdownOptions = (elementId, dataKey) => {
-            const selectEl = document.getElementById(elementId);
-            const currentValue = currentFilters[dataKey];
-            let uniqueOpts = [];
-            if (dataKey === 'ringGroup') {
-                uniqueOpts = getUnique(rawCalls.filter(d => checkFilters(d, 'ringGroup', false)), 'ringGroup');
-            } else {
-                const validCalls = rawCalls.filter(d => checkFilters(d, dataKey, false));
-                const validChats = rawChats.filter(d => checkFilters(d, dataKey, true));
-                uniqueOpts = getUnique([...validCalls, ...validChats], dataKey);
-            }
-            if (dataKey === 'mes') {
-                uniqueOpts = uniqueOpts.sort((a,b) => {
-                    if (a === 'Sin asignar') return 1;
-                    if (b === 'Sin asignar') return -1;
-                    return moment(a.toLowerCase(), 'MMMM YYYY', 'es').valueOf() - moment(b.toLowerCase(), 'MMMM YYYY', 'es').valueOf();
-                });
-            }
-            selectEl.innerHTML = '<option value="Todos">Todos</option>';
-            uniqueOpts.forEach(opt => selectEl.innerHTML += `<option value="${opt}">${opt}</option>`);
-            if (currentValue !== 'Todos' && uniqueOpts.includes(currentValue)) {
-                selectEl.value = currentValue;
-            } else {
-                selectEl.value = 'Todos';
-                currentFilters[dataKey] = 'Todos';
-            }
-        };
+document.getElementById('btn-exportar').onclick=()=>{if(!filteredCalls.length&&!filteredChats.length)return alert('No hay datos para exportar.');const vVol=sum(filteredCalls,'atendidas'),cVol=sum(filteredChats,'atendidos'),vAvg=vVol?sum(filteredCalls,'totalTime')/vVol:0,cAvg=cVol?sum(filteredChats,'totalTime')/cVol:0,vAgg=aggregate(filteredCalls,'atendidas'),cAgg=aggregate(filteredChats,'atendidos'),vTarget=targetFrom(vAgg,vAvg),cTarget=targetFrom(cAgg,cAvg);const wb=XLSX.utils.book_new();const summary=[['AHT INTELLIGENCE - ANALISIS EJECUTIVO'],['Generado',moment().format('DD/MM/YYYY HH:mm')],[],['FILTROS'],...Object.entries(currentFilters).map(([k,v])=>[k,v]),[],['INDICADORES'],['AHT Voz',fmt(vAvg)],['Meta sugerida Voz',fmt(vTarget)],['Gap Voz',signed(vAvg-vTarget)],['Oportunidad Voz (h)',oppHours(vAgg,vTarget).toFixed(2)],['AHT Chat',fmt(cAvg)],['Meta sugerida Chat',fmt(cTarget)],['Gap Chat',signed(cAvg-cTarget)],['Oportunidad Chat (h)',oppHours(cAgg,cTarget).toFixed(2)]];XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(summary),'Resumen');const agentRows=[...eligible(vAgg).map(x=>({Canal:'Voz',Agente:x.name,Volumen:x.vol,AHT_Seg:Math.round(x.aht),Meta_Seg:vTarget,Gap_Seg:Math.round(x.aht-vTarget),Oportunidad_Horas:+(Math.max(0,x.aht-vTarget)*x.vol/3600).toFixed(3)})),...eligible(cAgg).map(x=>({Canal:'Chat',Agente:x.name,Volumen:x.vol,AHT_Seg:Math.round(x.aht),Meta_Seg:cTarget,Gap_Seg:Math.round(x.aht-cTarget),Oportunidad_Horas:+(Math.max(0,x.aht-cTarget)*x.vol/3600).toFixed(3)}))];XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(agentRows),'Analisis_Agentes');XLSX.writeFile(wb,`AHT_Analisis_Ejecutivo_${moment().format('YYYYMMDD_HHmm')}.xlsx`)};
 
-        const updateFilterChips = () => {
-            const container = document.getElementById('active-filter-chips');
-            const labels = { mes: 'Mes', dia: 'Día', campana: 'Campaña', ringGroup: 'Ring Group', supervisor: 'Supervisor', coordinador: 'Coordinador' };
-            const active = Object.entries(currentFilters).filter(([,value]) => value !== 'Todos');
-            if (!active.length) {
-                container.innerHTML = '<span class="filter-chip"><i class="fa-solid fa-globe"></i> Todos los datos visibles</span>';
-                return;
-            }
-            container.innerHTML = active.map(([key,value]) => `<span class="filter-chip active"><i class="fa-solid fa-check"></i>${labels[key]}: ${value}</span>`).join('');
-        };
+const updateFreshness=()=>{const d=validDates([...rawCalls,...rawChats]);document.getElementById('data-last-update').innerText=d.length?moment(new Date(Math.max(...d.map(x=>x.getTime())))).format('DD MMM YYYY'):'Sin datos'};
+const processExcelData=(wb)=>{headCountMap={};if(wb.SheetNames.includes('HC'))XLSX.utils.sheet_to_json(wb.Sheets['HC']).forEach(r=>{const k=clean(r['Nombre del Agente']||r['Nombre del agente']).toLowerCase();headCountMap[k]={supervisor:clean(r['Supervisor']),coordinador:clean(r['Coordinador'])}});if(wb.SheetNames.includes('AHT In y Out'))rawCalls=XLSX.utils.sheet_to_json(wb.Sheets['AHT In y Out']).map(r=>{const agente=clean(r['Nombre del agente']);let supervisor=clean(r['Supervisor']),coordinador=clean(r['Coordinador']),campana=clean(r['Campaña']).toUpperCase();if(campana==='-'||campana==='DESCONOCIDO')campana='SIN ASIGNAR';if(supervisor==='-'||supervisor==='Desconocido'||supervisor===''){const m=headCountMap[agente.toLowerCase()];if(m){supervisor=m.supervisor;coordinador=m.coordinador}}const d=parseDate(r['Fecha']),ok=d&&d.isValid();return{fechaRaw:ok?d.toDate():null,mes:ok?d.format('MMMM YYYY').toUpperCase():'Sin asignar',dia:ok?d.format('YYYY-MM-DD'):'Sin asignar',agente,campana,ringGroup:clean(r['Ring Groups']),atendidas:Number(r['Llamadas Atendidas'])||0,talkTime:Number(r['Talk Time'])||0,holdTime:Number(r['Hold Time'])||0,acwTime:Number(r['After Call Work Time'])||0,totalTime:Number(r['Tiempo Total Operacion'])||0,supervisor,coordinador}});if(wb.SheetNames.includes('AHT Chat'))rawChats=XLSX.utils.sheet_to_json(wb.Sheets['AHT Chat']).filter(r=>String(r['Campaña']||'').toUpperCase().includes('ATOM')).map(r=>{const agente=clean(r['Nombre del agente']);let supervisor=clean(r['Supervisor']),coordinador=clean(r['Coordinador']);if(supervisor==='-'||supervisor==='Desconocido'||supervisor===''){const m=headCountMap[agente.toLowerCase()];if(m){supervisor=m.supervisor;coordinador=m.coordinador}}const d=parseDate(r['Fecha']),ok=d&&d.isValid(),atendidos=Number(r['Atendidos'])||0,aht=Number(r['AHT'])||0;return{fechaRaw:ok?d.toDate():null,mes:ok?d.format('MMMM YYYY').toUpperCase():'Sin asignar',dia:ok?d.format('YYYY-MM-DD'):'Sin asignar',agente,campana:clean(r['Campaña']).toUpperCase(),atendidos,aht,totalTime:aht*atendidos,sumPrimerRes:Number(r['Suma Primer Respuesta (seg)'])||0,sumEntreMen:Number(r['Suma Entre Mensajes (seg)'])||0,supervisor,coordinador}});applyFilters();restore();applyFilters();updateFreshness()};
 
-        const aggregateAgents = (data, volumeKey) => {
-            const map = {};
-            data.forEach(d => {
-                if (!map[d.agente]) map[d.agente] = { agente: d.agente, vol: 0, time: 0 };
-                map[d.agente].vol += Number(d[volumeKey]) || 0;
-                map[d.agente].time += Number(d.totalTime) || 0;
-            });
-            return Object.values(map).map(x => ({ ...x, aht: x.vol > 0 ? x.time / x.vol : 0 }));
-        };
-
-        const aggregateCampaigns = (data, volumeKey) => {
-            const map = {};
-            data.forEach(d => {
-                if (!map[d.campana]) map[d.campana] = { campana: d.campana, vol: 0, time: 0 };
-                map[d.campana].vol += Number(d[volumeKey]) || 0;
-                map[d.campana].time += Number(d.totalTime) || 0;
-            });
-            return Object.values(map).map(x => ({ ...x, aht: x.vol > 0 ? x.time / x.vol : 0 }));
-        };
-
-        const getSuggestedTarget = (agentAgg, fallback) => {
-            const eligible = agentAgg.filter(x => x.vol >= 10 && x.aht > 0).map(x => x.aht);
-            if (!eligible.length) return Math.round(fallback || 0);
-            const target = percentile(eligible, 0.35);
-            return Math.round(target || fallback || 0);
-        };
-
-        const getStatusInfo = (current, target) => {
-            if (!target || !current) return { label: 'Sin referencia', cls: 'status-ok', stateClass: 'state-good', progress: 0, progressColor: 'linear-gradient(90deg,#94a3b8,#cbd5e1)' };
-            const ratio = current / target;
-            if (ratio <= 1) return { label: 'En meta', cls: 'status-ok', stateClass: 'state-good', progress: Math.min(ratio * 100, 100), progressColor: 'linear-gradient(90deg,#10b981,#34d399)' };
-            if (ratio <= 1.08) return { label: 'Cerca de meta', cls: 'status-warn', stateClass: 'state-mid', progress: Math.min(ratio * 100, 125), progressColor: 'linear-gradient(90deg,#f59e0b,#fbbf24)' };
-            return { label: 'Sobre meta', cls: 'status-bad', stateClass: 'state-bad', progress: Math.min(ratio * 100, 150), progressColor: 'linear-gradient(90deg,#fb7185,#ef4444)' };
-        };
-
-        const updateExecutiveSummary = (sumLlamadas, sumChats, callsTarget, chatsTarget, avgCallAHT, avgChatAHT) => {
-            const dates = getValidDates([...filteredCalls, ...filteredChats]);
-            let period = 'Sin datos';
-            if (dates.length) {
-                const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
-                const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
-                period = moment(minDate).isSame(maxDate, 'day') ? moment(minDate).format('DD MMM YYYY') : `${moment(minDate).format('DD MMM')} – ${moment(maxDate).format('DD MMM YYYY')}`;
-            }
-            document.getElementById('summary-period').innerText = period;
-            document.getElementById('summary-interactions').innerText = (sumLlamadas + sumChats).toLocaleString();
-            document.getElementById('summary-footprint').innerText = `${new Set([...filteredCalls.map(x=>x.agente), ...filteredChats.map(x=>x.agente)]).size.toLocaleString()} agentes / ${new Set([...filteredCalls.map(x=>x.campana), ...filteredChats.map(x=>x.campana)]).size.toLocaleString()} campañas`;
-
-            const voiceStatus = getStatusInfo(avgCallAHT, callsTarget);
-            const chatStatus = getStatusInfo(avgChatAHT, chatsTarget);
-            const worseChannel = Math.max(avgCallAHT - callsTarget, avgChatAHT - chatsTarget) > 0 ? ((avgCallAHT - callsTarget) >= (avgChatAHT - chatsTarget) ? 'voz' : 'chat') : 'operación';
-            document.getElementById('hero-title').innerText = `Visión ejecutiva del AHT con foco en ${worseChannel}`;
-            document.getElementById('hero-text').innerText = `Esta vista muestra el comportamiento del AHT actual frente a una meta sugerida derivada del desempeño real de la operación. La lectura combina tendencia, dispersión por agente y desviaciones por campaña para que se vea con más claridad dónde conviene actuar.`;
-
-            document.getElementById('calls-current').innerText = formatAHT(avgCallAHT);
-            document.getElementById('calls-target').innerText = formatAHT(callsTarget);
-            document.getElementById('calls-gap').innerText = formatSignedAHT(avgCallAHT - callsTarget);
-            document.getElementById('calls-status').className = `status-tag ${voiceStatus.cls}`;
-            document.getElementById('calls-status').innerText = voiceStatus.label;
-            document.getElementById('calls-progress').style.width = `${Math.max(8, Math.min(voiceStatus.progress, 100))}%`;
-            document.getElementById('calls-progress').style.background = voiceStatus.progressColor;
-
-            document.getElementById('chats-current').innerText = formatAHT(avgChatAHT);
-            document.getElementById('chats-target').innerText = formatAHT(chatsTarget);
-            document.getElementById('chats-gap').innerText = formatSignedAHT(avgChatAHT - chatsTarget);
-            document.getElementById('chats-status').className = `status-tag ${chatStatus.cls}`;
-            document.getElementById('chats-status').innerText = chatStatus.label;
-            document.getElementById('chats-progress').style.width = `${Math.max(8, Math.min(chatStatus.progress, 100))}%`;
-            document.getElementById('chats-progress').style.background = chatStatus.progressColor;
-
-            document.getElementById('kpi-calls-gap-text').innerText = `Meta sugerida ${formatAHT(callsTarget)} · gap ${formatSignedAHT(avgCallAHT - callsTarget)}`;
-            document.getElementById('kpi-chats-gap-text').innerText = `Meta sugerida ${formatAHT(chatsTarget)} · gap ${formatSignedAHT(avgChatAHT - chatsTarget)}`;
-        };
-
-        const updateInsights = (callsAgg, chatsAgg, callsTarget, chatsTarget) => {
-            const insights = [];
-            const worstCallCampaign = aggregateCampaigns(filteredCalls, 'atendidas').sort((a,b)=>b.aht-a.aht)[0];
-            const worstChatCampaign = aggregateCampaigns(filteredChats, 'atendidos').sort((a,b)=>b.aht-a.aht)[0];
-            const worstCallAgent = callsAgg.filter(x => x.vol >= 10).sort((a,b)=>(b.aht-callsTarget)-(a.aht-callsTarget))[0];
-            const worstChatAgent = chatsAgg.filter(x => x.vol >= 10).sort((a,b)=>(b.aht-chatsTarget)-(a.aht-chatsTarget))[0];
-            const callsAboveMeta = callsAgg.filter(x => x.vol >= 10 && x.aht > callsTarget).length;
-            const chatsAboveMeta = chatsAgg.filter(x => x.vol >= 10 && x.aht > chatsTarget).length;
-            const callsEligible = callsAgg.filter(x => x.vol >= 10).length;
-            const chatsEligible = chatsAgg.filter(x => x.vol >= 10).length;
-            insights.push(`En <strong>voz</strong>, ${callsAboveMeta} de ${callsEligible} agentes elegibles están por arriba de la meta sugerida ${callsEligible ? `(${formatAHT(callsTarget)})` : ''}.`);
-            insights.push(`En <strong>chat</strong>, ${chatsAboveMeta} de ${chatsEligible} agentes elegibles están por arriba de la meta sugerida ${chatsEligible ? `(${formatAHT(chatsTarget)})` : ''}.`);
-            if (worstCallCampaign) insights.push(`La campaña de voz con mayor AHT visible es <strong>${worstCallCampaign.campana}</strong> con ${formatAHT(worstCallCampaign.aht)}.`);
-            if (worstChatCampaign) insights.push(`La campaña de chat con mayor AHT visible es <strong>${worstChatCampaign.campana}</strong> con ${formatAHT(worstChatCampaign.aht)}.`);
-            if (worstCallAgent) insights.push(`El principal outlier en voz es <strong>${worstCallAgent.agente}</strong> con ${worstCallAgent.vol.toLocaleString()} interacciones y un gap de ${formatSignedAHT(worstCallAgent.aht - callsTarget)}.`);
-            if (worstChatAgent) insights.push(`El principal outlier en chat es <strong>${worstChatAgent.agente}</strong> con ${worstChatAgent.vol.toLocaleString()} interacciones y un gap de ${formatSignedAHT(worstChatAgent.aht - chatsTarget)}.`);
-            document.getElementById('insights-list').innerHTML = insights.length ? insights.map(x => `<li>${x}</li>`).join('') : '<li>Sin datos suficientes para construir hallazgos.</li>';
-        };
-
-        const ahtTooltip = {
-            callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    if (label) label += ': ';
-                    label += formatAHT(context.raw?.y ?? context.raw ?? 0);
-                    return label;
-                }
-            }
-        };
-
-        const yAxisHHMMSS = {
-            ticks: { callback: function(value) { return formatAHT(value); } }
-        };
-
-        const updateTrendChart = (callsTarget, chatsTarget) => {
-            const dates = [...new Set([...filteredCalls.map(d=>d.dia), ...filteredChats.map(d=>d.dia)])].filter(d => d && d !== 'Sin asignar').sort();
-            const callsByDay = {};
-            const chatsByDay = {};
-            dates.forEach(d => {
-                const dayCalls = filteredCalls.filter(x => x.dia === d);
-                const sumV = dayCalls.reduce((sum, x) => sum + x.atendidas, 0);
-                const sumT = dayCalls.reduce((sum, x) => sum + x.totalTime, 0);
-                callsByDay[d] = sumV > 0 ? (sumT / sumV) : null;
-                const dayChats = filteredChats.filter(x => x.dia === d);
-                const sumCV = dayChats.reduce((sum, x) => sum + x.atendidos, 0);
-                const sumCT = dayChats.reduce((sum, x) => sum + x.totalTime, 0);
-                chatsByDay[d] = sumCV > 0 ? (sumCT / sumCV) : null;
-            });
-            if (trendChart) trendChart.destroy();
-            trendChart = new Chart(document.getElementById('trendChart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: dates.map(d => moment(d).format('DD MMM')),
-                    datasets: [
-                        { label: 'AHT Voz', data: dates.map(d => callsByDay[d]), borderColor: '#2563eb', backgroundColor: '#2563eb', tension: .35, spanGaps: true, yAxisID: 'y' },
-                        { label: 'Meta Voz', data: dates.map(()=>callsTarget), borderColor: '#93c5fd', backgroundColor: '#93c5fd', borderDash:[6,6], pointRadius:0, tension:0, spanGaps:true, yAxisID:'y' },
-                        { label: 'AHT Chat', data: dates.map(d => chatsByDay[d]), borderColor: '#0f766e', backgroundColor: '#0f766e', tension: .35, spanGaps: true, yAxisID: 'y1' },
-                        { label: 'Meta Chat', data: dates.map(()=>chatsTarget), borderColor: '#99f6e4', backgroundColor: '#99f6e4', borderDash:[6,6], pointRadius:0, tension:0, spanGaps:true, yAxisID:'y1' }
-                    ]
-                },
-                options: {
-                    responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
-                    plugins:{ legend:{ position:'bottom' }, tooltip:ahtTooltip },
-                    scales:{
-                        x:{ grid:{ display:false } },
-                        y:{ type:'linear', position:'left', ...yAxisHHMMSS, title:{display:true, text:'Voz'} },
-                        y1:{ type:'linear', position:'right', grid:{ drawOnChartArea:false }, ...yAxisHHMMSS, title:{display:true, text:'Chat'} }
-                    }
-                }
-            });
-        };
-
-        const buildScatterDataset = (aggData, target, color, softColor) => {
-            const eligible = aggData.filter(x => x.vol > 0 && x.aht > 0);
-            const maxVol = Math.max(1, ...eligible.map(x => x.vol));
-            return eligible.map(x => ({ x: x.vol, y: x.aht, r: Math.max(5, Math.min(18, Math.sqrt(x.vol / maxVol) * 18)), agente: x.agente, gap: x.aht - target }));
-        };
-
-        const scatterTooltip = {
-            callbacks: {
-                label: function(context) {
-                    const p = context.raw;
-                    return [`${p.agente}`, `Volumen: ${Number(p.x).toLocaleString()}`, `AHT: ${formatAHT(p.y)}`, `Gap: ${formatSignedAHT(p.gap)}`];
-                }
-            }
-        };
-
-        const updateScatterCharts = (callsAgg, chatsAgg, callsTarget, chatsTarget) => {
-            const renderScatter = (chartRef, canvasId, points, target, color, targetColor, label) => {
-                const maxX = Math.max(10, ...points.map(p => p.x), 10);
-                const maxY = Math.max(target || 0, ...points.map(p => p.y), 60);
-                if (chartRef) chartRef.destroy();
-                return new Chart(document.getElementById(canvasId).getContext('2d'), {
-                    type:'bubble',
-                    data:{
-                        datasets:[
-                            {
-                                label,
-                                data: points,
-                                backgroundColor: color,
-                                borderColor: color,
-                                borderWidth:1,
-                                hoverBorderWidth:1.5
-                            },
-                            {
-                                type:'line',
-                                label:'Meta sugerida',
-                                data:[{x:0,y:target},{x:maxX,y:target}],
-                                borderColor: targetColor,
-                                borderDash:[6,6],
-                                borderWidth:2,
-                                pointRadius:0,
-                                fill:false,
-                                parsing:false
-                            }
-                        ]
-                    },
-                    options:{
-                        responsive:true, maintainAspectRatio:false,
-                        plugins:{ legend:{ position:'bottom' }, tooltip:scatterTooltip },
-                        scales:{
-                            x:{ type:'linear', beginAtZero:true, title:{display:true, text:'Volumen'}, grid:{ color:'rgba(148,163,184,.15)' } },
-                            y:{ beginAtZero:true, title:{display:true, text:'AHT'}, ...yAxisHHMMSS, suggestedMax:maxY * 1.1 }
-                        }
-                    }
-                });
-            };
-            scatterCallsChart = renderScatter(scatterCallsChart, 'scatterCallsChart', buildScatterDataset(callsAgg, callsTarget, 'rgba(37,99,235,.68)', 'rgba(147,197,253,.9)'), callsTarget, 'rgba(37,99,235,.68)', '#93c5fd', 'Agentes Voz');
-            scatterChatsChart = renderScatter(scatterChatsChart, 'scatterChatsChart', buildScatterDataset(chatsAgg, chatsTarget, 'rgba(15,118,110,.68)', 'rgba(153,246,228,.9)'), chatsTarget, 'rgba(15,118,110,.68)', '#99f6e4', 'Agentes Chat');
-        };
-
-        const updateCampCharts = (callsTarget, chatsTarget) => {
-            const callData = aggregateCampaigns(filteredCalls, 'atendidas').sort((a,b)=>b.aht-a.aht);
-            const chatData = aggregateCampaigns(filteredChats, 'atendidos').sort((a,b)=>b.aht-a.aht);
-
-            const renderCamp = (chartRef, canvasId, data, barColor, targetColor, target, label) => {
-                if (chartRef) chartRef.destroy();
-                return new Chart(document.getElementById(canvasId).getContext('2d'), {
-                    type:'bar',
-                    data:{
-                        labels:data.map(x => x.campana),
-                        datasets:[
-                            { label, data:data.map(x => x.aht), backgroundColor:barColor, borderRadius:8, borderSkipped:false },
-                            { type:'line', label:'Meta sugerida', data:data.map(()=>target), borderColor:targetColor, borderDash:[6,6], pointRadius:0, tension:0, fill:false }
-                        ]
-                    },
-                    options:{
-                        indexAxis:'y', responsive:true, maintainAspectRatio:false,
-                        plugins:{ legend:{ position:'bottom' }, tooltip:ahtTooltip },
-                        scales:{ x:{ ...yAxisHHMMSS }, y:{ grid:{ display:false } } }
-                    }
-                });
-            };
-            callsCampChart = renderCamp(callsCampChart, 'callsCampChart', callData, '#2563eb', '#93c5fd', callsTarget, 'AHT Voz');
-            chatsCampChart = renderCamp(chatsCampChart, 'chatsCampChart', chatData, '#0f766e', '#99f6e4', chatsTarget, 'AHT Chat');
-        };
-
-        const updateCompCharts = (talk, hold, acw, pr, em, totalChatTime) => {
-            if (callsCompChart) callsCompChart.destroy();
-            callsCompChart = new Chart(document.getElementById('callsCompChart').getContext('2d'), {
-                type:'doughnut',
-                data:{ labels:['Talk Time','Hold Time','ACW'], datasets:[{ data:[talk, hold, acw], backgroundColor:['#2563eb','#f59e0b','#64748b'], borderWidth:0 }] },
-                options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom' }, tooltip:{ callbacks:{ label:(ctx)=>{ const total = ctx.dataset.data.reduce((a,b)=>a+b,0); const pct = total ? ((ctx.raw/total)*100).toFixed(1) : '0.0'; return `${ctx.label}: ${formatAHT(ctx.raw)} (${pct}%)`; } } } } }
-            });
-            const resto = Math.max(0, totalChatTime - pr - em);
-            if (chatsCompChart) chatsCompChart.destroy();
-            chatsCompChart = new Chart(document.getElementById('chatsCompChart').getContext('2d'), {
-                type:'doughnut',
-                data:{ labels:['1er Respuesta','Entre Mensajes','Resto del AHT'], datasets:[{ data:[pr, em, resto], backgroundColor:['#0f766e','#14b8a6','#94a3b8'], borderWidth:0 }] },
-                options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom' }, tooltip:{ callbacks:{ label:(ctx)=>{ const total = ctx.dataset.data.reduce((a,b)=>a+b,0); const pct = total ? ((ctx.raw/total)*100).toFixed(1) : '0.0'; return `${ctx.label}: ${formatAHT(ctx.raw)} (${pct}%)`; } } } } }
-            });
-        };
-
-        const renderDeviationTable = (tbody, data, target) => {
-            tbody.innerHTML = '';
-            if (!data.length) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay agentes con mínimo 10 interacciones</td></tr>';
-                return;
-            }
-            data.forEach((row, i) => {
-                const gap = row.aht - target;
-                const status = getStatusInfo(row.aht, target);
-                tbody.innerHTML += `
-                    <tr>
-                        <td><span class="rank-badge">${i+1}</span></td>
-                        <td class="font-semibold text-slate-700">${row.agente}</td>
-                        <td class="text-right">${row.vol.toLocaleString()}</td>
-                        <td class="text-right font-semibold">${formatAHT(row.aht)}</td>
-                        <td class="text-right ${gap > 0 ? 'text-rose-600' : 'text-emerald-600'} font-semibold">${formatSignedAHT(gap)}</td>
-                        <td class="text-right"><span class="state-badge ${status.stateClass}">${status.label}</span></td>
-                    </tr>
-                `;
-            });
-        };
-
-        const updateAgentTables = (callsTarget, chatsTarget) => {
-            const callsAgg = aggregateAgents(filteredCalls, 'atendidas')
-                .filter(x => x.vol >= 10)
-                .sort((a,b) => (b.aht - callsTarget) - (a.aht - callsTarget))
-                .slice(0, 25);
-            const chatsAgg = aggregateAgents(filteredChats, 'atendidos')
-                .filter(x => x.vol >= 10)
-                .sort((a,b) => (b.aht - chatsTarget) - (a.aht - chatsTarget))
-                .slice(0, 25);
-            renderDeviationTable(document.getElementById('table-calls-body'), callsAgg, callsTarget);
-            renderDeviationTable(document.getElementById('table-chats-body'), chatsAgg, chatsTarget);
-        };
-
-        const updateDashboard = () => {
-            const sumLlamadas = sum(filteredCalls, 'atendidas');
-            const sumTotalTimeCalls = sum(filteredCalls, 'totalTime');
-            const sumTalk = sum(filteredCalls, 'talkTime');
-            const sumHold = sum(filteredCalls, 'holdTime');
-            const sumAcw = sum(filteredCalls, 'acwTime');
-            const avgCallAHT = sumLlamadas > 0 ? sumTotalTimeCalls / sumLlamadas : 0;
-
-            const sumChats = sum(filteredChats, 'atendidos');
-            const sumTotalTimeChats = sum(filteredChats, 'totalTime');
-            const sumPrimerRes = sum(filteredChats, 'sumPrimerRes');
-            const sumEntreMen = sum(filteredChats, 'sumEntreMen');
-            const avgChatAHT = sumChats > 0 ? sumTotalTimeChats / sumChats : 0;
-
-            const callsAgg = aggregateAgents(filteredCalls, 'atendidas');
-            const chatsAgg = aggregateAgents(filteredChats, 'atendidos');
-            const callsTarget = getSuggestedTarget(callsAgg, avgCallAHT);
-            const chatsTarget = getSuggestedTarget(chatsAgg, avgChatAHT);
-
-            document.getElementById('kpi-calls-vol').innerText = sumLlamadas.toLocaleString();
-            document.getElementById('kpi-calls-aht').innerText = formatAHT(avgCallAHT);
-            document.getElementById('kpi-chats-vol').innerText = sumChats.toLocaleString();
-            document.getElementById('kpi-chats-aht').innerText = formatAHT(avgChatAHT);
-
-            updateExecutiveSummary(sumLlamadas, sumChats, callsTarget, chatsTarget, avgCallAHT, avgChatAHT);
-            updateInsights(callsAgg, chatsAgg, callsTarget, chatsTarget);
-            updateTrendChart(callsTarget, chatsTarget);
-            updateScatterCharts(callsAgg, chatsAgg, callsTarget, chatsTarget);
-            updateCampCharts(callsTarget, chatsTarget);
-            updateCompCharts(sumTalk, sumHold, sumAcw, sumPrimerRes, sumEntreMen, sumTotalTimeChats);
-            updateAgentTables(callsTarget, chatsTarget);
-        };
-
-        const applyFilters = () => {
-            currentFilters.mes = document.getElementById('filter-mes').value;
-            currentFilters.dia = document.getElementById('filter-dia').value;
-            currentFilters.campana = document.getElementById('filter-campana').value;
-            currentFilters.ringGroup = document.getElementById('filter-ringgroup').value;
-            currentFilters.supervisor = document.getElementById('filter-supervisor').value;
-            currentFilters.coordinador = document.getElementById('filter-coordinador').value;
-
-            updateDropdownOptions('filter-mes', 'mes');
-            updateDropdownOptions('filter-dia', 'dia');
-            updateDropdownOptions('filter-campana', 'campana');
-            updateDropdownOptions('filter-ringgroup', 'ringGroup');
-            updateDropdownOptions('filter-supervisor', 'supervisor');
-            updateDropdownOptions('filter-coordinador', 'coordinador');
-
-            filteredCalls = rawCalls.filter(d => checkFilters(d, null, false));
-            filteredChats = rawChats.filter(d => checkFilters(d, null, true));
-
-            saveFilters();
-            updateFilterChips();
-            updateDashboard();
-        };
-
-        ['filter-mes', 'filter-dia', 'filter-campana', 'filter-ringgroup', 'filter-supervisor', 'filter-coordinador'].forEach(id => {
-            document.getElementById(id).addEventListener('change', applyFilters);
-        });
-
-        document.getElementById('btn-limpiar').addEventListener('click', () => {
-            currentFilters = { mes: 'Todos', dia: 'Todos', campana: 'Todos', ringGroup: 'Todos', supervisor: 'Todos', coordinador: 'Todos' };
-            document.querySelectorAll('select').forEach(sel => sel.value = 'Todos');
-            try { localStorage.removeItem(FILTER_STORAGE_KEY); } catch (e) {}
-            applyFilters();
-        });
-
-        document.getElementById('btn-exportar').addEventListener('click', () => {
-            if(filteredCalls.length === 0 && filteredChats.length === 0) return alert('No hay datos para exportar.');
-            const callsAgg = aggregateAgents(filteredCalls, 'atendidas');
-            const chatsAgg = aggregateAgents(filteredChats, 'atendidos');
-            const sumLlamadas = sum(filteredCalls, 'atendidas');
-            const sumTotalTimeCalls = sum(filteredCalls, 'totalTime');
-            const sumChats = sum(filteredChats, 'atendidos');
-            const sumTotalTimeChats = sum(filteredChats, 'totalTime');
-            const avgCallAHT = sumLlamadas > 0 ? sumTotalTimeCalls / sumLlamadas : 0;
-            const avgChatAHT = sumChats > 0 ? sumTotalTimeChats / sumChats : 0;
-            const callsTarget = getSuggestedTarget(callsAgg, avgCallAHT);
-            const chatsTarget = getSuggestedTarget(chatsAgg, avgChatAHT);
-
-            const wb = XLSX.utils.book_new();
-            const summaryRows = [
-                ['AHT CONTROL EXECUTIVE'],
-                ['Generado', moment().format('DD/MM/YYYY HH:mm')],
-                [],
-                ['FILTROS APLICADOS'],
-                ['Mes', currentFilters.mes],
-                ['Día', currentFilters.dia],
-                ['Campaña', currentFilters.campana],
-                ['Ring Group', currentFilters.ringGroup],
-                ['Supervisor', currentFilters.supervisor],
-                ['Coordinador', currentFilters.coordinador],
-                [],
-                ['RESUMEN'],
-                ['Volumen voz', sumLlamadas],
-                ['AHT voz', formatAHT(avgCallAHT)],
-                ['Meta sugerida voz', formatAHT(callsTarget)],
-                ['Gap voz', formatSignedAHT(avgCallAHT - callsTarget)],
-                ['Volumen chat', sumChats],
-                ['AHT chat', formatAHT(avgChatAHT)],
-                ['Meta sugerida chat', formatAHT(chatsTarget)],
-                ['Gap chat', formatSignedAHT(avgChatAHT - chatsTarget)],
-                ['Agentes visibles', new Set([...filteredCalls.map(x=>x.agente), ...filteredChats.map(x=>x.agente)]).size],
-                ['Campañas visibles', new Set([...filteredCalls.map(x=>x.campana), ...filteredChats.map(x=>x.campana)]).size]
-            ];
-            const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-            wsSummary['!cols'] = [{wch: 26}, {wch: 30}];
-            XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumen');
-
-            if (callsAgg.length) {
-                const wsCallsAgents = XLSX.utils.json_to_sheet(callsAgg.filter(x=>x.vol>=10).sort((a,b)=>(b.aht-callsTarget)-(a.aht-callsTarget)).map(x => ({
-                    Agente:x.agente,
-                    Volumen:x.vol,
-                    AHT_Segundos:Math.round(x.aht),
-                    Meta_Sugerida_Segundos:callsTarget,
-                    Gap_Segundos:Math.round(x.aht - callsTarget)
-                })));
-                XLSX.utils.book_append_sheet(wb, wsCallsAgents, 'Agentes_Voz');
-            }
-
-            if (chatsAgg.length) {
-                const wsChatsAgents = XLSX.utils.json_to_sheet(chatsAgg.filter(x=>x.vol>=10).sort((a,b)=>(b.aht-chatsTarget)-(a.aht-chatsTarget)).map(x => ({
-                    Agente:x.agente,
-                    Volumen:x.vol,
-                    AHT_Segundos:Math.round(x.aht),
-                    Meta_Sugerida_Segundos:chatsTarget,
-                    Gap_Segundos:Math.round(x.aht - chatsTarget)
-                })));
-                XLSX.utils.book_append_sheet(wb, wsChatsAgents, 'Agentes_Chat');
-            }
-
-            if(filteredCalls.length > 0) {
-                const wsCalls = XLSX.utils.json_to_sheet(filteredCalls.map(c => ({
-                    Fecha:c.dia, Agente:c.agente, Campaña:c.campana, Ring_Group:c.ringGroup,
-                    Llamadas_Atendidas:c.atendidas, AHT_Segundos:Math.round(c.atendidas > 0 ? c.totalTime/c.atendidas : 0),
-                    Supervisor:c.supervisor, Coordinador:c.coordinador
-                })));
-                XLSX.utils.book_append_sheet(wb, wsCalls, 'Detalle_Voz');
-            }
-            if(filteredChats.length > 0) {
-                const wsChats = XLSX.utils.json_to_sheet(filteredChats.map(c => ({
-                    Fecha:c.dia, Agente:c.agente, Campaña:c.campana,
-                    Chats_Atendidos:c.atendidos, AHT_Segundos:Math.round(c.aht),
-                    Supervisor:c.supervisor, Coordinador:c.coordinador
-                })));
-                XLSX.utils.book_append_sheet(wb, wsChats, 'Detalle_Chat');
-            }
-            XLSX.writeFile(wb, `AHT_Control_Executive_${moment().format('YYYYMMDD_HHmm')}.xlsx`);
-        });
-
-        const processExcelData = (workbook) => {
-            headCountMap = {};
-            if (workbook.SheetNames.includes('HC')) {
-                const hcData = XLSX.utils.sheet_to_json(workbook.Sheets['HC']);
-                hcData.forEach(row => {
-                    const nameKey = cleanString(row['Nombre del Agente'] || row['Nombre del agente']).toLowerCase();
-                    headCountMap[nameKey] = {
-                        supervisor: cleanString(row['Supervisor']),
-                        coordinador: cleanString(row['Coordinador'])
-                    };
-                });
-            }
-            if (workbook.SheetNames.includes('AHT In y Out')) {
-                const callsRaw = XLSX.utils.sheet_to_json(workbook.Sheets['AHT In y Out']);
-                rawCalls = callsRaw.map(row => {
-                    const agentName = cleanString(row['Nombre del agente']);
-                    let sup = cleanString(row['Supervisor']);
-                    let coord = cleanString(row['Coordinador']);
-                    let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
-                    if (campanaLimpia === '-' || campanaLimpia === 'DESCONOCIDO') campanaLimpia = 'SIN ASIGNAR';
-                    if (sup === '-' || sup === 'Desconocido' || sup === '') {
-                        const mapped = headCountMap[agentName.toLowerCase()];
-                        if (mapped) { sup = mapped.supervisor; coord = mapped.coordinador; }
-                    }
-                    const d = parseDate(row['Fecha']);
-                    const validDate = d && d.isValid();
-                    return {
-                        fechaRaw: validDate ? d.toDate() : null,
-                        mes: validDate ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
-                        dia: validDate ? d.format('YYYY-MM-DD') : 'Sin asignar',
-                        agente: agentName,
-                        campana: campanaLimpia,
-                        ringGroup: cleanString(row['Ring Groups']),
-                        atendidas: Number(row['Llamadas Atendidas']) || 0,
-                        talkTime: Number(row['Talk Time']) || 0,
-                        holdTime: Number(row['Hold Time']) || 0,
-                        acwTime: Number(row['After Call Work Time']) || 0,
-                        totalTime: Number(row['Tiempo Total Operacion']) || 0,
-                        supervisor: sup,
-                        coordinador: coord
-                    };
-                });
-            }
-            if (workbook.SheetNames.includes('AHT Chat')) {
-                const chatsRaw = XLSX.utils.sheet_to_json(workbook.Sheets['AHT Chat']);
-                const atomChats = chatsRaw.filter(row => String(row['Campaña'] || '').toUpperCase().includes('ATOM'));
-                rawChats = atomChats.map(row => {
-                    const agentName = cleanString(row['Nombre del agente']);
-                    let sup = cleanString(row['Supervisor']);
-                    let coord = cleanString(row['Coordinador']);
-                    let campanaLimpia = cleanString(row['Campaña']).toUpperCase();
-                    if (sup === '-' || sup === 'Desconocido' || sup === '') {
-                        const mapped = headCountMap[agentName.toLowerCase()];
-                        if (mapped) { sup = mapped.supervisor; coord = mapped.coordinador; }
-                    }
-                    const d = parseDate(row['Fecha']);
-                    const validDate = d && d.isValid();
-                    const atendidos = Number(row['Atendidos']) || 0;
-                    const aht = Number(row['AHT']) || 0;
-                    return {
-                        fechaRaw: validDate ? d.toDate() : null,
-                        mes: validDate ? d.format('MMMM YYYY').toUpperCase() : 'Sin asignar',
-                        dia: validDate ? d.format('YYYY-MM-DD') : 'Sin asignar',
-                        agente: agentName,
-                        campana: campanaLimpia,
-                        atendidos: atendidos,
-                        aht: aht,
-                        totalTime: aht * atendidos,
-                        sumPrimerRes: Number(row['Suma Primer Respuesta (seg)']) || 0,
-                        sumEntreMen: Number(row['Suma Entre Mensajes (seg)']) || 0,
-                        supervisor: sup,
-                        coordinador: coord
-                    };
-                });
-            }
-            applyFilters();
-            restoreSavedFilters();
-            applyFilters();
-            updateDataFreshness();
-        };
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-                loadingTitle.innerText = 'Buscando base de datos en Render...';
-                loadingSubtitle.innerText = 'Esto puede tomar unos segundos.';
-                let response = await fetch('./AHT Servicios.xlsx');
-                if (!response.ok) response = await fetch('./datos.xlsx');
-                if (response.ok) {
-                    const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('text/html')) throw new Error('Render no encontró el Excel.');
-                    const arrayBuffer = await response.arrayBuffer();
-                    const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
-                    processExcelData(workbook);
-                }
-            } catch (error) {
-                console.error('No se pudo cargar el archivo automáticamente:', error);
-            } finally {
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
-            }
-        });
-    </script>
+window.addEventListener('DOMContentLoaded',async()=>{try{overlay.classList.remove('hidden');overlay.classList.add('flex');let res=await fetch('./AHT Servicios.xlsx');if(!res.ok)res=await fetch('./datos.xlsx');if(res.ok){const ct=res.headers.get('content-type');if(ct&&ct.includes('text/html'))throw new Error('Excel no encontrado');const ab=await res.arrayBuffer();processExcelData(XLSX.read(ab,{type:'array',cellDates:true}))}}catch(e){console.error(e)}finally{overlay.classList.add('hidden');overlay.classList.remove('flex')}});
+</script>
 </body>
 </html>
