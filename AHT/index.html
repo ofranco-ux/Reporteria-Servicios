@@ -198,12 +198,41 @@ body.sidebar-collapsed .app-stage{margin-left:0}
   .filter-groups{grid-template-columns:1fr}.filter-group-people{grid-column:auto}.filter-group-period .filter-group-grid,.filter-group-operation .filter-group-grid,.filter-group-people .filter-group-grid,.advanced-grid{grid-template-columns:1fr}
   .field.filter-actions #moreFilters{width:100%}.active-scope{align-items:flex-start;flex-direction:column}
 }
+
+/* ===== v10 · menú compacto integrado ===== */
+.topbar{display:none!important}
+.main{padding-top:30px}
+.sidebar-brand{position:relative;padding-right:48px;height:116px}
+.sidebar-menu-toggle{position:absolute;right:8px;top:22px;width:38px;height:38px;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.06);color:#bfe4e2;display:grid;place-items:center;cursor:pointer;transition:background .16s,border-color .16s}
+.sidebar-menu-toggle:hover{background:rgba(255,255,255,.12);border-color:rgba(119,226,204,.45)}
+.sidebar-menu-toggle svg,.mobile-menu-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.mobile-menu-toggle{display:none}
+body.sidebar-collapsed .app-sidebar{width:70px;padding:0 10px;transform:none}
+body.sidebar-collapsed .app-stage{margin-left:70px}
+body.sidebar-collapsed .sidebar-brand{height:78px;padding:0}
+body.sidebar-collapsed .sidebar-brand .brand{display:none}
+body.sidebar-collapsed .sidebar-menu-toggle{position:absolute;left:6px;right:auto;top:18px;width:38px;height:38px}
+body.sidebar-collapsed .sidebar-scroll,body.sidebar-collapsed .sidebar-export{display:none}
+@media(max-width:900px){
+  .app-sidebar{transform:translateX(-100%);width:304px;padding:0 24px}
+  .app-stage,body.sidebar-collapsed .app-stage{margin-left:0}
+  body.sidebar-collapsed .app-sidebar{width:304px;padding:0 24px;transform:translateX(-100%)}
+  body.mobile-sidebar-open .app-sidebar,body.sidebar-collapsed.mobile-sidebar-open .app-sidebar{transform:translateX(0)}
+  body.sidebar-collapsed .sidebar-brand{height:116px;padding-right:48px}
+  body.sidebar-collapsed .sidebar-brand .brand{display:flex}
+  body.sidebar-collapsed .sidebar-menu-toggle{left:auto;right:8px;top:22px}
+  body.sidebar-collapsed .sidebar-scroll{display:block}
+  body.sidebar-collapsed .sidebar-export{display:block}
+  .mobile-menu-toggle{position:fixed;display:grid;place-items:center;left:14px;top:14px;width:42px;height:42px;padding:0;border:1px solid #d3e0e2;border-radius:11px;background:#fff;color:#607785;z-index:55;box-shadow:0 4px 16px rgba(17,55,69,.10)}
+  body.mobile-sidebar-open .mobile-menu-toggle{opacity:0;pointer-events:none}
+  .main{padding-top:74px}
+}
 </style>
 </head>
 <body>
 <div class="app-shell">
   <aside class="app-sidebar" id="appSidebar" aria-label="Navegación principal">
-    <div class="sidebar-brand"><div class="brand"><div aria-hidden="true" class="brandmark"><svg fill="none" viewbox="0 0 28 28"><path d="M4 7l5 14 5-10 5 10 5-14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg></div><div><div class="brand-name">WFM · Servicios</div><div class="brand-sub">ANÁLISIS DE OPERACIÓN</div></div></div></div>
+    <div class="sidebar-brand"><div class="brand"><div aria-hidden="true" class="brandmark"><svg fill="none" viewbox="0 0 28 28"><path d="M4 7l5 14 5-10 5 10 5-14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg></div><div><div class="brand-name">WFM · Servicios</div><div class="brand-sub">ANÁLISIS DE OPERACIÓN</div></div></div><button class="sidebar-menu-toggle" id="menuToggle" type="button" aria-controls="appSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
     <div class="sidebar-scroll">
       <div class="sidebar-label">ANÁLISIS OPERATIVO</div>
       <div class="sidebar-channels"><div aria-label="Canal" class="channel-switch"><button aria-pressed="true" data-channel="voice"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M6 4h3l2 5-2 2c2 3 3 4 6 6l2-2 5 2v3C10 22 2 14 4 4z"></path></svg><span class="sidebar-item-copy">Voz<small>IN / OUT</small></span></button><button aria-pressed="false" data-channel="chat"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"></path></svg><span class="sidebar-item-copy">Chat<small>Atenciones</small></span></button></div></div>
@@ -233,10 +262,7 @@ body.sidebar-collapsed .app-stage{margin-left:0}
   </aside>
 
   <div class="app-stage">
-    <header class="topbar">
-      <button class="menu-toggle" id="menuToggle" type="button" aria-controls="appSidebar" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menú</span></button>
-
-    </header>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="appSidebar" aria-expanded="false" aria-label="Abrir menú"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 
     <main class="main">
       <section class="headline"><div><div class="eyebrow" id="reportEyebrow">Reporte de operación</div><h1>AHT Servicios</h1><p class="subtitle">Volumen, tiempos de atención y distribución por campaña.</p></div></section>
@@ -591,15 +617,39 @@ $('trendChart').addEventListener('pointermove',e=>{const t=e.target.closest('[da
 </script>
 <script>
 (function(){
-  const btn=document.getElementById('menuToggle');
-  if(!btn)return;
-  const sync=()=>btn.setAttribute('aria-expanded',String(!(document.body.classList.contains('sidebar-collapsed')||document.body.classList.contains('mobile-sidebar-open')===false&&innerWidth<=900)));
-  btn.addEventListener('click',()=>{
-    if(innerWidth<=900){document.body.classList.toggle('mobile-sidebar-open');btn.setAttribute('aria-expanded',String(document.body.classList.contains('mobile-sidebar-open')));}
-    else{document.body.classList.toggle('sidebar-collapsed');btn.setAttribute('aria-expanded',String(!document.body.classList.contains('sidebar-collapsed')));}
+  const desktopBtn=document.getElementById('menuToggle');
+  const mobileBtn=document.getElementById('mobileMenuToggle');
+  if(!desktopBtn)return;
+  const setExpanded=(open)=>{
+    desktopBtn.setAttribute('aria-expanded',String(open));
+    desktopBtn.setAttribute('aria-label',open?'Contraer menú':'Expandir menú');
+    desktopBtn.title=open?'Contraer menú':'Expandir menú';
+    if(mobileBtn) mobileBtn.setAttribute('aria-expanded',String(open));
+  };
+  desktopBtn.addEventListener('click',()=>{
+    if(innerWidth<=900){
+      document.body.classList.remove('mobile-sidebar-open');
+      setExpanded(false);
+    }else{
+      document.body.classList.toggle('sidebar-collapsed');
+      setExpanded(!document.body.classList.contains('sidebar-collapsed'));
+    }
   });
-  document.addEventListener('click',e=>{if(innerWidth<=900&&document.body.classList.contains('mobile-sidebar-open')&&!e.target.closest('#appSidebar')&&!e.target.closest('#menuToggle')){document.body.classList.remove('mobile-sidebar-open');btn.setAttribute('aria-expanded','false');}});
-  window.addEventListener('resize',()=>{if(innerWidth>900)document.body.classList.remove('mobile-sidebar-open');});
+  if(mobileBtn) mobileBtn.addEventListener('click',()=>{
+    document.body.classList.add('mobile-sidebar-open');
+    setExpanded(true);
+  });
+  document.addEventListener('click',e=>{
+    if(innerWidth<=900&&document.body.classList.contains('mobile-sidebar-open')&&!e.target.closest('#appSidebar')&&!e.target.closest('#mobileMenuToggle')){
+      document.body.classList.remove('mobile-sidebar-open');
+      setExpanded(false);
+    }
+  });
+  window.addEventListener('resize',()=>{
+    if(innerWidth>900){document.body.classList.remove('mobile-sidebar-open');setExpanded(!document.body.classList.contains('sidebar-collapsed'));}
+    else setExpanded(document.body.classList.contains('mobile-sidebar-open'));
+  });
+  setExpanded(innerWidth>900&&!document.body.classList.contains('sidebar-collapsed'));
 })();
 </script>
 </body></html>
