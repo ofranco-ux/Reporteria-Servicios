@@ -37,16 +37,16 @@
 <section id="view-campaigns" role="tabpanel" aria-labelledby="tab-campaigns" hidden><div class="view-header"><div><h2>Comparativo de campañas</h2><p class="sub">AHT calculado con los totales de cada campaña. Haz clic en una columna para ordenar.</p></div><button class="btn small" data-export="campaigns">Exportar campañas</button></div><div class="card"><div class="summary-strip" id="campaignStrip"></div><div class="table-wrap" id="campaignTable"></div></div><p class="source-micro">Un agente puede participar en varias campañas. La fila total cuenta cada nombre una sola vez.</p></section>
 <section id="view-agents" role="tabpanel" aria-labelledby="tab-agents" hidden><div class="view-header"><div><h2>Detalle por agente</h2><p class="sub">Una fila por agente y campaña en el periodo seleccionado.</p></div><div class="table-tools"><input type="search" id="agentSearch" class="search-input" placeholder="Buscar agente o campaña…" aria-label="Buscar agente o campaña"><button class="btn small" data-export="agents">Exportar agentes</button></div></div><div class="card"><div class="table-wrap" id="agentTable"></div><div class="table-foot"><span id="agentCount"></span><div class="pagination"><button id="agentPrev" aria-label="Página anterior de agentes">‹</button><span id="agentPage"></span><button id="agentNext" aria-label="Página siguiente de agentes">›</button></div></div></div><p class="source-micro">Los días con actividad son fechas con registros. Estos datos no equivalen a días programados, asistencia ni horas de conexión.</p></section>
 <section id="view-quality" role="tabpanel" aria-labelledby="tab-quality" hidden><div class="view-header"><div><h2>Calidad de los datos y cálculo</h2><p class="quality-intro">Los valores originales se mantienen en todos los indicadores. Estas señales permiten revisar registros; no implican por sí mismas errores de operación.</p></div></div><div class="quality-cards" id="qualityCards"></div><div class="view-header"><div><h3 id="qualityTableTitle">Registros por revisar</h3><p class="sub" id="qualityTableDescription"></p></div><select class="small-select" id="qualityType" aria-label="Señal de calidad"></select></div><div class="card"><div class="table-wrap" id="qualityTable"></div><div class="table-foot"><span id="qualityCount"></span><div class="pagination"><button id="qualityPrev" aria-label="Página anterior de calidad">‹</button><span id="qualityPage"></span><button id="qualityNext" aria-label="Página siguiente de calidad">›</button></div></div></div>
-<article class="method"><h2>Cómo se calcula este reporte</h2><div class="method-grid"><div><h3>Voz · IN y OUT</h3><div class="formula">AHT = Σ Tiempo Total Operación ÷ Σ Llamadas Atendidas</div><p>Los tiempos se interpretan en segundos. El reporte recalcula el AHT con los registros disponibles de voz. Talk Time + Hold Time + After Call Work Time se contrastan con Tiempo Total Operacion cuando esas columnas están disponibles.</p><p><strong>Horas de operación</strong> = tiempo total ÷ 3,600. Miden la duración registrada de la atención; no son horas de dotación o disponibilidad.</p></div><div><h3>Chat · AHT de la fuente</h3><div class="formula">AHT = Σ (AHT de la fila × Atendidos) ÷ Σ Atendidos</div><p>Se utiliza la columna «AHT» original. No se recalcula a partir de «Suma Primer Respuesta (seg)» y «Suma Entre Mensajes (seg)»: pueden existir filas donde su suma dividida entre Atendidos difiera del AHT original o donde falte algún componente.</p><p>Las comparaciones de chat entre periodos deben considerar esta inconsistencia. No se combina el AHT de voz con el de chat.</p></div></div><details open><summary>Criterios de lectura</summary><ul><li>Fechas inclusivas. El periodo disponible se actualiza automáticamente con el archivo cargado. La vista semanal agrupa de lunes a domingo y respeta el rango filtrado.</li><li>El AHT global siempre se pondera por atenciones. No se promedian promedios diarios, de agentes o de campañas.</li><li>Los registros con AHT cero y los valores extremos se conservan. «AHT &gt; 24 h» usa 86,400 segundos como criterio de revisión, no como meta de desempeño. Los valores extremos se conservan y se señalan en la vista de calidad.</li><li>Los guiones y campos vacíos de asignación se muestran como «Sin asignar». Se conservan las asignaciones guardadas en el Excel, derivadas de Matriz y HC; no se reconstruyen movimientos históricos.</li><li>Agentes con actividad = nombres distintos en la selección. No se fusionan variantes de nombres. La hoja HC se usa como catálogo de asignación cuando está disponible; no representa por sí misma la dotación histórica ni el número de agentes disponibles.</li><li>Los porcentajes de volumen usan las atenciones de la selección. Los componentes de voz usan el tiempo total de la selección. Sin registros, los resultados se muestran como no disponibles.</li><li>El archivo no contiene metas de AHT, forecast, intervalos horarios, horarios de agentes ni nivel de servicio. El reporte se limita a los indicadores observables.</li></ul></details><details><summary>Fuente y alcance</summary><table class="source-table"><thead><tr><th>Hoja</th><th>Registros</th><th>Uso</th></tr></thead><tbody><tr><td>AHT In y Out</td><td id="voiceSourceCount">—</td><td>Voz por fecha, agente, dirección y ring group.</td></tr><tr><td>AHT Chat</td><td id="chatSourceCount">—</td><td>Atenciones y AHT de chat por fecha y agente.</td></tr><tr><td>Matriz</td><td id="matrixSourceCount">—</td><td>Catálogo de clasificación cuando existe.</td></tr><tr><td>HC</td><td id="hcSourceCount">—</td><td>Catálogo de asignación cuando existe.</td></tr></tbody></table><p>Fuente: AHT Servicios.xlsx en el mismo repositorio que este HTML. Al abrir el reporte desde GitHub Pages, el archivo se consulta automáticamente; no es necesario cargarlo manualmente dentro del tablero.</p><p>Los CSV exportados reflejan el canal y filtros activos. La exportación por agente incluye la búsqueda de esa vista. Los registros incluyen hoja y fila de origen para trazabilidad.</p></details></article></section>
-<footer class="footer"><span id="footerSource">AHT Servicios · Fuente: AHT Servicios.xlsx</span><span id="footerMode">Carga automática desde el repositorio</span></footer>
+<article class="method"><h2>Cómo se calcula este reporte</h2><div class="method-grid"><div><h3>Voz · IN y OUT</h3><div class="formula">AHT = Σ Tiempo Total Operación ÷ Σ Llamadas Atendidas</div><p>Los tiempos se interpretan en segundos. El reporte recalcula el AHT con los registros disponibles de voz. Talk Time + Hold Time + After Call Work Time se contrastan con Tiempo Total Operacion cuando esas columnas están disponibles.</p><p><strong>Horas de operación</strong> = tiempo total ÷ 3,600. Miden la duración registrada de la atención; no son horas de dotación o disponibilidad.</p></div><div><h3>Chat · AHT de la fuente</h3><div class="formula">AHT = Σ (AHT de la fila × Atendidos) ÷ Σ Atendidos</div><p>Se utiliza la columna «AHT» original. No se recalcula a partir de «Suma Primer Respuesta (seg)» y «Suma Entre Mensajes (seg)»: pueden existir filas donde su suma dividida entre Atendidos difiera del AHT original o donde falte algún componente.</p><p>Las comparaciones de chat entre periodos deben considerar esta inconsistencia. No se combina el AHT de voz con el de chat.</p></div></div><details open><summary>Criterios de lectura</summary><ul><li>Fechas inclusivas. El periodo disponible se actualiza automáticamente con el archivo cargado. La vista semanal agrupa de lunes a domingo y respeta el rango filtrado.</li><li>El AHT global siempre se pondera por atenciones. No se promedian promedios diarios, de agentes o de campañas.</li><li>Los registros con AHT cero y los valores extremos se conservan. «AHT &gt; 24 h» usa 86,400 segundos como criterio de revisión, no como meta de desempeño. Los valores extremos se conservan y se señalan en la vista de calidad.</li><li>Los guiones y campos vacíos de asignación se muestran como «Sin asignar». Se conservan las asignaciones guardadas en el Excel, derivadas de Matriz y HC; no se reconstruyen movimientos históricos.</li><li>Agentes con actividad = nombres distintos en la selección. No se fusionan variantes de nombres. La hoja HC se usa como catálogo de asignación cuando está disponible; no representa por sí misma la dotación histórica ni el número de agentes disponibles.</li><li>Los porcentajes de volumen usan las atenciones de la selección. Los componentes de voz usan el tiempo total de la selección. Sin registros, los resultados se muestran como no disponibles.</li><li>El archivo no contiene metas de AHT, forecast, intervalos horarios, horarios de agentes ni nivel de servicio. El reporte se limita a los indicadores observables.</li></ul></details><details><summary>Fuente y alcance</summary><table class="source-table"><thead><tr><th>Hoja</th><th>Registros</th><th>Uso</th></tr></thead><tbody><tr><td>AHT In y Out</td><td id="voiceSourceCount">—</td><td>Voz por fecha, agente, dirección y ring group.</td></tr><tr><td>AHT Chat</td><td id="chatSourceCount">—</td><td>Atenciones y AHT de chat por fecha y agente.</td></tr><tr><td>Matriz</td><td id="matrixSourceCount">—</td><td>Catálogo de clasificación cuando existe.</td></tr><tr><td>HC</td><td id="hcSourceCount">—</td><td>Catálogo de asignación cuando existe.</td></tr></tbody></table><p>Fuente: AHT Servicios.xlsx. En cada publicación, GitHub Actions procesa automáticamente el Excel y genera data.json para el tablero; no es necesario cargar archivos desde la interfaz.</p><p>Los CSV exportados reflejan el canal y filtros activos. La exportación por agente incluye la búsqueda de esa vista. Los registros incluyen hoja y fila de origen para trazabilidad.</p></details></article></section>
+<footer class="footer"><span id="footerSource">AHT Servicios · Fuente: AHT Servicios.xlsx</span><span id="footerMode">Datos preparados automáticamente al publicar</span></footer>
 </main><div class="tooltip" id="tooltip" hidden></div><div class="toast" id="toast" role="status" hidden></div>
 
 <!-- Versión corregida 2026-09-29: reconoce 'Nombre del agente' y 'Ring Groups' -->
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
 'use strict';
 let DATA=null;
-const DATA_FILE=new URLSearchParams(location.search).get('data')||'AHT Servicios.xlsx';
+const SOURCE_FILE='AHT Servicios.xlsx';
+const DATA_FILE='data.json';
 const $=id=>document.getElementById(id), $$=q=>Array.from(document.querySelectorAll(q));
 const nf=new Intl.NumberFormat('es-MX',{maximumFractionDigits:0}), df=new Intl.NumberFormat('es-MX',{minimumFractionDigits:1,maximumFractionDigits:1}), pf=new Intl.NumberFormat('es-MX',{minimumFractionDigits:1,maximumFractionDigits:1,style:'percent'});
 const n=x=>Number.isFinite(x)?nf.format(x):'—', dec=x=>Number.isFinite(x)?df.format(x):'—', pct=x=>Number.isFinite(x)?pf.format(x):'—';
@@ -64,103 +64,58 @@ const icons={volume:'<path d="M6 4h3l2 5-2 2c2 3 3 4 6 6l2-2 5 2v3c-10 2-20-8-18
 const icon=k=>'<svg class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'+icons[k]+'</svg>';
 const alertIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3L2 21h20L12 3zM12 9v5m0 3v1"/></svg>';
 
-const headerNorm=s=>norm(String(s??'')).replace(/[^a-z0-9]+/g,' ').trim();
-const headerLoose=s=>headerNorm(s).replace(/\b(del|de|la|el|los|las)\b/g,' ').replace(/\bgroups\b/g,'group').replace(/\s+/g,' ').trim();
-function resolveColumns(rows,defs){
-  const sample=rows.find(r=>r&&Object.keys(r).length)||{};
-  const keys=Object.keys(sample),exact=new Map(),loose=new Map();
-  for(const k of keys){exact.set(headerNorm(k),k);loose.set(headerLoose(k),k);}
-  const out={};
-  for(const [field,aliases] of Object.entries(defs)){
-    let found=null;
-    for(const a of aliases){const k=headerNorm(a);if(exact.has(k)){found=exact.get(k);break;}}
-    if(found===null){for(const a of aliases){const k=headerLoose(a);if(loose.has(k)){found=loose.get(k);break;}}}
-    out[field]=found;
-  }
-  return out;
-}
-const cell=(row,key)=>key===null||key===undefined?null:row[key];
-function numValue(v){if(v===null||v===undefined||v==='')return null;if(typeof v==='number')return Number.isFinite(v)?v:null;const s=String(v).trim().replace(/,/g,'');const x=Number(s);return Number.isFinite(x)?x:null;}
-function dateISO(v){if(v instanceof Date&&!Number.isNaN(v.valueOf()))return v.toISOString().slice(0,10);if(typeof v==='number'&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);if(d)return String(d.y).padStart(4,'0')+'-'+String(d.m).padStart(2,'0')+'-'+String(d.d).padStart(2,'0');}const s=String(v??'').trim();if(/^\d{4}-\d{1,2}-\d{1,2}/.test(s)){const [y,m,d]=s.slice(0,10).split('-');return y+'-'+m.padStart(2,'0')+'-'+d.padStart(2,'0');}const m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);if(m){const y=m[3].length===2?'20'+m[3]:m[3];return y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');}const d=new Date(s);return Number.isNaN(d.valueOf())?null:d.toISOString().slice(0,10);}
-function findSheet(wb,candidates){const byNorm=new Map(wb.SheetNames.map(n=>[headerNorm(n),n]));for(const c of candidates){const exact=byNorm.get(headerNorm(c));if(exact)return exact;}for(const name of wb.SheetNames){const k=headerNorm(name);if(candidates.some(c=>k.includes(headerNorm(c))))return name;}return null;}
-function rowsFromSheet(wb,candidates){const name=findSheet(wb,candidates);if(!name)return {name:null,rows:[]};const rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{defval:null,raw:true});return {name,rows};}
-function directionValue(v){const s=headerNorm(v);if(v===1||s==='1'||s.includes('out')||s.includes('salida'))return 1;return 0;}
-function buildMaps(hcRows,matrixRows){
-  const hc=new Map(),ring=new Map();
-  const hk=resolveColumns(hcRows,{agent:['Agente','Nombre Agente','Nombre del agente','Nombre del Agente','Nombre','Asesor','Empleado'],campaign:['Campaña','Campana','Servicio','Skill'],supervisor:['Supervisor','Supervisor Operativo'],coordinator:['Coordinador','Coordinadora','Coordinator']});
-  const mk=resolveColumns(matrixRows,{ring:['Ring group','Ring Group','Ring Groups','Ring','Cola','Queue','Skill'],campaign:['Campaña','Campana','Servicio']});
-  for(const r of hcRows){const agent=cell(r,hk.agent);if(!agent)continue;hc.set(norm(agent),{campaign:cell(r,hk.campaign),supervisor:cell(r,hk.supervisor),coordinator:cell(r,hk.coordinator)});}
-  for(const r of matrixRows){const rg=cell(r,mk.ring),camp=cell(r,mk.campaign);if(rg&&camp)ring.set(norm(rg),camp);}
-  return {hc,ring};
-}
-function workbookToReport(wb){
-  const voiceSheet=rowsFromSheet(wb,['AHT In y Out','AHT In Out','AHT Voz','Voz']);
-  const chatSheet=rowsFromSheet(wb,['AHT Chat','Chat']);
-  const hcSheet=rowsFromSheet(wb,['HC']);
-  const matrixSheet=rowsFromSheet(wb,['Matriz']);
-  if(!voiceSheet.rows.length&&!chatSheet.rows.length)throw new Error('No se encontraron las hojas «AHT In y Out» o «AHT Chat».');
-
-  const vk=resolveColumns(voiceSheet.rows,{date:['Fecha','Date','Día','Dia'],agent:['Agente','Nombre Agente','Nombre del agente','Nombre del Agente','Nombre','Asesor','Agent'],ring:['Ring group','Ring Group','Ring Groups','Ring','Cola','Queue'],campaign:['Campaña','Campana','Servicio'],supervisor:['Supervisor','Supervisor Operativo'],coordinator:['Coordinador','Coordinadora','Coordinator'],attended:['Llamadas Atendidas','Atendidas','Atendidos','Llamadas','Calls Answered','Answered'],talk:['Talk Time','Talk Time (s)','Talk Time (seg)','Tiempo Conversación','Tiempo Conversacion'],hold:['Hold Time','Hold Time (s)','Hold Time (seg)','Tiempo Espera'],acw:['After Call Work Time','After Call Work','ACW','After Call Work Time (s)'],total:['Tiempo Total Operacion','Tiempo Total Operación','Tiempo Total','Total Operation Time'],aht:['AHT Promedio','AHT','AHT Promedio (s)'],direction:['Dirección','Direccion','IN/OUT','In Out','Tipo','Direction']});
-  const ck=resolveColumns(chatSheet.rows,{date:['Fecha','Date','Día','Dia'],agent:['Agente','Nombre Agente','Nombre del agente','Nombre del Agente','Nombre','Asesor','Agent'],campaign:['Campaña','Campana','Servicio'],supervisor:['Supervisor','Supervisor Operativo'],coordinator:['Coordinador','Coordinadora','Coordinator'],attended:['Atendidos','Chats Atendidos','Atenciones','Chats','Answered'],first:['Suma Primer Respuesta (seg)','Suma Primer Respuesta','Primer Respuesta (seg)','Primer Respuesta'],between:['Suma Entre Mensajes (seg)','Suma Entre Mensajes','Entre Mensajes (seg)','Entre Mensajes'],aht:['AHT','AHT Chat','AHT (s)','AHT (seg)']});
-  if(voiceSheet.rows.length&&(!vk.date||!vk.agent))throw new Error('La hoja «'+voiceSheet.name+'» no contiene encabezados reconocibles para Fecha y Nombre del agente.');
-  if(chatSheet.rows.length&&(!ck.date||!ck.agent))throw new Error('La hoja «'+chatSheet.name+'» no contiene encabezados reconocibles para Fecha y Nombre del agente.');
-
-  const maps=buildMaps(hcSheet.rows,matrixSheet.rows),voice=[],chat=[],datesSet=new Set(),agentsSet=new Set(),campaignSet=new Set(['-']),ringsSet=new Set(['-']),supSet=new Set(['-']),coordSet=new Set(['-']);
-  const cleanText=v=>{const s=String(v??'').trim();return s&&s!=='-'?s:'-';};
-  for(const r of voiceSheet.rows){
-    const date=dateISO(cell(r,vk.date)),agent=cleanText(cell(r,vk.agent));if(!date||agent==='-')continue;
-    const h=maps.hc.get(norm(agent))||{},ring=cleanText(cell(r,vk.ring));
-    const campaign=cleanText(cell(r,vk.campaign)??maps.ring.get(norm(ring))??h.campaign);
-    const supervisor=cleanText(cell(r,vk.supervisor)??h.supervisor),coordinator=cleanText(cell(r,vk.coordinator)??h.coordinator);
-    const n=numValue(cell(r,vk.attended))??0,talk=numValue(cell(r,vk.talk))??0,hold=numValue(cell(r,vk.hold))??0,acw=numValue(cell(r,vk.acw))??0;
-    const total=numValue(cell(r,vk.total))??(talk+hold+acw),original=numValue(cell(r,vk.aht))??(n?total/n:0);
-    if(!n&&!total&&!original)continue;
-    voice.push({date,agent,campaign,dir:directionValue(cell(r,vk.direction)),ring,n,talk,hold,acw,total,supervisor,coordinator,original});
-    datesSet.add(date);agentsSet.add(agent);campaignSet.add(campaign);ringsSet.add(ring);supSet.add(supervisor);coordSet.add(coordinator);
-  }
-  for(const r of chatSheet.rows){
-    const date=dateISO(cell(r,ck.date)),agent=cleanText(cell(r,ck.agent));if(!date||agent==='-')continue;
-    const h=maps.hc.get(norm(agent))||{},campaign=cleanText(cell(r,ck.campaign)??h.campaign),supervisor=cleanText(cell(r,ck.supervisor)??h.supervisor),coordinator=cleanText(cell(r,ck.coordinator)??h.coordinator);
-    const attended=numValue(cell(r,ck.attended))??0,first=numValue(cell(r,ck.first)),between=numValue(cell(r,ck.between)),aht=numValue(cell(r,ck.aht))??0;if(!attended&&!aht)continue;
-    chat.push({date,agent,campaign,attended,first,between,aht,supervisor,coordinator});
-    datesSet.add(date);agentsSet.add(agent);campaignSet.add(campaign);supSet.add(supervisor);coordSet.add(coordinator);
-  }
-  if(!voice.length&&!chat.length)throw new Error('El Excel se abrió, pero no se pudo interpretar ningún registro. Revisa los encabezados de Fecha y Nombre del agente.');
-  const dates=[...datesSet].sort(),agents=[...agentsSet].sort((a,b)=>a.localeCompare(b,'es')),campaigns=['-',...[...campaignSet].filter(x=>x!=='-').sort((a,b)=>a.localeCompare(b,'es'))],rings=['-',...[...ringsSet].filter(x=>x!=='-').sort((a,b)=>a.localeCompare(b,'es'))],supervisors=['-',...[...supSet].filter(x=>x!=='-').sort((a,b)=>a.localeCompare(b,'es'))],coordinators=['-',...[...coordSet].filter(x=>x!=='-').sort((a,b)=>a.localeCompare(b,'es'))];
-  const idx=a=>new Map(a.map((v,i)=>[v,i])),di=idx(dates),ai=idx(agents),ci=idx(campaigns),ri=idx(rings),si=idx(supervisors),coi=idx(coordinators);
-  return {dates,agents,campaigns,rings,supervisors,coordinators,
-    voice:voice.map(r=>[di.get(r.date),ai.get(r.agent),ci.get(r.campaign),r.dir,ri.get(r.ring)??0,r.n,r.talk,r.hold,r.acw,r.total,si.get(r.supervisor),coi.get(r.coordinator),r.original]),
-    chat:chat.map(r=>[di.get(r.date),ai.get(r.agent),ci.get(r.campaign),r.attended,r.first,r.between,r.aht,si.get(r.supervisor),coi.get(r.coordinator)]),
-    _meta:{voiceRows:voice.length,chatRows:chat.length,hcRows:hcSheet.rows.length,matrixRows:matrixSheet.rows.length,voiceSheet:voiceSheet.name,chatSheet:chatSheet.name}
-  };
-}
-function updateSourceMeta(mode){
+function updateSourceMeta(){
   const first=DATA.dates[0],last=DATA.dates[DATA.dates.length-1],years=[...new Set(DATA.dates.map(d=>d.slice(0,4)))];
+  const source=DATA._meta?.sourceFile||SOURCE_FILE;
   $('reportEyebrow').textContent='Reporte de operación'+(years.length===1?' · '+years[0]:'');
   $('dateFrom').min=first;$('dateFrom').max=last;$('dateFrom').value=first;$('dateTo').min=first;$('dateTo').max=last;$('dateTo').value=last;
-  $('dataPeriod').textContent=first&&last?dateLabel(first)+' — '+dateLabel(last):'Sin fechas disponibles';$('dataFileLabel').textContent='Fuente: '+DATA_FILE;
+  $('dataPeriod').textContent=first&&last?dateLabel(first)+' — '+dateLabel(last):'Sin fechas disponibles';
+  $('dataFileLabel').textContent='Fuente: '+source;
   $('dataSourceStatus').textContent='Datos cargados automáticamente desde GitHub';
-  $('footerSource').textContent='AHT Servicios · Fuente: '+DATA_FILE+(last?' · Corte: '+dateLabel(last):'');$('footerMode').textContent='Carga automática desde el repositorio';
-  $('voiceSourceCount').textContent=n(DATA._meta?.voiceRows??DATA.voice.length);$('chatSourceCount').textContent=n(DATA._meta?.chatRows??DATA.chat.length);$('matrixSourceCount').textContent=DATA._meta?.matrixRows!==undefined?n(DATA._meta.matrixRows):'Catálogo integrado';$('hcSourceCount').textContent=DATA._meta?.hcRows!==undefined?n(DATA._meta.hcRows):'Catálogo integrado';
+  $('footerSource').textContent='AHT Servicios · Fuente: '+source+(last?' · Corte: '+dateLabel(last):'');
+  $('footerMode').textContent='Datos preparados automáticamente al publicar';
+  $('voiceSourceCount').textContent=n(DATA._meta?.voiceRows??DATA.voice.length);
+  $('chatSourceCount').textContent=n(DATA._meta?.chatRows??DATA.chat.length);
+  $('matrixSourceCount').textContent=DATA._meta?.matrixRows!==undefined?n(DATA._meta.matrixRows):'—';
+  $('hcSourceCount').textContent=DATA._meta?.hcRows!==undefined?n(DATA._meta.hcRows):'—';
 }
-async function paintStatus(text){$('dataSourceStatus').textContent=text;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));}
+async function paintStatus(text){
+  $('dataSourceStatus').textContent=text;
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+}
+function validateData(d){
+  if(!d||!Array.isArray(d.dates)||!Array.isArray(d.voice)||!Array.isArray(d.chat))throw new Error('data.json no tiene la estructura esperada.');
+  if(!d.dates.length)throw new Error('data.json no contiene fechas.');
+  if(!d.voice.length&&!d.chat.length)throw new Error('data.json no contiene registros de Voz ni Chat.');
+}
 async function loadRepositoryData(){
-  if(location.protocol==='file:')throw new Error('Abre este reporte desde GitHub Pages o desde un servidor web; el navegador no permite leer el Excel automáticamente al abrir index.html con doble clic.');
-  if(!window.XLSX)throw new Error('No se pudo cargar la librería de lectura de Excel.');
-  await paintStatus('Descargando '+DATA_FILE+'…');
+  if(location.protocol==='file:')throw new Error('Abre el reporte desde GitHub Pages o desde un servidor web.');
+  await paintStatus('Descargando datos preparados…');
   const url=new URL(DATA_FILE,location.href);url.searchParams.set('_',Date.now());
-  const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status+' al leer '+DATA_FILE);
-  const buffer=await response.arrayBuffer();
-  await paintStatus('Archivo descargado · '+(buffer.byteLength/1048576).toFixed(1)+' MB · leyendo Excel…');
-  const wb=XLSX.read(buffer,{type:'array',cellDates:true,dense:true});
-  await paintStatus('Excel leído · procesando registros…');
-  DATA=workbookToReport(wb);
-  return 'remote';
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw new Error('HTTP '+response.status+' al leer '+DATA_FILE+'. El flujo de GitHub Pages debe generar este archivo.');
+  const text=await response.text();
+  await paintStatus('Datos descargados · '+(text.length/1048576).toFixed(1)+' MB · preparando tablero…');
+  DATA=JSON.parse(text);validateData(DATA);
 }
 async function bootstrap(){
-  try{await loadRepositoryData();updateSourceMeta('remote');setupChannel();applyFilters();}
-  catch(e){$('loading').innerHTML='<div class="error-banner"><strong>No fue posible cargar '+esc(DATA_FILE)+'.</strong><br>'+esc(e.message||String(e))+'<br><br>Verifica que el archivo esté en la misma carpeta que index.html y que conserve las hojas esperadas.</div>';$('dataSourceStatus').textContent='No se pudo cargar el archivo de datos';$('footerMode').textContent='Error de carga de datos';console.error(e);}
+  try{
+    await loadRepositoryData();
+    updateSourceMeta();
+    setupChannel();
+    applyFilters();
+  }catch(e){
+    $('loading').hidden=false;
+    $('loading').innerHTML='<div class="error-banner"><strong>No fue posible cargar los datos del reporte.</strong><br>'+esc(e.message||String(e))+'<br><br>Este paquete usa GitHub Actions para convertir <strong>'+esc(SOURCE_FILE)+'</strong> en <strong>'+esc(DATA_FILE)+'</strong> automáticamente antes de publicar.</div>';
+    $('dataSourceStatus').textContent='No se pudo cargar la fuente de datos';
+    $('dataPeriod').textContent='Revisa el despliegue de GitHub Pages';
+    $('footerMode').textContent='Error de carga de datos';
+    console.error(e);
+  }
 }
+
+// Arranca la carga antes de registrar el resto de interacciones para que el estado cambie de inmediato.
+bootstrap();
 function rowData(r,index){const v=state.channel==='voice';return{raw:r,row:index+2,date:r[0],agent:r[1],camp:r[2],dir:v?r[3]:null,ring:v?r[4]:null,n:v?r[5]:r[3],time:v?r[9]:r[3]*r[6],aht:v?r[9]/r[5]:r[6],a:v?r[6]:r[4],b:v?r[7]:r[5],c:v?r[8]:0,sup:v?r[10]:r[7],coord:v?r[11]:r[8],original:v?r[12]:r[6]};}
 function makeAgg(name,key){return{name,key,n:0,time:0,a:0,b:0,c:0,rows:0,agents:new Set(),days:new Set(),sups:new Set(),coords:new Set(),missingCampaign:0,missingSupervisor:0,high:0,zero:0,incomplete:0,mismatch:0,byDir:[0,0]};}
 function addAgg(a,r){a.n+=r.n;a.time+=r.time;a.a+=r.a??0;a.b+=r.b??0;a.c+=r.c??0;a.rows++;a.agents.add(r.agent);a.days.add(r.date);a.sups.add(r.sup);a.coords.add(r.coord);if(DATA.campaigns[r.camp]==='-')a.missingCampaign+=r.n;if(DATA.supervisors[r.sup]==='-')a.missingSupervisor+=r.n;if(r.aht>86400)a.high++;if(r.aht===0)a.zero++;if(r.a===null||r.b===null)a.incomplete++;if(state.channel==='chat'&&r.a!==null&&r.b!==null&&Math.abs((r.a+r.b)/r.n-r.aht)>.51)a.mismatch++;if(r.dir!==null)a.byDir[r.dir]+=r.n;}
@@ -193,3 +148,4 @@ function exportCSV(type){if(!selected.length){toast('No hay datos en la selecci�
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.channel&&b.dataset.channel!==state.channel){state.channel=b.dataset.channel;setupChannel();applyFilters();}if(b.dataset.view)setView(b.dataset.view);if(b.dataset.goto)setView(b.dataset.goto);if(b.dataset.export)exportCSV(b.dataset.export);if(b.dataset.metric){state.metric=b.dataset.metric;renderTrend();}if(b.dataset.campaign){state.campaigns=new Set([+b.dataset.campaign]);$$('#campaignOptions input').forEach(el=>el.checked=state.campaigns.has(+el.value));updateCampaignSummary();applyFilters();}if(b.dataset.quality){state.qualityType=b.dataset.quality;state.qualityPage=1;renderQuality();}if(b.dataset.sort){const camp=b.dataset.sort==='campaign',key=camp?'sortCampaign':'sortAgent',dir=camp?'dirCampaign':'dirAgent';state[dir]=state[key]===b.dataset.key?-state[dir]:b.dataset.key==='name'||b.dataset.key==='campaign'?1:-1;state[key]=b.dataset.key;if(camp)renderCampaigns();else{state.agentPage=1;renderAgents();}}});
 ['dateFrom','dateTo','supervisor','coordinator','direction','ring'].forEach(id=>$(id).addEventListener('change',applyFilters));$('campaignOptions').addEventListener('change',()=>{state.campaigns=new Set($$('#campaignOptions input:checked').map(el=>+el.value));updateCampaignSummary();applyFilters();});$('allCampaigns').addEventListener('click',()=>{$$('#campaignOptions input').forEach(el=>el.checked=true);state.campaigns=new Set($$('#campaignOptions input').map(el=>+el.value));updateCampaignSummary();applyFilters();});$('moreFilters').addEventListener('click',()=>{const open=$('advancedFilters').hidden;$('advancedFilters').hidden=!open;$('moreFilters').setAttribute('aria-expanded',open);$('moreFilters').textContent=open?'Menos filtros':'Más filtros';});$('resetFilters').addEventListener('click',reset);$('emptyReset').addEventListener('click',reset);$('granularity').addEventListener('change',()=>{state.granularity=$('granularity').value;buildTrend();renderTrend();});$('agentSearch').addEventListener('input',()=>{state.agentPage=1;renderAgents();});$('agentPrev').addEventListener('click',()=>{state.agentPage--;renderAgents();});$('agentNext').addEventListener('click',()=>{state.agentPage++;renderAgents();});$('qualityType').addEventListener('change',()=>{state.qualityType=$('qualityType').value;state.qualityPage=1;renderQuality();});$('qualityPrev').addEventListener('click',()=>{state.qualityPage--;renderQuality();});$('qualityNext').addEventListener('click',()=>{state.qualityPage++;renderQuality();});$('printBtn').addEventListener('click',()=>window.print());document.addEventListener('click',e=>{if(!$('campaignMenu').contains(e.target))$('campaignMenu').open=false;if(!$('exportMenu').contains(e.target))$('exportMenu').open=false;});document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('campaignMenu').open=false;$('exportMenu').open=false;$('tooltip').hidden=true;}if(e.target.matches('[role=tab]')&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const tabs=$$('[role=tab]');const i=tabs.indexOf(e.target),next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;setView(tabs[next].dataset.view);tabs[next].focus();}});
 function showTooltip(target,x,y){const a=trend[+target.dataset.point];if(!a)return;$('tooltip').innerHTML='<strong>'+esc(dateLabel(a.start)+(a.end!==a.start?' — '+dateLabel(a.end):''))+'</strong>AHT: '+ahtFmt(a.aht)+'<br>Atenciones: '+n(a.n)+'<br><small>'+n(a.days.size)+' días con actividad</small>';$('tooltip').hidden=false;const w=$('tooltip').offsetWidth,h=$('tooltip').offsetHeight;$('tooltip').style.left=Math.max(8,Math.min(innerWidth-w-8,x+14))+'px';$('tooltip').style.top=Math.max(8,Math.min(innerHeight-h-8,y+12))+'px';}
+$('trendChart').addEventListener('pointermove',e=>{const t=e.target.closest('[data-point]');if(t)showTooltip(t,e.clientX,e.clientY);else $('tooltip').hidden=true;});$('trendChart').addEventListener('pointerleave',()=>$('tooltip').hidden=true);$('trendChart').addEventListener('focusin',e=>{if(e.target.dataset.point!==undefined){const b=e.target.getBoundingClientRect();showTooltip(e.target,b.x,b.y);}});$('trendChart').addEventListener('focusout',()=>$('tooltip').hidden=true);let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(state.view==='overview'&&selected.length)renderTrend();},100);});
