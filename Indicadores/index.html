@@ -97,7 +97,7 @@ body.sidebar-hidden{--sidebar:0px}
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <div class="busy" id="loading-overlay" role="status" aria-live="polite" hidden><div class="busy-content"><div class="spinner"></div><span id="loading-text">Cargando indicadores…</span></div></div>
-<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Guía de indicadores</h2><button type="button" class="icon-btn" id="close-help" aria-label="Cerrar guía"><svg class="icon"><use href="#i-x"/></svg></button></div><dl class="glossary"><dt>SLA global</dt><dd>Atendidas dentro de SLA ÷ recibidas × 100. Meta actual: al menos 80%.</dd><dt>Abandono</dt><dd>Abandonadas ÷ recibidas × 100. Meta actual: hasta 3%.</dd><dt>AHT</dt><dd>Tiempo promedio de atención, ponderado por atendidas. En Outbound se pondera por llamadas realizadas.</dd><dt>ASA</dt><dd>Tiempo promedio de espera, ponderado por atendidas. Se muestra en Inbound.</dd><dt>Intervalos</dt><dd>Si seleccionas varios días, se suman los registros de la misma franja horaria. Los porcentajes se recalculan sobre el total.</dd></dl><div class="dialog-note">Los datos se cargan automáticamente desde <strong>Indicadores Mensuales Servicios.xlsx</strong>, ubicado junto al HTML en el servidor. Se conservan las hojas <strong>Inbound</strong>, <strong>Outbound</strong> y <strong>Chat</strong> y los encabezados de tu archivo actual. El archivo se procesa en este navegador. El botón de actualizar consulta nuevamente el Excel del servidor.<br><br>La lectura y exportación de Excel requieren conexión para cargar la biblioteca SheetJS. Los tiempos numéricos se interpretan en segundos; también se admiten tiempos con formato hh:mm:ss.</div></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Guía de indicadores</h2><button type="button" class="icon-btn" id="close-help" aria-label="Cerrar guía"><svg class="icon"><use href="#i-x"/></svg></button></div><dl class="glossary"><dt>SLA global</dt><dd>Atendidas dentro de SLA ÷ recibidas × 100. Meta actual: al menos 80%.</dd><dt>Abandono</dt><dd>Abandonadas ÷ recibidas × 100. Meta actual: hasta 3%.</dd><dt>AHT</dt><dd>Tiempo promedio de atención, ponderado por atendidas. En Outbound se pondera por llamadas realizadas.</dd><dt>ASA</dt><dd>Tiempo promedio de espera, ponderado por atendidas. Se muestra en Inbound.</dd><dt>Intervalos</dt><dd>Si seleccionas varios días, se suman los registros de la misma franja horaria. Los porcentajes se recalculan sobre el total.</dd></dl><div class="dialog-note">Se excluyen filas completamente idénticas y se suma el volumen original del Excel, sin reemplazarlo por atendidas más abandonadas.<br><br>Los datos se cargan automáticamente desde <strong>Indicadores Mensuales Servicios.xlsx</strong>, ubicado junto al HTML en el servidor. Se conservan las hojas <strong>Inbound</strong>, <strong>Outbound</strong> y <strong>Chat</strong> y los encabezados de tu archivo actual. El archivo se procesa en este navegador. El botón de actualizar consulta nuevamente el Excel del servidor.<br><br>La lectura y exportación de Excel requieren conexión para cargar la biblioteca SheetJS. Los tiempos numéricos se interpretan en segundos; también se admiten tiempos con formato hh:mm:ss.</div></dialog>
 <script>
 'use strict';
 // Se conserva el archivo y los encabezados del dashboard original.
@@ -180,13 +180,19 @@ function timeToMinutes(s) {
   return parts.length===2 ? parts[0]*60+parts[1] : Infinity;
 }
 function normalizeRows(rawRows,moduleName) {
+  // El Excel puede repetir registros completos. Excluir solo filas idénticas,
+  // conservando registros distintos aunque compartan fecha, grupo e intervalo.
+  const seen = new Set();
   return rawRows.map(raw => {
     const row = Object.fromEntries(Object.entries(raw).map(([key,value])=>[key.trim(),value]));
+    const signature = JSON.stringify(Object.keys(row).sort().map(key=>[key,row[key]]));
+    if(seen.has(signature)) return null;
+    seen.add(signature);
     const rec = numeric(row.Recibidas ?? row.Realizadas ?? row.Recibidos);
     const aten = numeric(row.Atendidas ?? row.Atendidos);
     const aban = numeric(row.Abandonadas_Total ?? row.Abandonados);
-    return {date:dateKey(row.Fecha),camp:String(row['Campaña'] ?? '').trim(),ring:String(row[moduleName==='CHAT'?'Nombre del Bot':'Ring Group'] ?? row['Ring Group'] ?? row['Nombre del Bot'] ?? '').trim(),interval:intervalKey(row.Intervalo),rec:moduleName==='OUTBOUND'?rec:Math.max(rec,aten+aban),aten,aban,atenSLA:numeric(row.Atendidas_SLA ?? row.Atendidos_SLA),aht:durationSeconds(row.AHT),asa:durationSeconds(row.ASA)};
-  });
+    return {date:dateKey(row.Fecha),camp:String(row['Campaña'] ?? '').trim(),ring:String(row[moduleName==='CHAT'?'Nombre del Bot':'Ring Group'] ?? row['Ring Group'] ?? row['Nombre del Bot'] ?? '').trim(),interval:intervalKey(row.Intervalo),rec,aten,aban,atenSLA:numeric(row.Atendidas_SLA ?? row.Atendidos_SLA),aht:durationSeconds(row.AHT),asa:durationSeconds(row.ASA)};
+  }).filter(Boolean);
 }
 // Las tasas se calculan sobre recibidas; los tiempos son promedios ponderados.
 function aggregate(rows,moduleName) {
