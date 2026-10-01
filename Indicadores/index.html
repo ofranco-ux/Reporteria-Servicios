@@ -97,7 +97,7 @@ body.sidebar-hidden{--sidebar:0px}
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <div class="busy" id="loading-overlay" role="status" aria-live="polite" hidden><div class="busy-content"><div class="spinner"></div><span id="loading-text">Cargando indicadores…</span></div></div>
-<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Guía de indicadores</h2><button type="button" class="icon-btn" id="close-help" aria-label="Cerrar guía"><svg class="icon"><use href="#i-x"/></svg></button></div><dl class="glossary"><dt>SLA global</dt><dd>Atendidas dentro de SLA ÷ recibidas × 100. Meta actual: al menos 80%.</dd><dt>Abandono</dt><dd>Abandonadas ÷ recibidas × 100. Meta actual: hasta 3%.</dd><dt>AHT</dt><dd>Tiempo promedio de atención, ponderado por atendidas. En Outbound se pondera por llamadas realizadas.</dd><dt>ASA</dt><dd>Tiempo promedio de espera, ponderado por atendidas. Se muestra en Inbound.</dd><dt>Intervalos</dt><dd>Si seleccionas varios días, se suman los registros de la misma franja horaria. Los porcentajes se recalculan sobre el total.</dd></dl><div class="dialog-note">Se excluyen filas completamente idénticas y se suma el volumen original del Excel, sin reemplazarlo por atendidas más abandonadas.<br><br>Los datos se cargan automáticamente desde <strong>Indicadores Mensuales Servicios.xlsx</strong>, ubicado junto al HTML en el servidor. Se conservan las hojas <strong>Inbound</strong>, <strong>Outbound</strong> y <strong>Chat</strong> y los encabezados de tu archivo actual. El archivo se procesa en este navegador. El botón de actualizar consulta nuevamente el Excel del servidor.<br><br>La lectura y exportación de Excel requieren conexión para cargar la biblioteca SheetJS. Los tiempos numéricos se interpretan en segundos; también se admiten tiempos con formato hh:mm:ss.</div></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Guía de indicadores</h2><button type="button" class="icon-btn" id="close-help" aria-label="Cerrar guía"><svg class="icon"><use href="#i-x"/></svg></button></div><dl class="glossary"><dt>SLA global</dt><dd>Atendidas dentro de SLA ÷ recibidas × 100. Meta actual: al menos 80%.</dd><dt>Abandono</dt><dd>Inbound: (abandonadas totales − abandonadas cortas) ÷ recibidas × 100. Chat: abandonados ÷ recibidos × 100. Meta actual: hasta 3%.</dd><dt>AHT</dt><dd>Tiempo promedio de atención, ponderado por atendidas. En Outbound se pondera por llamadas realizadas.</dd><dt>ASA</dt><dd>Tiempo promedio de espera, ponderado por atendidas. Se muestra en Inbound.</dd><dt>Intervalos</dt><dd>Si seleccionas varios días, se suman los registros de la misma franja horaria. Los porcentajes se recalculan sobre el total.</dd></dl><div class="dialog-note">Se excluyen filas completamente idénticas y se suma el volumen original del Excel, sin reemplazarlo por atendidas más abandonadas.<br><br>Los datos se cargan automáticamente desde <strong>Indicadores Mensuales Servicios.xlsx</strong>, ubicado junto al HTML en el servidor. Se conservan las hojas <strong>Inbound</strong>, <strong>Outbound</strong> y <strong>Chat</strong> y los encabezados de tu archivo actual. El archivo se procesa en este navegador. El botón de actualizar consulta nuevamente el Excel del servidor.<br><br>La lectura y exportación de Excel requieren conexión para cargar la biblioteca SheetJS. Los tiempos numéricos se interpretan en segundos; también se admiten tiempos con formato hh:mm:ss.</div></dialog>
 <script>
 'use strict';
 // Se conserva el archivo y los encabezados del dashboard original.
@@ -191,24 +191,24 @@ function normalizeRows(rawRows,moduleName) {
     const rec = numeric(row.Recibidas ?? row.Realizadas ?? row.Recibidos);
     const aten = numeric(row.Atendidas ?? row.Atendidos);
     const aban = numeric(row.Abandonadas_Total ?? row.Abandonados);
-    return {date:dateKey(row.Fecha),camp:String(row['Campaña'] ?? '').trim(),ring:String(row[moduleName==='CHAT'?'Nombre del Bot':'Ring Group'] ?? row['Ring Group'] ?? row['Nombre del Bot'] ?? '').trim(),interval:intervalKey(row.Intervalo),rec,aten,aban,atenSLA:numeric(row.Atendidas_SLA ?? row.Atendidos_SLA),aht:durationSeconds(row.AHT),asa:durationSeconds(row.ASA)};
+    return {date:dateKey(row.Fecha),camp:String(row['Campaña'] ?? '').trim(),ring:String(row[moduleName==='CHAT'?'Nombre del Bot':'Ring Group'] ?? row['Ring Group'] ?? row['Nombre del Bot'] ?? '').trim(),interval:intervalKey(row.Intervalo),rec,aten,aban,abanCortas:moduleName==='INBOUND'?numeric(row.Abandonadas_Cortas):0,atenSLA:numeric(row.Atendidas_SLA ?? row.Atendidos_SLA),aht:durationSeconds(row.AHT),asa:durationSeconds(row.ASA)};
   }).filter(Boolean);
 }
 // Las tasas se calculan sobre recibidas; los tiempos son promedios ponderados.
 function aggregate(rows,moduleName) {
-  const total={rec:0,aten:0,aban:0,atenSLA:0,sumAHT:0,sumASA:0,rowCount:rows.length};
+  const total={rec:0,aten:0,aban:0,abanCortas:0,atenSLA:0,sumAHT:0,sumASA:0,rowCount:rows.length};
   const map = new Map();
   for(const row of rows) {
-    if(!map.has(row.interval)) map.set(row.interval,{interval:row.interval,rec:0,aten:0,aban:0,atenSLA:0,sumAHT:0,sumASA:0});
+    if(!map.has(row.interval)) map.set(row.interval,{interval:row.interval,rec:0,aten:0,aban:0,abanCortas:0,atenSLA:0,sumAHT:0,sumASA:0});
     const interval = map.get(row.interval), base = moduleName==='OUTBOUND'?row.rec:row.aten;
     for(const target of [total,interval]) {
-      target.rec+=row.rec;target.aten+=row.aten;target.aban+=row.aban;target.atenSLA+=row.atenSLA;
+      target.rec+=row.rec;target.aten+=row.aten;target.aban+=row.aban;target.abanCortas+=row.abanCortas??0;target.atenSLA+=row.atenSLA;
       target.sumAHT+=row.aht*base;target.sumASA+=row.asa*row.aten;
     }
   }
   function finish(item) {
     const base = moduleName==='OUTBOUND'?item.rec:item.aten;
-    return {...item,sla:item.rec>0?item.atenSLA/item.rec*100:null,abandon:item.rec>0?item.aban/item.rec*100:null,aht:base>0?item.sumAHT/base:null,asa:item.aten>0?item.sumASA/item.aten:null};
+    return {...item,sla:item.rec>0?item.atenSLA/item.rec*100:null,abandon:item.rec>0?(item.aban-(moduleName==='INBOUND'?item.abanCortas:0))/item.rec*100:null,aht:base>0?item.sumAHT/base:null,asa:item.aten>0?item.sumASA/item.aten:null};
   }
   return {metrics:finish(total),intervals:[...map.values()].map(finish).sort((a,b)=>timeToMinutes(a.interval)-timeToMinutes(b.interval))};
 }
